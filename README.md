@@ -4,7 +4,7 @@ PNU 2020 Applied Design and Lab. team 6
 
 
 프로젝트 설정법
- 1. pull 받기
+ 1. cmd에서 최상위 디렉터리로 이동
  2. python manage.py makemigrations competitions로 테이블 만들기
  3. python manage.py migrate로 마이그레이션 실행
  4. python manage.py createsuperuser로 관리자 계정 생성
