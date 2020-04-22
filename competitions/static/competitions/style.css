@@ -1,0 +1,14 @@
+li a {
+    color: #FCA205;
+    font-family: 'Lobster';
+}
+
+body {
+
+}
+
+.ship {
+    background: white url("images/cover.jpg") no-repeat;
+    height: 100%;
+    width: 100%;
+}

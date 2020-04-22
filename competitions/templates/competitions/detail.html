@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset = "utf-8">
+      <title> Polls-detail </title>
+  </head>
+  <body>
+    <h1>    {{ competition.competition_name }}  </h1>
+
+    <h1>   game: {{ competition.competition_game }}  </h1>
+
+    <h1>    {{ competition.competition_text }}  </h1>
+
+    <form action="{% url 'competitions:attend' competition.id %}" method="post">
+    {% csrf_token %}
+
+    <input type="submit" value="대회 참가하기">
+    </form>
+  </body>

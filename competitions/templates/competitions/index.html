@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+      {% load static %}
+      <meta charset = "utf-8">
+      <title> Polls </title>
+      <link rel="stylesheet" type="text/css" href="{% static 'competitions/style.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    {% if latest_question_list %}
+        <ul>
+            {% for competition in latest_question_list %}
+            <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_text }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p> No Competitions are available.</p>
+    {% endif %}
+    <div class="ship">
+        hello
+    </div>
+  </body>
