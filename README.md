@@ -12,4 +12,4 @@ PNU 2020 Applied Design and Lab. team 6
  6. localhost:8000/admin 들어가서 관리자계정으로 접속, 테이블 확인
  
 
-추가 . db.sqlite3 수정되서 달라지면 문제생기니 제외하고 commit, push하기
+추가 db파일(db.sqlite3)은 제외하고 commit, push하기
