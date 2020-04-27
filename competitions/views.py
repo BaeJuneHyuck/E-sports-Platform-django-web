@@ -1,14 +1,5 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-
-# avoid race conditions
-from django.db.models import F
 
 from .models import Competition
 
@@ -33,3 +24,4 @@ class DetailView(generic.DetailView):
 class AttendView(generic.DetailView):
     model = Competition
     template_name = 'competitions/attend.html'
+

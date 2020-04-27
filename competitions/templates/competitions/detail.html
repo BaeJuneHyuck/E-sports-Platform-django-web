@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html>
-  <head>
-      <meta charset = "utf-8">
-      <title> Polls-detail </title>
-  </head>
-  <body>
+
+{% extends "competitions/base.html" %}
+
+{% block title %} esportsPlatform : competition-detail{% endblock %}
+
+{% block content %}
+    <div class="top">
+
+        <div class="topnav">
+            <div class="topnav-centered">
+                <a href="#home" class="active">Home</a>
+            </div>
+
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+
+            <div class="topnav-right">
+                <a href="/signup">Sign in</a>
+                <a href="/signin">Sign up</a>
+            </div>
+
+        </div>
+
+        <div class="preview">
+
+        </div>
+    </div>
+
     <h1>    {{ competition.competition_name }}  </h1>
 
     <h1>   game: {{ competition.competition_game }}  </h1>
@@ -16,4 +37,4 @@
 
     <input type="submit" value="대회 참가하기">
     </form>
-  </body>
+{% endblock %}

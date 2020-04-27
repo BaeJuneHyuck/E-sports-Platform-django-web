@@ -1,24 +1,63 @@
 
-<!DOCTYPE html>
-<html>
-  <head>
-      {% load static %}
-      <meta charset = "utf-8">
-      <title> Polls </title>
-      <link rel="stylesheet" type="text/css" href="{% static 'competitions/style.css' %}">
-        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    {% if latest_question_list %}
-        <ul>
-            {% for competition in latest_question_list %}
-            <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_text }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p> No Competitions are available.</p>
-    {% endif %}
-    <div class="ship">
-        hello
+{% extends "competitions/base.html" %}
+
+{% block title %} esportsPlatform {% endblock %}
+
+{% block content %}
+    <div class="top">
+
+        <div class="topnav">
+            <div class="topnav-centered">
+                <a href="/" class="active">Home</a>
+            </div>
+
+            <a>E-platform</a>
+
+            <div class="topnav-right">
+                <a href="/signup">회원가입</a>
+                <a href="/signin">로그인</a>
+            </div>
+
+        </div>
+
+        <div class="preview">
+
+        </div>
     </div>
-  </body>
+
+    <div class="main">
+        <div class="contents">
+            주요 대회 일정
+            {% if latest_question_list %}
+                <ul>
+                    {% for competition in latest_question_list %}
+                    <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_text }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Competitions are available.</p>
+            {% endif %}
+        </div>
+
+        <div class="contents">
+            신청 가능 대회
+            {% if latest_question_list %}
+                <ul>
+                    {% for competition in latest_question_list %}
+                    <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_text }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Competitions are available.</p>
+            {% endif %}
+
+        </div>
+
+        <div class="contents">
+            하이라이트<br>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/U_n20yIvbpA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+    </div>
+
+{% endblock %}
