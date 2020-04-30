@@ -1,0 +1,43 @@
+
+{% extends 'user/base.html' %}
+{% load i18n %}
+{% block title %} 로그인 {% endblock %}
+
+{% block content %}
+
+<div class="panel panel-default registration">
+    <div class="panel-heading">
+        로그인하기
+    </div>
+    <div class="panel-body">
+        <form action="." method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group {% if field.errors|length > 0 %}has-error{%endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <input name="{{ field.html_name }}" id="{{ field.id_for_lable }}" class="form-control" type="{{ field.field.widget.input_type }}" value="{{ field.value|default_if_none:'' }}">
+                    {% for error in field.errors %}
+                        <label class="control-label" for="{{ field.id_for_label }}">{{ error }}</label>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button class="btn btn-primary btn-large" type="submit">로그인하기</button>
+            </div>
+            {% if messages %}
+                        {% for message in messages %}
+                            <div class="row" style="margin:20px auto;">
+                            <div class="col-sm-12">
+                                <div class="alert alert-danger">
+                                    {{ message.message }}
+                                </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

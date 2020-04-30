@@ -1,11 +1,15 @@
 
-{% extends "competitions/base.html" %}
+{% extends "home/base.html" %}
 
 {% block title %} esportsPlatform {% endblock %}
 
 {% block content %}
 
+    {% if request.user.is_authenticated %}
+    <div class="topmain">
+    {% else %}
     <div class="top">
+    {% endif %}
       <div class="topnav">
           <div class="topnav-centered">
               <a href="/" class="active">Home</a>
@@ -22,14 +26,26 @@
               {% endif %}
           </div>
       </div>
+      {% if request.user.is_authenticated %}
+        <div class="banner">
+            <div class="logo">
 
+            </div>
+            <a href="/1/">
+            <div class="button">
+                참가하기
+            </div>
+            </a>
+
+        </div>
+      {% endif %}
       </div>
     </div>
 
     <div class="competition">
         <div class="contents">
             <div class="contents_title">
-            <a href="/competitions">진행중인 대회</a>
+            <a href="/competitions">주요 대회 일정</a>
             </div>
             {% if latest_competitions_list %}
                 <ul>
@@ -44,7 +60,7 @@
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/competitions">예정 대회</a>
+                <a href="/competitions">신청 가능 대회</a>
             </div>
             {% if latest_competitions_list %}
                 <ul>
@@ -55,13 +71,30 @@
             {% else %}
                 <p> No Competitions are available.</p>
             {% endif %}
+
         </div>
 
-        <div>
-            지난 대회
+        <div class="contents">
+            <div class="contents_title">
+                하이라이트<br>
+            </div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/U_n20yIvbpA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
-
     </div>
 
+    <div class="practice">
+        <div class="contents_title">
+            <a href="/practice">연습경기 모집</a>
+        </div>
+            {% if practices %}
+                <ul>
+                    {% for practice in practices %}
+                    <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Practice are available.</p>
+            {% endif %}
+    </div>
 
 {% endblock %}

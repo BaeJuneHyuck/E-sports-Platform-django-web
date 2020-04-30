@@ -16,8 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path, include
+from user.views import UserRegistrationView
+
 
 urlpatterns = [
-    url('', include('competitions.urls')),
+    url('', include('home.urls')),
+    url('competitions/', include('competitions.urls')),
+    url('practice/', include('practice.urls')),
+    url('user/', include('user.urls')),
+
     path('admin/', admin.site.urls),
 ]

@@ -1,0 +1,58 @@
+
+{% extends 'user/base.html' %}
+{% load i18n %}
+{% block title %} 로그인 {% endblock %}
+
+{% block content %}
+<style>
+    .registration {
+        width: 360px;
+        margin: 0 auto;
+    }
+    p {
+        text-align: center;
+    }
+    label {
+        width: 50%;
+        text-align: left;
+    }
+    .control-label {
+        width: 100%;
+    }
+    .registration .form-actions > button {
+        width: 100%;
+    }
+    .link-below-button { margin-top: 10px; text-align: right;}
+</style>
+<div class="panel panel-default registration">
+    <div class="panel-heading">
+        인증이메일 보내기
+    </div>
+    <div class="panel-body">
+        <form action="." method="post">
+            {% csrf_token %}
+            <b class="">재발송할 이메일주소를 입력해주세요.</b>
+            {% for field in form %}
+                <div class="form-group {% if field.errors|length > 0 %}has-error{%endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <input name="{{ field.html_name }}" id="{{ field.id_for_lable }}" class="form-control" type="{{ field.field.widget.input_type }}" value="{{ field.value|default_if_none:'' }}">
+                    {% for error in field.errors %}
+                        <label class="control-label" for="{{ field.id_for_label }}">{{ error }}</label>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button class="btn btn-primary btn-large" type="submit">인증이메일 보내기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-actions">
+    <button class="btn btn-primary btn-large" type="submit">로그인하기</button>
+</div>
+<a href="/user/resend_verify_email/">
+    <div class="link-below-button">인증이메일 재발송</div>
+</a>
+
+{% endblock content %}

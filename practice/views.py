@@ -1,16 +1,16 @@
 from django.views import generic
 from django.utils import timezone
 
-from .models import Competition
+from .models import Practice
 from practice.models import Practice
 
 
 class IndexView(generic.ListView):
-    template_name = 'competitions/index.html'
-    context_object_name = 'latest_competitions_list'
+    template_name = 'practice/index.html'
+    context_object_name = 'latest_practice_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
+        return Practice.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -19,16 +19,16 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
-    model = Competition
-    template_name = 'competitions/detail.html'
+    model = Practice
+    template_name = 'practice/detail.html'
 
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
         """
-        return Competition.objects.filter(pub_date__lte=timezone.now())
+        return Practice.objects.filter(pub_date__lte=timezone.now())
 
 class AttendView(generic.DetailView):
-    model = Competition
-    template_name = 'competitions/attend.html'
+    model = Practice
+    template_name = 'practice/attend.html'
 

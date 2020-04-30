@@ -1,7 +1,7 @@
 
 {% extends "competitions/base.html" %}
 
-{% block title %} esportsPlatform : competition-detail{% endblock %}
+{% block title %} esportsPlatform : Practice-detail{% endblock %}
 
 {% block content %}
 
@@ -24,15 +24,15 @@
       </div>
       </div>
     </div>
-    <h3>   {{ competition.competition_game }}  </h3>
+    <h3>   {{ practice.game }}  </h3>
 
-    <h1>    {{ competition.competition_name }}  </h1>
+    <h1>    {{ practice.title }}  </h1>
 
-    <h1>    {{ competition.competition_text }}  </h1>
+    <h1>    {{ practice.text }}  </h1>
 
-    <form action="{% url 'competitions:attend' competition.id %}" method="post">
+    <form action="{% url 'practice:attend' practice.id %}" method="post">
     {% csrf_token %}
 
-    <input type="submit" value="대회 참가하기">
+    <input type="submit" value="연습경기 참가하기">
     </form>
 {% endblock %}
