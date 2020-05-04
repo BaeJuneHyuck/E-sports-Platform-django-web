@@ -29,36 +29,53 @@
     <div class="competition">
         <div class="contents">
             <div class="contents_title">
-            <a href="/competitions">진행중인 대회</a>
+            <a href="/competitions/ongoing">진행중인 대회</a>
             </div>
-            {% if latest_competitions_list %}
-                <ul>
-                    {% for competition in latest_competitions_list %}
-                    <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
+            {% if ongoings %}
+                <ul style = "list-style:none;">
+                    {% for competition in ongoings %}
+                    {% if competition.competition_game in 'LOL' %}
+                    <li class = "lol_competition"><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
+                    <a href="{% url 'competitions:detail' competition.id %}"><img src = "/static/competitions/images/lol.jpg" width="30%" height=auto></a>
+                    {% elif competition.competition_game in 'Overwatch' %}
+                    <li class = "overwatch_competition"><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
+                    <a href="{% url 'competitions:detail' competition.id %}"><img src = "/static/competitions/images/overwatch.jpg" width="30%" height=auto></a>
+                    {% endif %}
                     {% endfor %}
                 </ul>
             {% else %}
-                <p> No Competitions are available.</p>
+                <p> No Competitions in progress are available.</p>
             {% endif %}
         </div>
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/competitions">예정 대회</a>
+                <a href="/competitions/scheduled">예정 대회</a>
             </div>
-            {% if latest_competitions_list %}
+            {% if scheduleds %}
                 <ul>
-                    {% for competition in latest_competitions_list %}
+                    {% for competition in scheduleds %}
                     <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p> No Competitions are available.</p>
+                <p> No Competitions in scheduled are available.</p>
             {% endif %}
         </div>
 
-        <div>
-            지난 대회
+        <div class = "contents">
+            <div class = "contents_title">
+                <a href="/competitions/past">지난 대회</a>
+            </div>
+            {% if pasts %}
+                <ul>
+                    {% for competition in pasts %}
+                    <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Competitions in past scheduled are available.</p>
+            {% endif %}
         </div>
 
     </div>
