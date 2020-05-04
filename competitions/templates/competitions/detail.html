@@ -24,12 +24,63 @@
       </div>
       </div>
     </div>
-    <h3>   {{ competition.competition_game }}  </h3>
 
-    <h1>    {{ competition.competition_name }}  </h1>
+<div class = "contents_detail">
+    <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
+    {% if competition.competition_game in 'LOL' %}
+    <a href = "https://kr.leagueoflegends.com/ko-kr/">
+    <img class = "competition_img" src = "/static/competitions/images/lol.jpg">
+    </a>
+    {% elif competition.competition_game in 'Overwatch' %}
+    <a href = "https://playoverwatch.com/ko-kr/">
+    <img class = "competition_img" src = "/static/competitions/images/overwatch.jpg">
+    </a>
+    {% endif %}
+    <table class = "contents_table">
+        <tr>
+            <th>게임분야</th>
+            <td> {{ competition.competition_game }} </td>
+        </tr>
+        <tr>
+            <th>주최자</th>
+            <td> {{ competition.competition_master}} </td>
+        </tr>
+        <tr>
+            <th>참가자격</th>
+            <td> {{ competition.competition_qualification }} </td>
+        </tr>
+        <tr>
+            <th>참가신청일</th>
+            <td> {{ competition.pub_date }} </td>
+        </tr>
+        <tr>
+            <th>대회일</th>
+            <td> {{ competition.pub_date }} </td>
+        </tr>
+        <tr>
+            <th>대회소개</th>
+            <td> {{ competition.competition_text }} </td>
+        </tr>
+        <tr>
+            <th>홈페이지</th>
+            {% if competition.competition_game in 'LOL' %}
+            <td><a href="https://kr.leagueoflegends.com/ko-kr/">https://kr.leagueoflegends.com/ko-kr/</a>
+            {% elif competition.competition_game in 'Overwatch' %}
+            <td><a href="https://playoverwatch.com/ko-kr/">https://playoverwatch.com/ko-kr/</a>
+            {% endif %}
+        </tr>
+    </table>
+</div>
 
-    <h1>    {{ competition.competition_text }}  </h1>
+<div class = "pager">
+    {% if posts.has_previous %}
+    <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}"> {{ competition.id|add:'-1' }}이전페이지</a>
+    {% endif %}
 
+    {% if posts.has_next %}
+    <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">{{ competition.id|add:'1' }}다음페이지</a>
+    {% endif %}
+</div>
     <form action="{% url 'competitions:attend' competition.id %}" method="post">
     {% csrf_token %}
 
