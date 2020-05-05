@@ -17,7 +17,6 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['practices'] = Practice.objects.all()
         context['ongoings'] = Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
         context['scheduleds'] = Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
         context['pasts'] = Competition.objects.filter(pub_date__gte=timezone.now()).order_by('-pub_date')[:5]
@@ -110,8 +109,3 @@ class PastView(generic.ListView):
         total_page = page.num_pages()
         posts = paginator.get_page(page)
         return render(request, 'Ongoing.html', {'competitions' : competitions, 'posts' : posts}, context)
-
-
-class PraticeView(generic.ListView):
-    template_name = 'competitions/practice.html'
-

@@ -5,25 +5,7 @@
 
 {% block content %}
 
-<div class="top">
-      <div class="topnav">
-          <div class="topnav-centered">
-              <a href="/" class="active">Home</a>
-          </div>
 
-          <a>E-platform</a>
-
-          <div class="topnav-right">
-              {% if request.user.is_authenticated %}
-              <a href="/user/logout/">로그아웃</a>
-              {% else %}
-              <a href="/user/registration/">회원가입</a>
-              <a href="/user/login/">로그인</a>
-              {% endif %}
-          </div>
-      </div>
-      </div>
-    </div>
 
 <div class = "contents_detail">
     <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
@@ -43,7 +25,7 @@
         </tr>
         <tr>
             <th>주최자</th>
-            <td> {{ competition.competition_master}} </td>
+            <td> {{ competition.competition_author}} </td>
         </tr>
         <tr>
             <th>참가자격</th>
@@ -55,11 +37,15 @@
         </tr>
         <tr>
             <th>대회일</th>
-            <td> {{ competition.pub_date }} </td>
+            <td> {{ competition.date_start }} ~ {{ competition.date_end }}</td>
+        </tr>
+        <tr>
+            <th>게시일</th>
+            <td> {{ competition.date_published }}</td>
         </tr>
         <tr>
             <th>대회소개</th>
-            <td> {{ competition.competition_text }} </td>
+            <td> {{ competition.description }} </td>
         </tr>
         <tr>
             <th>홈페이지</th>

@@ -157,14 +157,6 @@ a:link, a:visited, a:hover, a:active {
     color: black;
 }
 
-.pager a .previous{
-    position: relative;
-}
-
-.pager a .next{
-    position: relative;
-}
-
 
 #footer{
     background: white;
