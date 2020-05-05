@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load static %}
+    <meta charset = "utf-8">
+    <title> {% block title %}{% endblock %} </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'competitions/style.css' %}">
+  </head>
+
+  <body>
+  {% block content %}{% endblock %}
+  </body>
+
+  <footer id="footer">
+    <p>E-sports 통합 관리 플랫폼</p>
+    <p>Copyright © 2020 컴퓨터응용설계및 실험 6조</p>
+    <p> 배준혁, 김재희, 김태영, 이창홍, 김연재, 김재민</p>
+    <a href="https://github.com/BaeJuneHyuck/2020_Applied_Design_Lab_team6" target="_blank">
+      <img src="{% static 'competitions/images/github.png' %}"></a>
+  </footer>
