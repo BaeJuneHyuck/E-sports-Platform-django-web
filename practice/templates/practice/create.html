@@ -1,0 +1,14 @@
+
+{% extends "practice/base.html" %}
+
+{% block title %} esportsPlatform : competition-detail{% endblock %}
+
+{% block content %}
+<h2>연습경기 생성</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_ul }}
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+
+{% endblock %}

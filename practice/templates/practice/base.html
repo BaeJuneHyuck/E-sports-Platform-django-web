@@ -5,10 +5,28 @@
     {% load static %}
     <meta charset = "utf-8">
     <title> {% block title %}{% endblock %} </title>
-    <link rel="stylesheet" type="text/css" href="{% static 'competitions/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/style.css' %}">
   </head>
 
   <body>
+  <div class="top">
+      <div class="topnav">
+          <div class="topnav-centered">
+              <a href="/" class="active">Home</a>
+          </div>
+
+          <a>E-platform</a>
+
+          <div class="topnav-right">
+              {% if self.user.is_authenticated %}
+              <a href="/user/logout/">로그아웃</a>
+              {% else %}
+              <a href="/user/registration/">회원가입</a>
+              <a href="/user/login/">로그인</a>
+              {% endif %}
+          </div>
+      </div>
+    </div>
   {% block content %}{% endblock %}
   </body>
 
@@ -17,5 +35,5 @@
     <p>Copyright © 2020 컴퓨터응용설계및 실험 6조</p>
     <p> 배준혁, 김재희, 김태영, 이창홍, 김연재, 김재민</p>
     <a href="https://github.com/BaeJuneHyuck/2020_Applied_Design_Lab_team6" target="_blank">
-      <img src="{% static 'competitions/images/github.png' %}"></a>
+      <img src="{% static 'practice/images/github.png' %}"></a>
   </footer>

@@ -1,37 +1,17 @@
 
-{% extends "competitions/base.html" %}
+{% extends "practice/base.html" %}
 
-{% block title %} esportsPlatform : competition-detail{% endblock %}
+{% block title %} esportsPlatform : practice-detail{% endblock %}
 
 {% block content %}
 
-<div class="top">
-      <div class="topnav">
-          <div class="topnav-centered">
-              <a href="/" class="active">Home</a>
-          </div>
-
-          <a>E-platform</a>
-
-          <div class="topnav-right">
-              {% if request.user.is_authenticated %}
-              <a href="/user/logout/">로그아웃</a>
-              {% else %}
-              <a href="/user/registration/">회원가입</a>
-              <a href="/user/login/">로그인</a>
-              {% endif %}
-          </div>
-      </div>
-    </div>
-</div>
-
-<div class = "contents_detail">
+<div class = "practice_detail">
     <h1 class = "practice_name"> {{ practice.title }} </h1>
-    {% if model.game in 'LOL' %}
+    {% if practice.game in 'lol' %}
     <a href = "https://kr.leagueoflegends.com/ko-kr/">
     <img class = "practice_img" src = "/static/practice/images/lol.jpg">
     </a>
-    {% elif model.game in 'Overwatch' %}
+    {% elif practice.game in 'overwatch' %}
     <a href = "https://playoverwatch.com/ko-kr/">
     <img class = "practice_img" src = "/static/practice/images/overwatch.jpg">
     </a>
@@ -47,7 +27,7 @@
         </tr>
         <tr>
             <th>티어</th>
-            <td> {{ practice.tier}} </td>
+            <td> {{ practice.tier }} </td>
         </tr>
         <tr>
             <th>소개</th>
@@ -55,11 +35,11 @@
         </tr>
         <tr>
             <th>연습일</th>
-            <td> {{ practice.practice_time }} </td>
+            <td> {{ practice.practice_time|date:"Y-m-d" }} </td>
         </tr>
         <tr>
             <th>게시일</th>
-            <td> {{ practice.date_published }} </td>
+            <td> {{ practice.pub_date|date:"Y-m-d" }} </td>
         </tr>
     </table>
 </div>
@@ -69,16 +49,15 @@
     <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
     {% endif %}
 
+    <a class = "list" href="{% url 'practice:index' %}">목록</a>
 
     {% if practice.id|add:'1' %}
     <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
     {% endif %}
 </div>
 
-    <form action="{% url 'practice:attend' practice.id %}" method="post">
-    {% csrf_token %}
 
-    <input type="submit" value="연습경기 참가하기">
-    </form>
+
+
 
 {% endblock %}

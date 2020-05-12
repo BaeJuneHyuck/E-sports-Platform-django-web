@@ -79,19 +79,19 @@ a:link, a:visited, a:hover, a:active {
 }
 
 
-.competition{
+.practice{
     padding:100px;
     background: black;
     height: 800px;
     font-size:20px;
 }
 
-.contents{
+.contents_list {
     color:white;
     margin-bottom:100px;
 }
 
-.contents li a{
+.contents_list li a{
     text-decoration: none;
 }
 
@@ -127,14 +127,26 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .practice{
-    padding:100px;
-    background: gray;
+    padding:50px;
+    background: black;
     font-size:20px;
-    color:black;
+    color:white;
+}
+
+.practice .contents_list .practice_list {
+    color:white;
+}
+
+.practice_detail .practice_img {
+    width: 100%
 }
 
 .contents_title a:link, .contents_title a:visited, .contents_title a:hover, .contents_title a:active {
     font-size: 30px;
     font-color:#FA9C1D;
     text-decoration: none;  color:white;
+}
+
+.pager a {
+    font-color:black;
 }

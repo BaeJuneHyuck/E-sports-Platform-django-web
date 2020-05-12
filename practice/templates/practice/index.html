@@ -1,57 +1,18 @@
 
-{% extends "competitions/base.html" %}
+{% extends "practice/base.html" %}
 
 {% block title %} esportsPlatform {% endblock %}
 
 {% block content %}
-<div class="top">
-      <div class="topnav">
-          <div class="topnav-centered">
-              <a href="/" class="active">Home</a>
-          </div>
 
-          <a>E-platform</a>
 
-          <div class="topnav-right">
-              {% if request.user.is_authenticated %}
-              <a href="/user/logout/">로그아웃</a>
-              {% else %}
-              <a href="/user/registration/">회원가입</a>
-              <a href="/user/login/">로그인</a>
-              {% endif %}
-          </div>
-      </div>
-    </div>
-</div>
-
-    <div class="competition">
-        <div class="contents">
-            <div class="contents_title">
-            <a href="/practice/">연습 경기</a>
-            </div>
-            {% if practices %}
-                <ul style = "list-style:none;">
-                    {% for practice in practices %}
-                    {% if practice.game in 'LOL' %}
-                    <li class = "lol_practice"><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                    <a href="{% url 'practice:detail' practice.id %}"><img src = "/static/practice/images/lol.jpg" width="30%" height=auto></a>
-                    {% elif practice.game in 'Overwatch' %}
-                    <li class = "overwatch_practice"><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                    <a href="{% url 'practice:detail' practice.id %}"><img src = "/static/practice/images/overwatch.jpg" width="30%" height=auto></a>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p> No Competitions in progress are available.</p>
-            {% endif %}
-
-        </div>
+    <div class="practice">
         <div class="contents_list">
             <div class="contents_title">
-            <a href="/competitions/practice">연습 경기</a>
+            <a href="/practice">연습 경기</a>
             </div>
             {% if practices %}
-            <table class = "competition_list">
+            <table class = "practice_list">
                 <thead>
                 <tr>
                     <th>번호</th>
@@ -69,8 +30,8 @@
                     <td><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></td>
                     <td>{{ practice.game }}</td>
                     <td>{{ practice.tier }}</td>
-                    <td>{{ practice.practice_time }}</td>
-                    <td>{{ practice.pub_date }}</td>
+                    <td>{{ practice.practice_time|date:"Y-m-d" }}</td>
+                    <td>{{ practice.pub_date|date:"Y-m-d" }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -79,7 +40,24 @@
             <p>현재 연습 경기가 없습니다.</p>
             {% endif %}
         </div>
+        {% if is_paginated %}
+    <div class = "pagination">
+      <span class = "page-links">
+        {% if page_obj.has_previous %}
+        <a href="{{ self.path }}?page={{ page_obj.previous_page_number">previous</a>
+        {% endif %}
+        <span class = "page-current">
+          <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</p>
+        </span>
+        {% if page_obj.has_next %}
+        <a href="{{ self.path }}?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+      </span>
     </div>
+    {% endif %}
+        <a href="{% url 'practice:create' %}">연습경기 생성</a>
+    </div>
+
 
 
 {% endblock %}
