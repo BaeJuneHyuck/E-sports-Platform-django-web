@@ -8,7 +8,7 @@ class Practice(models.Model):
     game = models.CharField(max_length=50)
     tier = models.IntegerField(default=1000)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
-    practice_time = models.DateTimeField('practice time', auto_now_add=True)
+    practice_time = models.DateTimeField('practice time')
     author = models.ForeignKey(User, on_delete = models.CASCADE)
 
     def __str__(self):
