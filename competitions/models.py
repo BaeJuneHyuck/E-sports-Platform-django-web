@@ -1,5 +1,7 @@
 from django.db import models
 
+from user.models import User
+
 
 class Competition(models.Model):
     competition_text = models.CharField(max_length=100)
@@ -19,3 +21,12 @@ class CompetitionParticipate(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     team = models.CharField(max_length=100)
     avg_tier = models.IntegerField()
+
+class Comment(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    comment_user = models.ForeignKey('user.User', related_name='comments', on_delete=models.CASCADE)
+    comment_date = models.DateTimeField(auto_now_add=True)
+    comment_text = models.TextField()
+
+    class Meta:
+        ordering = ['-comment_date']
