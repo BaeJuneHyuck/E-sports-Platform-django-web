@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Q
 from django.db.models.functions import math
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -19,9 +20,9 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['ongoings'] = Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
-        context['scheduleds'] = Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
-        context['pasts'] = Competition.objects.filter(pub_date__gte=timezone.now()).order_by('-pub_date')[:5]
+        context['ongoings'] = Competition.objects.filter(Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by('-pub_date')[:5]
+        context['scheduleds'] = Competition.objects.filter(date_start__gt=timezone.now()).order_by('-pub_date')[:5]
+        context['pasts'] = Competition.objects.filter(date_end__lt=timezone.now()).order_by('-pub_date')[:5]
         return context
 
 
@@ -29,6 +30,7 @@ class DetailView(generic.DetailView):
     model = Competition
     template_name = 'competitions/detail.html'
     total_competition = Competition.total_Competition()
+    today = timezone.now().strftime("%Y-%m-%d")
 
     def get_queryset(self):
         """
@@ -63,7 +65,7 @@ class OngoingView(generic.ListView):
     context_object_name = 'latest_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
+        return Competition.objects.filter(Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by('-pub_date')
 
     def paging(request):
         competitions = Competition.objects
@@ -91,11 +93,11 @@ class ScheduledView(generic.ListView):
     context_object_name = 'scheduled_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__lt=timezone.now()).order_by('-pub_date')
+        return Competition.objects.filter(date_start__gt=timezone.now()).order_by('-pub_date')
 
     def paging(request):
         competitions = Competition.objects
-        competitions_list = Competition.objects.filter(pub_date__lt=timezone.now())
+        competitions_list = Competition.objects.filter(date_start__gt=timezone.now())
         paginator = Paginator(competitions_list, 1)
         page = request.GET.get('page', 1)
         try:
@@ -115,11 +117,11 @@ class PastView(generic.ListView):
     context_object_name = 'past_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__gt=timezone.now()).order_by('-pub_date')
+        return Competition.objects.filter(date_end__lt=timezone.now()).order_by('-pub_date')
 
     def paging(self):
         competitions = Competition.objects
-        competitions_list = Competition.objects.filter(pub_date__gt=timezone.now())
+        competitions_list = Competition.objects.filter(date_end__lt=timezone.now())
         paginator = Paginator(competitions_list, 1)
         page = self.GET.get('page', 1)
         try:

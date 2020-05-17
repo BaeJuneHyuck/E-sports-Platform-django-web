@@ -37,15 +37,15 @@
         </tr>
         <tr>
             <th>대회일</th>
-            <td> {{ competition.date_start }} ~ {{ competition.date_end }}</td>
+            <td> {{ competition.date_start|date:"Y-m-d" }} ~ {{ competition.date_end|date:"Y-m-d" }}</td>
         </tr>
         <tr>
             <th>참가신청일</th>
-            <td> {{ competition.attend_start }} ~ {{ competition.attend_end }}</td>
+            <td> {{ competition.attend_start|date:"Y-m-d" }} ~ {{ competition.attend_end|date:"Y-m-d" }}</td>
         </tr>
         <tr>
             <th>게시일</th>
-            <td> {{ competition.date_published }}</td>
+            <td> {{ competition.date_published|date:"Y-m-d" }}</td>
         </tr>
         <tr>
             <th>대회소개</th>
@@ -64,18 +64,27 @@
 
 <div class = "pager">
     {% if competition.id|add:'-1' > 0 %}
-    <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}"> {{ competition.id|add:'-1' }}이전페이지</a>
+    <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
     {% endif %}
 
-    {% if competition.date_start < timezone.now() }}
+    {% if competition.date_start < today %}
     <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
-    {% elif competition.date_end > timezone.now() }}
+    {% else %}
+    <span>실패1</span>
+    {% endif %}
+    {% if competition.date_end > today %}
     <a class = "list" href="{% url 'competitions:past' %}">목록</a>
     {% else %}
+    <span>실패2</span>
+    {% endif %}
+    {% if competition.date_start >= today and competition.date_end <= today %}
     <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
+    {% else %}
+    <span>실패3</span>
+    {% endif %}
 
-    {% if competition.id|add:'1' <= competition.total_competitoin %}
-    <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">{{ competition.id|add:'1' }}다음페이지</a>
+    {% if competition.id|add:'1' <= competition.total_competition %}
+    <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
     {% endif %}
 </div>
     <form action="{% url 'competitions:attend' competition.id %}" method="post">
