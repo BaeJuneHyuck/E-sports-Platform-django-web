@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+    {% if self.user.is_authenticated %}
     <div class="topmain">
     {% else %}
     <div class="top">
@@ -18,7 +18,7 @@
           <a>E-platform</a>
 
           <div class="topnav-right">
-              {% if request.user.is_authenticated %}
+              {% if self.user.is_authenticated %}
               <a href="/user/logout/">로그아웃</a>
               {% else %}
               <a href="/user/registration/">회원가입</a>
@@ -26,7 +26,7 @@
               {% endif %}
           </div>
       </div>
-      {% if request.user.is_authenticated %}
+      {% if self.user.is_authenticated %}
         <div class="banner">
             <div class="logo">
 
@@ -47,9 +47,9 @@
             <div class="contents_title">
             <a href="/competitions">주요 대회 일정</a>
             </div>
-            {% if latest_competitions_list %}
+            {% if latest_competitions %}
                 <ul>
-                    {% for competition in latest_competitions_list %}
+                    {% for competition in latest_competitions %}
                     <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
                     {% endfor %}
                 </ul>
@@ -60,11 +60,11 @@
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/competitions">신청 가능 대회</a>
+                <a href="/competitions/scheduled/">신청 가능 대회</a>
             </div>
-            {% if latest_competitions_list %}
+            {% if possible_attend_competitions %}
                 <ul>
-                    {% for competition in latest_competitions_list %}
+                    {% for competition in possible_attend_competitions %}
                     <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
                     {% endfor %}
                 </ul>
