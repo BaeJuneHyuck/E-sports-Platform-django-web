@@ -19,7 +19,7 @@
           <a>E-platform</a>
 
           <div class="topnav-right">
-              {% if request.user.is_authenticated %}
+              {% if self.user.is_authenticated %}
               <a href="/user/logout/">로그아웃</a>
               {% else %}
               <a href="/user/registration/">회원가입</a>

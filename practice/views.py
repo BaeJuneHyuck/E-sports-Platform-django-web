@@ -1,8 +1,8 @@
-from django.http import request, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
+from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Practice
 from user.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PracticeCreateForm
@@ -23,6 +23,9 @@ class IndexView(generic.ListView):
         context['practices'] = Practice.objects.all()
         return context
 
+    def paging(self):
+        total_page = Practice.objects.all()/10
+
 class DetailView(generic.DetailView):
     model = Practice
     template_name = 'practice/detail.html'
@@ -33,29 +36,38 @@ class DetailView(generic.DetailView):
         """
         return Practice.objects.all()
 
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context['total_practice'] = Practice.total_practice()
+        return context
+
 class AttendView(generic.CreateView):
     model = Practice
     template_name = 'practice/attend.html'
 
     def get_object(self):
-        return get_object_or_404(User, pk=self.request.user.id)
+        return get_object_or_404(User, pk=self.request.comment_user.id)
 
 
 class CreateView(generic.CreateView):
     login_url = settings.LOGIN_URL
     model = Practice
-    pk_url_kwarg = 'id'
 
-    def post_new(request):
-        if request.method == 'POST':
-            form = PracticeCreateForm(request.POST)
+    def post_new(self):
+        if not self.user.is_authenticated:
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
+
+        if self.method == 'POST':
+            form = PracticeCreateForm(self.POST)
             if form.is_valid():
                 practice = form.save(commit=False)
-                practice.author_id = request.user.id
+                practice.author = self.user
                 practice.save()
-                return render(request, "practice/index.html")
+                return redirect(reverse('practice:index'))
             else:
                 return HttpResponse('fail')
         else:
             form = PracticeCreateForm()
-        return render(request, 'practice/create.html', {'form': form})
+        return render(self, 'practice/create.html', {'form': form})
+
+

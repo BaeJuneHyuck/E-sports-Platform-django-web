@@ -29,14 +29,18 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Competition
     template_name = 'competitions/detail.html'
-    total_competition = Competition.total_Competition()
-    today = timezone.now().strftime("%Y-%m-%d")
 
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
         """
         return Competition.objects.filter(pub_date__lte=timezone.now())
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailView, self).get_context_data(**kwargs)
+        context['total_competition'] = Competition.total_Competition()
+        context['today'] = timezone.now().strftime("%Y-%m-%d")
+        return context
 
 
 class AttendView(generic.DetailView):

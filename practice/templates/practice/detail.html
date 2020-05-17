@@ -44,14 +44,34 @@
     </table>
 </div>
 
+<div class = "comment">
+    <h3>댓글</h3>
+    <div class = "comments-list">
+        {% for comment in practice.comments.all %}
+        <a class = "btn btn-default" href = "{% url 'add_comment_to_post' pk=practice.pk %}">Add comment</a>
+        <div class = "media">
+            <div class = "media-body">
+                <h5 class = "media-heading user_name">
+                    {{ comment.comment_user }}
+                </h5>
+                {{ comment.comment_text|linebreaks }}
+            </div>
+        </div>
+        {% empty %}
+        <p>No comments here yet :(</p>
+        {% endfor %}
+    </div>
+
+</div>
+
 <div class = "pager">
-    {% if practice.id|add:'-1' != 0 %}
+    {% if practice.id|add:'-1' > 0 %}
     <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
     {% endif %}
 
     <a class = "list" href="{% url 'practice:index' %}">목록</a>
 
-    {% if practice.id|add:'1' %}
+    {% if practice.id|add:'1' <= practice.total_practice %}
     <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
     {% endif %}
 </div>
