@@ -1,17 +1,19 @@
+from django.conf import settings
 from django.db.models.functions import math
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from .models import Competition
+from .forms import ParticipateForm
+from .models import Competition, CompetitionParticipate
 from practice.models import Practice
-
 
 class IndexView(generic.ListView):
     template_name = 'competitions/index.html'
     context_object_name = 'latest_competitions_list'
-
     def get_queryset(self):
         return Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
@@ -26,6 +28,7 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Competition
     template_name = 'competitions/detail.html'
+    total_competition = Competition.total_Competition()
 
     def get_queryset(self):
         """
@@ -33,30 +36,48 @@ class DetailView(generic.DetailView):
         """
         return Competition.objects.filter(pub_date__lte=timezone.now())
 
+
 class AttendView(generic.DetailView):
-    model = Competition
+    login_url = settings.LOGIN_URL
+    model = CompetitionParticipate
     template_name = 'competitions/attend.html'
+
+    def attend(self):
+        if not self.user.is_authenticated:
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
+        if self.method == 'POST':
+            form = ParticipateForm(self.POST)
+            if form.is_valid():
+                participation = form.save(commit=False)
+                participation.save()
+                return redirect(reverse('competitions:index'))
+            else:
+                return HttpResponse('fail')
+        else:
+            form = ParticipateForm()
+        return render(self, 'competitions/attend.html', {'form': form})
+
 
 class OngoingView(generic.ListView):
     template_name = 'competitions/ongoing.html'
     context_object_name = 'latest_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')
+        return Competition.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
     def paging(request):
         competitions = Competition.objects
-        competitions_list = Competition.objects.filter(pub_date__lte = timezone.now())
+        competitions_list = Competition.objects.filter(pub_date__lte=timezone.now())
         paginator = Paginator(competitions_list, 10)
         page = request.GET.get('page', 1)
-        page_range = 5 # 페이지 범위 5
+        page_range = 5  # 페이지 범위 5
         try:
             lines = paginator.page(page)
         except PageNotAnInteger:
             lines = paginator.page(1)
         except EmptyPage:
             lines = paginator.page(paginator.num_pages)
-        current_block = math.ceil(int(page)/page_range)
+        current_block = math.ceil(int(page) / page_range)
         start_block = (current_block - 1)
         end_block = start_block + page_range
         p_range = paginator.page_range[start_block:end_block]
@@ -70,10 +91,11 @@ class ScheduledView(generic.ListView):
     context_object_name = 'scheduled_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__lt = timezone.now()).order_by('-pub_date')
+        return Competition.objects.filter(pub_date__lt=timezone.now()).order_by('-pub_date')
+
     def paging(request):
         competitions = Competition.objects
-        competitions_list = Competition.objects.filter(pub_date__lt = timezone.now())
+        competitions_list = Competition.objects.filter(pub_date__lt=timezone.now())
         paginator = Paginator(competitions_list, 1)
         page = request.GET.get('page', 1)
         try:
@@ -82,10 +104,10 @@ class ScheduledView(generic.ListView):
             lines = paginator.page(1)
         except EmptyPage:
             lines = paginator.page(paginator.num_pages)
-        context = {'samelines':lines}
+        context = {'samelines': lines}
         total_page = page.num_pages()
         posts = paginator.get_page(page)
-        return render(request, 'Ongoing.html', {'competitions' : competitions, 'posts' : posts}, context)
+        return render(request, 'Ongoing.html', {'competitions': competitions, 'posts': posts}, context)
 
 
 class PastView(generic.ListView):
@@ -93,19 +115,20 @@ class PastView(generic.ListView):
     context_object_name = 'past_competitions_list'
 
     def get_queryset(self):
-        return Competition.objects.filter(pub_date__gt = timezone.now()).order_by('-pub_date')
-    def paging(request):
+        return Competition.objects.filter(pub_date__gt=timezone.now()).order_by('-pub_date')
+
+    def paging(self):
         competitions = Competition.objects
-        competitions_list = Competition.objects.filter(pub_date__gt = timezone.now())
+        competitions_list = Competition.objects.filter(pub_date__gt=timezone.now())
         paginator = Paginator(competitions_list, 1)
-        page = request.GET.get('page', 1)
+        page = self.GET.get('page', 1)
         try:
             lines = paginator.page(page)
         except PageNotAnInteger:
             lines = paginator.page(1)
         except EmptyPage:
             lines = paginator.page(paginator.num_pages)
-        context = {'samelines':lines}
+        context = {'samelines': lines}
         total_page = page.num_pages()
         posts = paginator.get_page(page)
-        return render(request, 'Ongoing.html', {'competitions' : competitions, 'posts' : posts}, context)
+        return render(self, 'Ongoing.html', {'competitions': competitions, 'posts': posts}, context)

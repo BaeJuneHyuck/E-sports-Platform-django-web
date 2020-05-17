@@ -40,6 +40,10 @@
             <td> {{ competition.date_start }} ~ {{ competition.date_end }}</td>
         </tr>
         <tr>
+            <th>참가신청일</th>
+            <td> {{ competition.attend_start }} ~ {{ competition.attend_end }}</td>
+        </tr>
+        <tr>
             <th>게시일</th>
             <td> {{ competition.date_published }}</td>
         </tr>
@@ -59,11 +63,18 @@
 </div>
 
 <div class = "pager">
-    {% if posts.has_previous %}
+    {% if competition.id|add:'-1' > 0 %}
     <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}"> {{ competition.id|add:'-1' }}이전페이지</a>
     {% endif %}
 
-    {% if posts.has_next %}
+    {% if competition.date_start < timezone.now() }}
+    <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
+    {% elif competition.date_end > timezone.now() }}
+    <a class = "list" href="{% url 'competitions:past' %}">목록</a>
+    {% else %}
+    <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
+
+    {% if competition.id|add:'1' <= competition.total_competitoin %}
     <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">{{ competition.id|add:'1' }}다음페이지</a>
     {% endif %}
 </div>
