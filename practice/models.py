@@ -14,6 +14,9 @@ class Practice(models.Model):
     def __str__(self):
         return '[{}] {}'.format(self.id, self.title)
 
+    def total_practice(self):
+        return Practice.objects.count()
+
 class PracticeParticipate(models.Model):
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

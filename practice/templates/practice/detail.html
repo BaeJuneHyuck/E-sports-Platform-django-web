@@ -71,7 +71,7 @@
 
     <a class = "list" href="{% url 'practice:index' %}">목록</a>
 
-    {% if practice.id|add:'1' <= practice.total_practice %}
+    {% if practice.id|add:'1' <= total_practice %}
     <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
     {% endif %}
 </div>

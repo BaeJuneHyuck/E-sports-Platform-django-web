@@ -8,7 +8,6 @@ from django.views import generic
 from django.utils import timezone
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from .forms import ParticipateForm
 from .models import Competition, CompetitionParticipate
 from practice.models import Practice
 
@@ -51,17 +50,7 @@ class AttendView(generic.DetailView):
     def attend(self):
         if not self.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
-        if self.method == 'POST':
-            form = ParticipateForm(self.POST)
-            if form.is_valid():
-                participation = form.save(commit=False)
-                participation.save()
-                return redirect(reverse('competitions:index'))
-            else:
-                return HttpResponse('fail')
-        else:
-            form = ParticipateForm()
-        return render(self, 'competitions/attend.html', {'form': form})
+        return HttpResponse('not yet :(')
 
 
 class OngoingView(generic.ListView):
