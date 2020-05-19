@@ -42,6 +42,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField('사용중', default=False)
     date_joined = models.DateTimeField('가입일', default=timezone.now)
 
+    lolid = models.CharField(blank=True, max_length=30, verbose_name='LOL 계정 이름')
+    overwid = models.CharField(blank=True, max_length=30, verbose_name='오버워치 계정 이름')
+    usage_agree = models.BooleanField(default=False, verbose_name='정보 제공 동의')
     objects = UserManager()
 
     USERNAME_FIELD = 'email'  # email을 사용자의 식별자로 설정
