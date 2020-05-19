@@ -14,7 +14,7 @@ class Competition(models.Model):
     attend_end = models.DateTimeField('attend_end')
 
     @staticmethod
-    def total_Competition():
+    def total_competition():
         return Competition.objects.count()
 
 class CompetitionParticipate(models.Model):
@@ -22,11 +22,3 @@ class CompetitionParticipate(models.Model):
     team = models.CharField(max_length=100)
     avg_tier = models.IntegerField()
 
-class Comment(models.Model):
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    comment_user = models.ForeignKey('user.User', related_name='comments', on_delete=models.CASCADE)
-    comment_date = models.DateTimeField(auto_now_add=True)
-    comment_text = models.TextField()
-
-    class Meta:
-        ordering = ['-comment_date']

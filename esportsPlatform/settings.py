@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'competitions',
     'user',
     'practice',
+
+    'django.contrib.sites',
+    'disqus',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +143,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'esportsplatform2020@gmail.com'
 EMAIL_HOST_PASSWORD = 'ep2020!!'
 EMAIL_USE_TLS = True
+
+#Disqus
+SITE_ID = 1
+DISQUS_WEBSITE_SHORTNAME='esportsplatform'

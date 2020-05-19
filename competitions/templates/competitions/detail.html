@@ -67,29 +67,60 @@
     <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
     {% endif %}
 
-    {% if competition.date_start < today %}
+    {% if compare_date < 0 %}
     <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
-    {% else %}
-    <span>실패1</span>
-    {% endif %}
-    {% if competition.date_end > today %}
+    {% elif compare_date > 0 %}
     <a class = "list" href="{% url 'competitions:past' %}">목록</a>
     {% else %}
-    <span>실패2</span>
-    {% endif %}
-    {% if competition.date_start >= today and competition.date_end <= today %}
     <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
-    {% else %}
-    <span>실패3</span>
     {% endif %}
 
-    {% if competition.id|add:'1' <= competition.total_competition %}
+    {% if competition.id|add:'1' <= total_competition %}
     <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
     {% endif %}
+
+    {{ compare_date }}
 </div>
     <form action="{% url 'competitions:attend' competition.id %}" method="post">
     {% csrf_token %}
-
     <input type="submit" value="대회 참가하기">
     </form>
+
+<!-- comment -->
+<div class = "Comment">
+    {% if comments %}
+    {% for comment in comments %}
+    <p>
+        {{ comment.comment_user }}
+    </p>
+    {{ comment.comment_text | linebreaks }}
+    {% endfor %}
+    {% else %}
+    <p>
+        not comment :(
+    </p>
+    {% endif %}
+</div>
+
+<div class = "Comment">
+    {% if new_comment %}
+    <div role="alert">
+        Your comment is awaiting moderation
+    </div>
+    {% else %}
+    <h3>Leave a comment</h3>
+    <form method="post" style="margin-top: 1.3em;">
+        {{ comment_form.as_p }}
+        {% csrf_token %}
+        <button type="submit">Submit</button>
+    </form>
+    {% endif %}
+    {% load disqus_tags %}
+    <div>
+        {% disqus_show_comments %}
+    </div>
+</div>
+
+
+
 {% endblock %}

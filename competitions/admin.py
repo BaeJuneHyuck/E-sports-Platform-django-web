@@ -4,7 +4,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from . import models
-from .models import Competition, Comment
+from .models import Competition
 
 
 class CompetitionsAdmin(admin.ModelAdmin):
@@ -23,4 +23,3 @@ class CompetitionsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Competition, CompetitionsAdmin)
-admin.site.register(Comment)
