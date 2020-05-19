@@ -14,7 +14,8 @@ class Practice(models.Model):
     def __str__(self):
         return '[{}] {}'.format(self.id, self.title)
 
-    def total_practice(self):
+    @staticmethod
+    def total_practice():
         return Practice.objects.count()
 
 class PracticeParticipate(models.Model):

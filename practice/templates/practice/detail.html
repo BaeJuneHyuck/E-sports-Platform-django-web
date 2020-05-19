@@ -45,23 +45,10 @@
 </div>
 
 <div class = "comment">
-    <h3>댓글</h3>
-    <div class = "comments-list">
-        {% for comment in practice.comments.all %}
-        <a class = "btn btn-default" href = "{% url 'add_comment_to_post' pk=practice.pk %}">Add comment</a>
-        <div class = "media">
-            <div class = "media-body">
-                <h5 class = "media-heading user_name">
-                    {{ comment.comment_user }}
-                </h5>
-                {{ comment.comment_text|linebreaks }}
-            </div>
-        </div>
-        {% empty %}
-        <p>No comments here yet :(</p>
-        {% endfor %}
+    {% load disqus_tags %}
+    <div>
+        {% disqus_show_comments %}
     </div>
-
 </div>
 
 <div class = "pager">

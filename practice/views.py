@@ -23,9 +23,6 @@ class IndexView(generic.ListView):
         context['practices'] = Practice.objects.all()
         return context
 
-    def paging(self):
-        total_page = Practice.objects.all()/10
-
 class DetailView(generic.DetailView):
     model = Practice
     template_name = 'practice/detail.html'
@@ -39,6 +36,7 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         context['total_practice'] = Practice.total_practice()
+        context['today'] = timezone.now().strftime("%Y-%m-%d")
         return context
 
 class AttendView(generic.CreateView):

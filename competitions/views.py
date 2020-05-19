@@ -37,16 +37,6 @@ class DetailView(generic.DetailView):
         context['today'] = timezone.now().strftime("%Y-%m-%d")
         return context
 
-    def compare_date(self):
-        today = timezone.now()
-        if self.date_start.date() > today.date():
-            return -1
-        elif self.date_end.date() < today.date():
-            return 1
-        else:
-            return 0
-
-
 
 class AttendView(generic.DetailView):
     login_url = settings.LOGIN_URL
