@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, Team
 
 
 @admin.register(User)
@@ -21,3 +21,15 @@ class UserAdmin(admin.ModelAdmin):
     joined_at.short_description = '가입일'
     last_login_at.admin_order_field = 'last_login_at'
     last_login_at.short_description = '최근로그인'
+
+
+
+class TeamAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['team_name']}),
+        (None, {'fields': ['team_game']}),
+        (None, {'fields': ['team_master']}),
+    ]
+    list_display = ('team_name', 'team_game', 'team_master')
+
+admin.site.register(Team, TeamAdmin)

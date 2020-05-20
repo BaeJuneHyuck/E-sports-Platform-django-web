@@ -12,4 +12,5 @@ class PracticeAdmin(admin.ModelAdmin):
     def time_practice(self, obj):
         return obj.practice_time.strftime("%Y-%m-%d")
 
+
 admin.site.register(PracticeParticipate)

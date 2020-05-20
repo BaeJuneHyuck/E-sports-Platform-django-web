@@ -4,29 +4,58 @@
 {% block title %} 회원가입 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="panel panel-default registration">
-        <div class="panel-heading">
-            가입하기
-        </div>
-        <div class="panel-body">
-            <form action="." method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="form-group {% if field.errors|length > 0 %}has-error{%endif %}">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        <input name="{{ field.html_name }}" id="{{ field.id_for_lable }}" class="form-control" type="{{ field.field.widget.input_type }}" value="{{ field.value|default_if_none:'' }}">
-                        {% for error in field.errors %}
-                            <label class="control-label" for="{{ field.id_for_label }}">{{ error }}</label>
+<style>
+    .control-label{
+    color:red;
+}
+
+</style>
+<div class="bg-gradient">
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-10 col-lg-12 col-md-9">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6">
+                <div class="p-5 panel panel-default registration">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">회원가입</h1>
+                  </div>
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group {% if field.errors|length > 0 %}has-error{%endif %}">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <input name="{{ field.html_name }}" id="{{ field.id_for_lable }}" class="form-control" type="{{ field.field.widget.input_type }}" value="{{ field.value|default_if_none:'' }}">
+                                {% for error in field.errors %}
+                                    <label class="control-label" for="{{ field.id_for_label }}">{{ error }}</label>
+                                {% endfor %}
+                            </div>
                         {% endfor %}
-                    </div>
-                {% endfor %}
-                <div class="form-actions">
-                    <button class="btn btn-primary btn-large" type="submit">가입하기</button>
+                        <div class="form-actions">
+                            <button class="btn btn-primary btn-user btn-block" type="submit">가입하기</button>
+                        </div>
+                    </form>
+                  <hr>
+
                 </div>
-            </form>
+              </div>
+            </div>
+          </div>
         </div>
+
+      </div>
+
     </div>
-</div>
+
+  </div>
 
 {% endblock content %}
