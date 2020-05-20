@@ -24,3 +24,13 @@ class PracticeParticipate(models.Model):
 
     def __str__(self):
         return '[{}] {}-{}'.format(self.id, self.practice, self.user)
+
+class Comment(models.Model):
+    practice = models.ForeignKey(Practice, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{} : {}'.format(self.author, self.content)
