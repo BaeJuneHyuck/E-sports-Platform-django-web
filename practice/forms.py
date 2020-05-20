@@ -1,5 +1,5 @@
 from django import forms
-from .models import Practice
+from .models import Practice, Comment
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 GAME=[
@@ -17,3 +17,10 @@ class PracticeCreateForm(forms.ModelForm):
     class Meta:
         model = Practice
         fields = ['title', 'text', 'game', 'tier', 'practice_time']
+
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(max_length=600, widget=forms.Textarea)
+
+    class Meta:
+        model = Comment
+        fields = ['content']

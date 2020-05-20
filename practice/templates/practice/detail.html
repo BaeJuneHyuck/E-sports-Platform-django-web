@@ -35,20 +35,37 @@
         </tr>
         <tr>
             <th>연습일</th>
-            <td> {{ practice.practice_time|date:"Y-m-d" }} </td>
+            <td> {{ practice.practice_time|date:"Y-m-d h:m" }} </td>
         </tr>
         <tr>
             <th>게시일</th>
-            <td> {{ practice.pub_date|date:"Y-m-d" }} </td>
+            <td> {{ practice.pub_date|date:"Y-m-d h:m" }} </td>
         </tr>
     </table>
 </div>
 
 <div class = "comment">
-    {% load disqus_tags %}
-    <div>
-        {% disqus_show_comments %}
-    </div>
+    <h3>Comments</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+</div>
+
+<div class = "comment">
+    <table>
+        <tr>
+            <th>작성자</th>
+            <th>내용</th>
+        </tr>
+        {% for comment in comments %}
+        <tr>
+            <td>{{ comment.author.name }}</td>
+            <td>{{ comment.content }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 <div class = "pager">

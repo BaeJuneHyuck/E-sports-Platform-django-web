@@ -1,5 +1,6 @@
 from django.contrib import admin
-from  .models import Practice, PracticeParticipate
+from .models import Practice, PracticeParticipate, Comment
+
 
 @admin.register(Practice)
 class PracticeAdmin(admin.ModelAdmin):
@@ -12,5 +13,5 @@ class PracticeAdmin(admin.ModelAdmin):
     def time_practice(self, obj):
         return obj.practice_time.strftime("%Y-%m-%d")
 
-
 admin.site.register(PracticeParticipate)
+admin.site.register(Comment)
