@@ -2,11 +2,12 @@ from django.views.generic import CreateView
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
-from user.forms import UserRegistrationForm, LoginForm
+from user.forms import UserRegistrationForm, LoginForm, UserMypageForm
 from django.contrib import messages
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # email 발송
 from django.contrib.auth.tokens import default_token_generator
@@ -14,7 +15,7 @@ from esportsPlatform import settings
 from django.views.generic import CreateView, FormView
 from .mixins import VerifyEmailMixin
 from .forms import VerificationEmailForm
-
+from .models import User
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
     template_name = 'user/user_model.html'
@@ -37,6 +38,27 @@ class UserLoginView(LoginView):
     def form_invalid(self, form):
         messages.error(self.request, '로그인에 실패하였습니다.', extra_tags='danger')
         return super().form_invalid(form)
+
+
+class UserMypageView(UpdateView):
+    model = get_user_model()
+    template_name = 'user/mypage.html'
+    #fields = ['lolid']
+    form_class= UserMypageForm
+
+    def get(self, request):
+        form = UserMypageForm(instance=request.user)
+        args = {'form': form}
+        return render(request, self.template_name, args)
+
+    def post(self, request):
+        form = UserMypageForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/user/mypage/')
+
+        args = {'form': form}
+        return render(request, self.template_name, args)
 
 
 class UserVerificationView(TemplateView):

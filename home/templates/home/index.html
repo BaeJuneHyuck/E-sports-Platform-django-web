@@ -4,44 +4,6 @@
 {% block title %} esportsPlatform {% endblock %}
 
 {% block content %}
-
-    {% if self.user.is_authenticated %}
-    <div class="topmain">
-    {% else %}
-    <div class="top">
-    {% endif %}
-      <div class="topnav">
-          <div class="topnav-centered">
-              <a href="/" class="active">Home</a>
-          </div>
-
-          <a>E-platform</a>
-
-          <div class="topnav-right">
-              {% if self.user.is_authenticated %}
-              <a href="/user/logout/">로그아웃</a>
-              {% else %}
-              <a href="/user/registration/">회원가입</a>
-              <a href="/user/login/">로그인</a>
-              {% endif %}
-          </div>
-      </div>
-      {% if self.user.is_authenticated %}
-        <div class="banner">
-            <div class="logo">
-
-            </div>
-            <a href="competitions/1/">
-            <div class="button">
-                참가하기
-            </div>
-            </a>
-
-        </div>
-      {% endif %}
-      </div>
-    </div>
-
     <div class="competition">
         <div class="contents">
             <div class="contents_title">
