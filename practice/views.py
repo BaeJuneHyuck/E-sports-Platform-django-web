@@ -12,16 +12,27 @@ from django.conf import settings
 
 
 class IndexView(generic.ListView):
+    model = Practice
     template_name = 'practice/index.html'
-    context_object_name = 'latest_practice_list'
+    context_object_name = 'practices'
     paginate_by = 10
-
-    def get_queryset(self):
-        return Practice.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['practices'] = Practice.objects.all()
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
         return context
 
 class DetailView(generic.DetailView):
@@ -66,6 +77,7 @@ class CreateView(generic.CreateView):
         if not self.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
 
+        form = PracticeCreateForm(self.POST)
         if self.method == 'POST':
             form = PracticeCreateForm(self.POST)
             if form.is_valid():
@@ -74,8 +86,7 @@ class CreateView(generic.CreateView):
                 practice.save()
                 return redirect(reverse('practice:index'))
             else:
-                return HttpResponse('fail')
-        else:
+                return render(self, 'practice/create.html', {'form': form})
             form = PracticeCreateForm()
         return render(self, 'practice/create.html', {'form': form})
 

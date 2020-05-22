@@ -1,6 +1,8 @@
 
 {% extends "home/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block title %} esportsPlatform : competition-detail{% endblock %}
 
 {% block content %}
@@ -8,8 +10,8 @@
     <h2>연습경기 생성</h2>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_ul }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        {{ form | crispy }}
+        <button type="submit" class="save btn btn-success">Save practice</button>
     </form>
 </div>
 {% endblock %}

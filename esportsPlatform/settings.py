@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'disqus',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,6 @@ EMAIL_USE_TLS = True
 #Disqus
 SITE_ID = 1
 DISQUS_WEBSITE_SHORTNAME='esportsplatform'
+
+#Crispy
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
