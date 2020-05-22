@@ -9,6 +9,7 @@ from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
+from django.views import generic
 # email 발송
 from django.contrib.auth.tokens import default_token_generator
 from esportsPlatform import settings

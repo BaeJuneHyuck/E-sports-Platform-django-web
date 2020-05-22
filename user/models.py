@@ -45,6 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     lolid = models.CharField(blank=True, max_length=30, verbose_name='LOL 계정 이름')
     overwid = models.CharField(blank=True, max_length=30, verbose_name='오버워치 계정 이름')
     usage_agree = models.BooleanField(default=False, verbose_name='정보 제공 동의')
+    message = models.CharField('인사말', max_length=300, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'  # email을 사용자의 식별자로 설정
@@ -57,12 +59,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):  # 이메일 발송 메소드
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
-
-class Team(models.Model):
-    team_name = models.CharField(max_length=200)
-    team_master = models.CharField(max_length=600)
-    team_game = models.IntegerField()
-
-    def __str__(self):
-        return '[{}] 팀장 : {}'.format(self.name, self.master)

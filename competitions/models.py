@@ -1,7 +1,7 @@
 from django.db import models
 
 from user.models import User
-
+from team.models import Team
 
 class Competition(models.Model):
     competition_text = models.CharField(max_length=100)
@@ -19,6 +19,6 @@ class Competition(models.Model):
 
 class CompetitionParticipate(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
-    team = models.CharField(max_length=100)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     avg_tier = models.IntegerField()
 

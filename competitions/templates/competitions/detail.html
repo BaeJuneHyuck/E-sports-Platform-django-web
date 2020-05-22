@@ -5,122 +5,123 @@
 
 {% block content %}
 
+<div class ="container mt-3">
 
-
-<div class = "contents_detail">
-    <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
-    {% if competition.competition_game in 'LOL' %}
-    <a href = "https://kr.leagueoflegends.com/ko-kr/">
-    <img class = "competition_img" src = "/static/competitions/images/lol.jpg">
-    </a>
-    {% elif competition.competition_game in 'Overwatch' %}
-    <a href = "https://playoverwatch.com/ko-kr/">
-    <img class = "competition_img" src = "/static/competitions/images/overwatch.jpg">
-    </a>
-    {% endif %}
-    <table class = "contents_table">
-        <tr>
-            <th>게임분야</th>
-            <td> {{ competition.competition_game }} </td>
-        </tr>
-        <tr>
-            <th>주최자</th>
-            <td> {{ competition.competition_author}} </td>
-        </tr>
-        <tr>
-            <th>참가자격</th>
-            <td> {{ competition.competition_qualification }} </td>
-        </tr>
-        <tr>
-            <th>참가신청일</th>
-            <td> {{ competition.pub_date }} </td>
-        </tr>
-        <tr>
-            <th>대회일</th>
-            <td> {{ competition.date_start|date:"Y-m-d" }} ~ {{ competition.date_end|date:"Y-m-d" }}</td>
-        </tr>
-        <tr>
-            <th>참가신청일</th>
-            <td> {{ competition.attend_start|date:"Y-m-d" }} ~ {{ competition.attend_end|date:"Y-m-d" }}</td>
-        </tr>
-        <tr>
-            <th>게시일</th>
-            <td> {{ competition.date_published|date:"Y-m-d" }}</td>
-        </tr>
-        <tr>
-            <th>대회소개</th>
-            <td> {{ competition.description }} </td>
-        </tr>
-        <tr>
-            <th>홈페이지</th>
-            {% if competition.competition_game in 'LOL' %}
-            <td><a href="https://kr.leagueoflegends.com/ko-kr/">https://kr.leagueoflegends.com/ko-kr/</a>
-            {% elif competition.competition_game in 'Overwatch' %}
-            <td><a href="https://playoverwatch.com/ko-kr/">https://playoverwatch.com/ko-kr/</a>
-            {% endif %}
-        </tr>
-    </table>
-</div>
-
-<div class = "pager">
-    {% if competition.id|add:'-1' > 0 %}
-    <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
-    {% endif %}
-
-    {% if compare_date < 0 %}
-    <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
-    {% elif compare_date > 0 %}
-    <a class = "list" href="{% url 'competitions:past' %}">목록</a>
-    {% else %}
-    <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
-    {% endif %}
-
-    {% if competition.id|add:'1' <= total_competition %}
-    <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
-    {% endif %}
-
-    {{ compare_date }}
-</div>
-    <form action="{% url 'competitions:attend' competition.id %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="대회 참가하기">
-    </form>
-
-<!-- comment -->
-<div class = "Comment">
-    {% if comments %}
-    {% for comment in comments %}
-    <p>
-        {{ comment.comment_user }}
-    </p>
-    {{ comment.comment_text | linebreaks }}
-    {% endfor %}
-    {% else %}
-    <p>
-        not comment :(
-    </p>
-    {% endif %}
-</div>
-
-<div class = "Comment">
-    {% if new_comment %}
-    <div role="alert">
-        Your comment is awaiting moderation
+    <div class = "contents_detail"  >
+        <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
+        {% if competition.competition_game in 'LOL' %}
+        <a href = "https://kr.leagueoflegends.com/ko-kr/">
+        <img class = "competition_img" src = "/static/competitions/images/lol.jpg">
+        </a>
+        {% elif competition.competition_game in 'Overwatch' %}
+        <a href = "https://playoverwatch.com/ko-kr/">
+        <img class = "competition_img" src = "/static/competitions/images/overwatch.jpg">
+        </a>
+        {% endif %}
+        <table class = "contents_table">
+            <tr>
+                <th>게임분야</th>
+                <td> {{ competition.competition_game }} </td>
+            </tr>
+            <tr>
+                <th>주최자</th>
+                <td> {{ competition.competition_author}} </td>
+            </tr>
+            <tr>
+                <th>참가자격</th>
+                <td> {{ competition.competition_qualification }} </td>
+            </tr>
+            <tr>
+                <th>참가신청일</th>
+                <td> {{ competition.pub_date }} </td>
+            </tr>
+            <tr>
+                <th>대회일</th>
+                <td> {{ competition.date_start|date:"Y-m-d" }} ~ {{ competition.date_end|date:"Y-m-d" }}</td>
+            </tr>
+            <tr>
+                <th>참가신청일</th>
+                <td> {{ competition.attend_start|date:"Y-m-d" }} ~ {{ competition.attend_end|date:"Y-m-d" }}</td>
+            </tr>
+            <tr>
+                <th>게시일</th>
+                <td> {{ competition.date_published|date:"Y-m-d" }}</td>
+            </tr>
+            <tr>
+                <th>대회소개</th>
+                <td> {{ competition.description }} </td>
+            </tr>
+            <tr>
+                <th>홈페이지</th>
+                {% if competition.competition_game in 'LOL' %}
+                <td><a href="https://kr.leagueoflegends.com/ko-kr/">https://kr.leagueoflegends.com/ko-kr/</a>
+                {% elif competition.competition_game in 'Overwatch' %}
+                <td><a href="https://playoverwatch.com/ko-kr/">https://playoverwatch.com/ko-kr/</a>
+                {% endif %}
+            </tr>
+        </table>
     </div>
-    {% else %}
-    <h3>Leave a comment</h3>
-    <form method="post" style="margin-top: 1.3em;">
-        {{ comment_form.as_p }}
+
+    <div class = "pager">
+        {% if competition.id|add:'-1' > 0 %}
+        <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
+        {% endif %}
+
+        {% if compare_date < 0 %}
+        <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
+        {% elif compare_date > 0 %}
+        <a class = "list" href="{% url 'competitions:past' %}">목록</a>
+        {% else %}
+        <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
+        {% endif %}
+
+        {% if competition.id|add:'1' <= total_competition %}
+        <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
+        {% endif %}
+
+        {{ compare_date }}
+    </div>
+        <form action="{% url 'competitions:attend' competition.id %}" method="post">
         {% csrf_token %}
-        <button type="submit">Submit</button>
-    </form>
-    {% endif %}
-    {% load disqus_tags %}
-    <div>
-        {% disqus_show_comments %}
-    </div>
-</div>
+        <input type="submit" value="대회 참가하기">
+        </form>
 
+    <!-- comment -->
+    <div class = "Comment">
+        {% if comments %}
+        {% for comment in comments %}
+        <p>
+            {{ comment.comment_user }}
+        </p>
+        {{ comment.comment_text | linebreaks }}
+        {% endfor %}
+        {% else %}
+        <p>
+            not comment :(
+        </p>
+        {% endif %}
+    </div>
+
+    <div class = "Comment">
+        {% if new_comment %}
+        <div role="alert">
+            Your comment is awaiting moderation
+        </div>
+        {% else %}
+        <h3>Leave a comment</h3>
+        <form method="post" style="margin-top: 1.3em;">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <button type="submit">Submit</button>
+        </form>
+        {% endif %}
+        {% load disqus_tags %}
+        <div>
+            {% disqus_show_comments %}
+        </div>
+    </div>
+
+</div>
 
 
 {% endblock %}

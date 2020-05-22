@@ -4,8 +4,9 @@
 {% block title %} esportsPlatform : practice-detail{% endblock %}
 
 {% block content %}
+<div class = "container mt-3">
 
-<div class = "practice_detail">
+    <div class = "practice_detail">
     <h1 class = "practice_name"> {{ practice.title }} </h1>
     {% if practice.game in 'lol' %}
     <a href = "https://kr.leagueoflegends.com/ko-kr/">
@@ -54,15 +55,20 @@
 </div>
 
 <div class = "comment">
-    <table>
+    <table class="table table-dark">
         <tr>
             <th>작성자</th>
             <th>내용</th>
+            <th></th>
         </tr>
         {% for comment in comments %}
         <tr>
             <td>{{ comment.author.name }}</td>
             <td>{{ comment.content }}</td>
+            {% if comment.author.name == request.user.name %}
+            <td style="text-align:right">삭제</td>
+            {% endif %}
+
         </tr>
         {% endfor %}
     </table>
@@ -81,7 +87,5 @@
 </div>
 
 
-
-
-
+</div>
 {% endblock %}

@@ -1,11 +1,11 @@
 
 {% extends "home/base.html" %}
 
-{% block title %} esportsPlatform : competition-detail{% endblock %}
+{% block title %} 새로운 팀 생성{% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-    <h2>연습경기 생성</h2>
+    <h2>새로운 팀 생성</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_ul }}

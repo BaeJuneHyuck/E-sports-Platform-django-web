@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'competitions',
     'user',
     'practice',
+    'team',
 
     'django.contrib.sites',
     'disqus',

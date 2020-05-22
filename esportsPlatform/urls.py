@@ -24,6 +24,7 @@ urlpatterns = [
     url('competitions/', include('competitions.urls')),
     url('practice/', include('practice.urls')),
     url('user/', include('user.urls')),
+    url('team/', include('team.urls')),
 
     path('admin/', admin.site.urls),
 ]

@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import User, Team
+from .models import User
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'email', 'name', 'joined_at', 'last_login_at', 'is_superuser', 'is_active')
+    list_display = ('id', 'email', 'name',  'message', 'joined_at', 'last_login_at', 'is_superuser', 'is_active')
     list_display_links = ('id', 'email')
     exclude = ('password',)                           # 사용자 상세 정보에서 비밀번호 필드를 노출하지 않음
 
@@ -22,14 +22,3 @@ class UserAdmin(admin.ModelAdmin):
     last_login_at.admin_order_field = 'last_login_at'
     last_login_at.short_description = '최근로그인'
 
-
-
-class TeamAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['team_name']}),
-        (None, {'fields': ['team_game']}),
-        (None, {'fields': ['team_master']}),
-    ]
-    list_display = ('team_name', 'team_game', 'team_master')
-
-admin.site.register(Team, TeamAdmin)

@@ -5,11 +5,11 @@
 
 {% block content %}
 <div class="container mt-3">
-    <h2>연습경기 생성</h2>
+    <h2>팀 참가하기</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_ul }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="save btn btn-primary">참가합니다</button>
     </form>
 </div>
 {% endblock %}
