@@ -5,13 +5,13 @@
 
 {% block content %}
 
-    <div class="container bg-primary mt-3">
+    <div class="competition">
         <div class="contents">
-            <div class="contents_title">
-                <a href="/team/myteams">내가 속한 팀</a>
+            <div class="contents_title" >
+                <a href="/team/myteam/" data-toggle="tooltip" data-placement="right" title="더보기">내가 속한 팀</a>
             </div>
             {% if teams %}
-                <table class="table table-dark">
+                <table class="table table table-hover text-white">
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
@@ -31,10 +31,10 @@
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/team/list">팀원 구함</a>
+                <a href="/team/list" data-toggle="tooltip" data-placement="right" title="더보기">팀원 구함</a>
             </div>
             {% if visible %}
-                <table class="table table-dark">
+                <table class="table table-hover text-white">
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
@@ -55,9 +55,25 @@
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/competitions/invite">팀 초대</a>
+                <a href="/team/myinvitation" data-toggle="tooltip" data-placement="right" title="더보기">받은 초대</a>
             </div>
-
+            {% if invitations %}
+                <table class="table table-hover text-white">
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">팀명</th>
+                          <th scope="col">초대한사람</th>
+                        </tr>
+                    {% for invitation in invitations %}
+                    <tr>
+                    <td><a href="{% url 'team:invitation' invitation.pk %}">{{ invitation.team_pk }}</a></td>
+                    <td>{{ invitation.inviter_pk }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> 받은 초대가 없습니다.</p>
+            {% endif %}
         </div>
 
         <div class="contents">

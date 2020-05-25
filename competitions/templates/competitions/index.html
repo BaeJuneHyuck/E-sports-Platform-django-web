@@ -3,12 +3,13 @@
 
 {% block title %} esportsPlatform {% endblock %}
 
+
 {% block content %}
 
     <div class="competition">
         <div class="contents">
             <div class="contents_title">
-            <a href="/competitions/ongoing">진행중인 대회</a>
+            <a href="/competitions/ongoing"  data-toggle="tooltip" data-placement="right" title="더보기">진행중인 대회</a>
             </div>
             {% if ongoings %}
                 <ul>
@@ -23,7 +24,7 @@
 
         <div class="contents">
             <div class="contents_title">
-                <a href="/competitions/scheduled">예정 대회</a>
+                <a href="/competitions/scheduled"  data-toggle="tooltip" data-placement="right" title="더보기">예정 대회</a>
             </div>
             {% if scheduleds %}
                 <ul>
@@ -38,7 +39,7 @@
 
         <div class = "contents">
             <div class = "contents_title">
-                <a href="/competitions/past">지난 대회</a>
+                <a href="/competitions/past"  data-toggle="tooltip" data-placement="right" title="더보기">지난 대회</a>
             </div>
             {% if pasts %}
                 <ul>

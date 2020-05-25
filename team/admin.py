@@ -20,9 +20,12 @@ class TeamInvitationAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['team_pk']}),
         (None, {'fields': ['inviter_pk']}),
-        (None, {'fields': ['invited_pk']})
+        (None, {'fields': ['invited_pk']}),
+        (None, {'fields': ['accepted']}),
+        (None, {'fields': ['checked']})
+
     ]
-    list_display = ('team_pk', 'inviter_pk','invited_pk')
+    list_display = ('team_pk', 'inviter_pk','invited_pk', 'accepted', 'checked')
 
 admin.site.register(TeamInvitation, TeamInvitationAdmin)
 

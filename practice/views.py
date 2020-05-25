@@ -7,6 +7,7 @@ from django.utils import timezone
 from user.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PracticeCreateForm, CommentForm
+from team.models import TeamInvitation
 from practice.models import Practice, Comment
 from django.conf import settings
 
@@ -33,6 +34,8 @@ class IndexView(generic.ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+
         return context
 
 class DetailView(generic.DetailView):
@@ -87,7 +90,6 @@ class CreateView(generic.CreateView):
                 return redirect(reverse('practice:index'))
             else:
                 return render(self, 'practice/create.html', {'form': form})
-            form = PracticeCreateForm()
         return render(self, 'practice/create.html', {'form': form})
 
 

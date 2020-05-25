@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.utils import timezone
 from .models import Competition, CompetitionParticipate
-
+from team.models import TeamInvitation
 
 class IndexView(generic.ListView):
     template_name = 'competitions/index.html'
@@ -20,6 +20,7 @@ class IndexView(generic.ListView):
             Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by('-pub_date')[:5]
         context['scheduleds'] = Competition.objects.filter(date_start__gt=timezone.now()).order_by('-pub_date')[:5]
         context['pasts'] = Competition.objects.filter(date_end__lt=timezone.now()).order_by('-pub_date')[:5]
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         return context
 
 
@@ -35,6 +36,7 @@ class DetailView(generic.DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
         context['total_competition'] = Competition.total_competition()
         context['today'] = timezone.now().strftime("%Y-%m-%d")
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         return context
 
 
@@ -57,6 +59,11 @@ class OngoingView(generic.ListView):
         return Competition.objects.filter(Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by(
             '-pub_date')
 
+    def get_context_data(self, **kwargs):
+        context = super(OngoingView, self).get_context_data(**kwargs)
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        return context
+
 
 class ScheduledView(generic.ListView):
     template_name = 'competitions/scheduled.html'
@@ -65,6 +72,11 @@ class ScheduledView(generic.ListView):
     def get_queryset(self):
         return Competition.objects.filter(date_start__gt=timezone.now()).order_by('-pub_date')
 
+    def get_context_data(self, **kwargs):
+        context = super(ScheduledView, self).get_context_data(**kwargs)
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        return context
+
 
 class PastView(generic.ListView):
     template_name = 'competitions/past.html'
@@ -72,3 +84,8 @@ class PastView(generic.ListView):
 
     def get_queryset(self):
         return Competition.objects.filter(date_end__lt=timezone.now()).order_by('-pub_date')
+
+    def get_context_data(self, **kwargs):
+        context = super(PastView, self).get_context_data(**kwargs)
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        return context

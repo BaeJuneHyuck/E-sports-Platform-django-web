@@ -5,41 +5,40 @@
 
 {% block content %}
 
+    <div class="competition">
 
-    <div class="practice">
-        <div class="contents_list">
-            <div class="contents_title">
-            <a href="/practice">연습 경기</a>
+        <div class="contents mb-0">
+            <div class="contents_title row">
+                <div class="col-sm">
+                    <a href="/team/list">팀원 구함</a>
+                </div>
+                <div class="col-sm">
+                    <form action="" method="get" class="form-inline md-form form-sm mt-0 float-right">
+                       <i class="fas fa-search" aria-hidden="true"></i>
+                        <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ q }}">
+                      <input type="submit" value="검색">
+                    </form>
+                </div>
             </div>
-            {% if practices %}
-            <table class = "practice_list table table-hover text-white">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>게임</th>
-                    <th>티어</th>
-                    <th>연습일</th>
-                    <th>게시일</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for practice in practices %}
-                <tr>
-                    <th>{{ practice.id }}</th>
-                    <td><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></td>
-                    <td>{{ practice.game }}</td>
-                    <td>{{ practice.tier }}</td>
-                    <td>{{ practice.practice_time|date:"Y-m-d" }}</td>
-                    <td>{{ practice.pub_date|date:"Y-m-d" }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if teams %}
+                <table class="table table-dark">
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">팀명</th>
+                          <th scope="col">게임</th>
+                        </tr>
+                    {% for team in teams %}
+                    <tr>
+                    <td><a href="{% url 'team:detail' team.pk %}">{{ team.name }}</a></td>
+                    <td>{{ team.game }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
             {% else %}
-            <p>현재 연습 경기가 없습니다.</p>
+                <p> 팀원을 찾는 팀이 없습니다.</p>
             {% endif %}
         </div>
+
 
         {# Pagination #}
         <div class="pagination">
@@ -81,9 +80,6 @@
         </nav>
         {% endif %}
         </div>
-        <a href="{% url 'practice:create' %}">연습경기 생성</a>
+
     </div>
-
-
-
 {% endblock %}
