@@ -1,46 +1,65 @@
 
 {% extends "home/base.html" %}
 
-{% block title %} {{ team.name }} {% endblock %}
+{% block title %} {{ team.name }} 팀정보 {% endblock %}
 
 {% block content %}
-<div class = "container mt-3">
-<script text="text/javascript">var attending = false</script>
-    <div class = "practice_detail">
-    <h1 class = "practice_name"> {{ team.name }} : {{ team.game}}</h1>
+    <div class = "container ">
+        <div class = "border border-primary rounded bg-light mt-3 p-5 " >
+            <script text="text/javascript">var attending = false</script>
+            <div class = "practice_detail">
+                <h1 class = "practice_name">  {{ team.name }}</h1> <h5 class = "practice_name">  게임 : {{ team.game }}</h5>
+                {% if team.visible %}
+                    팀종류 : 공개팀
+                {% else %}
+                    팀종류 : 팀공개팀
+                {% endif %}
+                <div class="card-footer bg-transparent border-primary"></div>
 
-    {% if team.visible %}
-        <h3 class = "practice_name"> 팀원 모집중 </h3>
-    {% else %}
-        <h3 class = "practice_name"> 비공개 팀 </h3>
-    {% endif %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="row" style="margin:20px auto;">
+                        <div class="col-sm-12">
+                            <div class="alert alert-primary">
+                                {{ message.message }}
+                            </div>
+                        </div>
+                        </div><!-- Logout Modal-->
+                    {% endfor %}
+                {% endif %}
 
-     <table class = "contents_table table .head-light">
+                    팀원
+                 <table class = "contents_table table .head-light m-0">
 
-        {% for member in members %}
-         {% if user.name == member.user_pk.name %} <script text="text/javascript">var attending = true</script>
-         {% endif %}
+                    {% for member in members %}
+                     {% if user.name == member.user_pk.name %} <script text="text/javascript">var attending = true</script>
+                     {% endif %}
 
-        {% if member.user_pk.name == team.master.name %}
-        <tr>
-            <td style="color:red">{{ member.user_pk.name }}(팀장)</td>
-        </tr>
-        {% else %}
-        <tr>
-             <td>{{ member.user_pk.name }}</td>
-        </tr>
-        {% endif %}
+                    {% if member.user_pk.name == team.master.name %}
+                    <tr>
+                        <td style="color:red">{{ member.user_pk.name }}(팀장)</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                         <td style="color:black">{{ member.user_pk.name }}</td>
+                    </tr>
+                    {% endif %}
 
-        {% endfor %}
-    </table>
+                    {% endfor %}
+                </table>
 
-    <a href="/team/attend/{{team.pk}}" id="attend" class="btn btn-primary" role="button">팀 참가하기</a>
-        <script>
-            if(attending) {
-                button = document.getElementById("attend");
-                button.innerHTML = "팀원 초대하기";
-                button.href="/team/invite/{{team.pk}}";
-            }
-        </script>
-</div>
+                <div class="card-footer bg-transparent border-primary"></div>
+                <a href="/team/attend/{{team.pk}}" id="attend" class="btn btn-primary" role="button">팀 참가하기</a>
+                    <script>
+                        if(attending) {
+                            button = document.getElementById("attend");
+                            button.innerHTML = "팀원 초대하기";
+                            button.href="/team/invite/{{team.pk}}";
+                        }
+                    </script>
+
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

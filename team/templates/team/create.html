@@ -1,15 +1,17 @@
 
 {% extends "home/base.html" %}
-
+{% load crispy_forms_tags %}
 {% block title %} 새로운 팀 생성{% endblock %}
 
 {% block content %}
-<div class="container mt-3">
-    <h2>새로운 팀 생성</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_ul }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+<div class="container">
+    <div class="border border-primary rounded bg-light mt-3 p-5 ">
+        <h2>새로운 팀 생성</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

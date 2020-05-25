@@ -5,41 +5,31 @@
 
 {% block content %}
 
+    <div class="competition">
 
-    <div class="practice">
-        <div class="contents_list">
+        <div class="contents mb-0">
             <div class="contents_title">
-            <a href="/practice">연습 경기</a>
+                <a href="/team/myteam">내 팀</a>
             </div>
-            {% if practices %}
-            <table class = "practice_list table table-hover text-white">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>게임</th>
-                    <th>티어</th>
-                    <th>연습일</th>
-                    <th>게시일</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for practice in practices %}
-                <tr>
-                    <th>{{ practice.id }}</th>
-                    <td><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></td>
-                    <td>{{ practice.game }}</td>
-                    <td>{{ practice.tier }}</td>
-                    <td>{{ practice.practice_time|date:"Y-m-d" }}</td>
-                    <td>{{ practice.pub_date|date:"Y-m-d" }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if myteams %}
+                <table class="table table-hover text-white">
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">팀명</th>
+                          <th scope="col">게임</th>
+                        </tr>
+                    {% for team in myteams %}
+                    <tr>
+                    <td><a href="{% url 'team:detail' team.team_pk.pk %}">{{ team.team_pk }}</a></td>
+                    <td>{{ team.team_pk.game }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
             {% else %}
-            <p>현재 연습 경기가 없습니다.</p>
+                <p> 내가 가입한 팀이 없습니다.</p>
             {% endif %}
         </div>
+
 
         {# Pagination #}
         <div class="pagination">
@@ -81,9 +71,7 @@
         </nav>
         {% endif %}
         </div>
-        <a href="{% url 'practice:create' %}">연습경기 생성</a>
+
+
     </div>
-
-
-
 {% endblock %}

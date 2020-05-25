@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team, TeamRelation
+from .models import Team, TeamRelation, TeamInvitation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 GAME=[
@@ -28,4 +28,25 @@ class TeamRelationCreateForm(forms.ModelForm):
         widgets = {
             'team_pk ': forms.HiddenInput,
             'user_pk ': forms.HiddenInput
+        }
+
+class TeamInvitationCreateForm(forms.ModelForm):
+    name = forms.CharField(max_length=200, label='유저 이름')
+
+    class Meta:
+        model = TeamInvitation
+        fields = []
+        widgets = {
+            'team_pk ': forms.HiddenInput,
+            'inviter_pk ': forms.HiddenInput,
+            'invited_pk ' : forms.HiddenInput
+        }
+
+
+class TeamInvitationUpdateForm(forms.ModelForm):
+    class Meta:
+        model = TeamInvitation
+        fields = ('accepted',)
+        widgets = {
+            'checked': forms.HiddenInput
         }
