@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import User
+from .models import lol_record
 
 
 @admin.register(User)
@@ -22,3 +23,4 @@ class UserAdmin(admin.ModelAdmin):
     last_login_at.admin_order_field = 'last_login_at'
     last_login_at.short_description = '최근로그인'
 
+admin.site.register(lol_record)

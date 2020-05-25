@@ -27,7 +27,7 @@ def LoLCrawling(Container,soup):
     baron = []
     dragon = []
     tower = []
-    dmage = []
+    damage = []
     pinkWard = []
     wardSet = []
     wardDel = []
@@ -106,7 +106,7 @@ def LoLCrawling(Container,soup):
         pWard = i.find_next("span", {"class" :{"SightWard"}})
         ward = i.find_next("div", {"class" :{"Stats"}})
         nickName.append(name.text)
-        dmage.append(dmg.text)
+        damage.append(dmg.text.replace(",",""))
         pinkWard.append(pWard.text)
         wardlist = ward.text.replace("\n", "").replace("\t","").replace(" ", "").split("/")
         wardSet.append(wardlist[0])
@@ -133,7 +133,7 @@ def LoLCrawling(Container,soup):
     Container['baron'] = baron
     Container['dragon'] = dragon
     Container['tower'] = tower
-    Container['dmage'] = dmage
+    Container['damage'] = damage
     Container['pinkward'] = pinkWard
     Container['wardSet'] = wardSet
     Container['wardDel'] = wardDel
@@ -224,7 +224,7 @@ if __name__ == "__main__":
         exit(0)
 
     db = sqlite3.connect('db.sqlite3')
-    cursor = db.cursor()
 
-    df = pd.DataFrame(Dic, index=Dic['gameId'])
-    df.to_sql('lol_record', db, if_exists='replace')
+
+    df = pd.DataFrame(Dic)
+    df.to_sql('user_lol_record', db, if_exists='append', index = False)
