@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+import django.db.models.manager 
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -59,3 +60,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):  # 이메일 발송 메소드
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+class lol_record(models.Model):
+    nickName = models.CharField('nickName', max_length=20)
+    gameId = models.IntegerField('gameId', unique=True, primary_key=True)
+    outCome = models.CharField('outCome', max_length=5)
+    gameType = models.CharField('gameType',max_length=5)
+    startTime = models.IntegerField('startTime')
+    playTime = models.IntegerField('playTime')
+    champion = models.CharField('champion', max_length=20)
+    mainRune = models.CharField('mainRune', max_length=10)
+    subRune = models.CharField('subRune', max_length=5)
+    dSpell = models.CharField('dSpell', max_length=10)
+    fSpell = models.CharField('fSpell',max_length=5)
+    level = models.IntegerField('level')
+    killratio = models.IntegerField('killratio')
+    kill = models.IntegerField('Kill')
+    death = models.IntegerField('death')
+    assist = models.IntegerField('assist')
+    cs = models.IntegerField('cs')
+    baron = models.IntegerField('baron')
+    dragon = models.IntegerField('dragon')
+    tower = models.IntegerField('tower')
+    damage = models.IntegerField('damage')
+    pinkWard = models.IntegerField('pinkWart')
+    wardSet = models.IntegerField('wardSet')
+    wardDel = models.IntegerField('wardDel') 
+    
+    def __str__(self):
+        return '{}_{}'.format(self.nickName, self.gameId)

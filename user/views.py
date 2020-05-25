@@ -1,4 +1,4 @@
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -17,6 +17,7 @@ from django.views.generic import CreateView, FormView
 from .mixins import VerifyEmailMixin
 from .forms import VerificationEmailForm
 from .models import User
+from .models import lol_record
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
     template_name = 'user/user_model.html'
@@ -44,21 +45,26 @@ class UserLoginView(LoginView):
 class UserMypageView(UpdateView):
     model = get_user_model()
     template_name = 'user/mypage.html'
-    #fields = ['lolid']
+    fields = ['lolid']
     form_class= UserMypageForm
 
     def get(self, request):
         form = UserMypageForm(instance=request.user)
-        args = {'form': form}
+        lolid = self.model.objects.get(pk = 1)
+        records = lol_record.objects.filter(nickName = lolid.lolid)
+        args = {'form': form, 'records':records}
+
         return render(request, self.template_name, args)
 
     def post(self, request):
         form = UserMypageForm(request.POST, instance=request.user)
+        lolid = self.model.objects.get(pk=1)
+        records = lol_record.objects.filter(nickName= lolid.lolid)
         if form.is_valid():
             form.save()
             return redirect('/user/mypage/')
 
-        args = {'form': form}
+        args = {'form': form, 'records':records}
         return render(request, self.template_name, args)
 
 
