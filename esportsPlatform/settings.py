@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'disqus',
     'crispy_forms',
+    'OW_parse',
 ]
 
 MIDDLEWARE = [
