@@ -7,6 +7,8 @@ from django.utils import timezone
 from .models import Competition, CompetitionParticipate
 from team.models import TeamInvitation
 
+NOW = timezone.now()
+
 class IndexView(generic.ListView):
     template_name = 'competitions/index.html'
     context_object_name = 'latest_competitions_list'
@@ -54,27 +56,50 @@ class AttendView(generic.DetailView):
 class OngoingView(generic.ListView):
     template_name = 'competitions/ongoing.html'
     context_object_name = 'latest_competitions_list'
-
-    def get_queryset(self):
-        return Competition.objects.filter(Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by(
-            '-pub_date')
+    queryset = Competition.objects.filter(state='ONGOING').order_by('-pub_date')
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(OngoingView, self).get_context_data(**kwargs)
-        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
         return context
 
 
 class ScheduledView(generic.ListView):
     template_name = 'competitions/scheduled.html'
     context_object_name = 'scheduled_competitions_list'
-
-    def get_queryset(self):
-        return Competition.objects.filter(date_start__gt=timezone.now()).order_by('-pub_date')
+    queryset = Competition.objects.filter(state='SCHEDULED').order_by('-pub_date')
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(ScheduledView, self).get_context_data(**kwargs)
-        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
         return context
 
 

@@ -9,57 +9,97 @@
             <div class="contents_title">
             <a href="/competitions/past">지난 대회</a>
             </div>
-            {% if past_competitions_list %}
-            <table class = "competition_list table table-hover  text-white">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>대회명</th>
-                    <th>게임</th>
-                    <th>게시일</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for competition in past_competitions_list %}
-                <tr>
-                    <th>{{ competition.id }}</th>
-                    <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
-                    <td>{{ competition.competition_game }}</td>
-                    <td>{{ competition.pub_date }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <span>지난 게임이 존재하지 않습니다.</span>
-            {% endif %}
-        </div>
-        <div class = "pager_list">
-            <a href = "?page=1">맨 앞으로</a>
-            <a href = "?page={{ posts.previous_page_number }}">이전으로</a>
-            {% if samelines.has_other_pages %}
-            <ul class = "pagination">
-                {% if samelines.has_previous %}
-                <li><a href = "?page={{ samelines.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                <li class = "disabled"><span>&laquo;</span></li>
-                {% endif %}
-                {% for page_num in samelines.paginator.page_range %}
-                {% if samelines.number == page_num %}
-                <li class = "active"><span>{{ page_num }}<span class = "sr-only">(current)</span></span></li>
-                {% else %}
-                <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
-                {% endif %}
-                {% endfor %}
-                {%if samelines.has_next %}
-                <li><a href = "?page={{ samelines.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                <li class = "disabled"><span>&raquo;</span></li>
-                {% endif %}
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#current">2020</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#last">2019</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#last_last">2018</a>
+                </li>
             </ul>
-            {% endif %}
-            <a href = "?page={{ posts.next_page_number }}">다음으로</a>
-            <a href = "?page={{ posts.paginator.num_pages }}">맨 뒤로</a>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="current">
+                    {% if current_year %}
+                    <table class = "competition_list table table-hover  text-white">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>대회명</th>
+                        <th>게임</th>
+                        <th>대회일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for competition in current_year %}
+                    <tr>
+                        <th>{{ competition.id }}</th>
+                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td>{{ competition.competition_game }}</td>
+                        <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                    <span>지난 게임이 존재하지 않습니다.</span>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade in active" id="last">
+                    {% if last_year %}
+                    <table class = "competition_list table table-hover  text-white">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>대회명</th>
+                        <th>게임</th>
+                        <th>대회일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for competition in last_year %}
+                    <tr>
+                        <th>{{ competition.id }}</th>
+                        <td><a href="{% url 'competitions:past_detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td>{{ competition.competition_game }}</td>
+                        <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                    <span>지난 게임이 존재하지 않습니다.</span>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade in active" id="last_last">
+                    {% if last_last_year %}
+                    <table class = "competition_list table table-hover  text-white">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>대회명</th>
+                        <th>게임</th>
+                        <th>대회일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for competition in last_last_year %}
+                    <tr>
+                        <th>{{ competition.id }}</th>
+                        <td><a href="{% url 'competitions:past_detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td>{{ competition.competition_game }}</td>
+                        <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                    <span>지난 게임이 존재하지 않습니다.</span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

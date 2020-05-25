@@ -78,43 +78,16 @@
         {% if competition.id|add:'1' <= total_competition %}
         <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
         {% endif %}
-
-        {{ compare_date }}
     </div>
+        {% if competition.attend_start <= today and competition.attend_end >= today %}
         <form action="{% url 'competitions:attend' competition.id %}" method="post">
         {% csrf_token %}
         <input type="submit" value="대회 참가하기">
         </form>
+        {% endif %}
 
     <!-- comment -->
     <div class = "Comment">
-        {% if comments %}
-        {% for comment in comments %}
-        <p>
-            {{ comment.comment_user }}
-        </p>
-        {{ comment.comment_text | linebreaks }}
-        {% endfor %}
-        {% else %}
-        <p>
-            not comment :(
-        </p>
-        {% endif %}
-    </div>
-
-    <div class = "Comment">
-        {% if new_comment %}
-        <div role="alert">
-            Your comment is awaiting moderation
-        </div>
-        {% else %}
-        <h3>Leave a comment</h3>
-        <form method="post" style="margin-top: 1.3em;">
-            {{ comment_form.as_p }}
-            {% csrf_token %}
-            <button type="submit">Submit</button>
-        </form>
-        {% endif %}
         {% load disqus_tags %}
         <div>
             {% disqus_show_comments %}
