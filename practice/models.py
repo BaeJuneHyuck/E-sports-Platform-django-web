@@ -1,15 +1,16 @@
 from django.db import models
+
+from team.models import Team
 from user.models import User
 
-
 class Practice(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     text = models.CharField(max_length=600)
     game = models.CharField(max_length=50)
     tier = models.IntegerField(default=1000)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     practice_time = models.DateTimeField('practice time')
-    author = models.ForeignKey(User, on_delete = models.CASCADE)
 
     def __str__(self):
         return '[{}] {}'.format(self.id, self.title)

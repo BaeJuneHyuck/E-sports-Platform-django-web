@@ -1,4 +1,7 @@
+from team.models import Team
+from django.contrib.postgres import search
 from django.http import HttpResponse
+from django.template import RequestContext
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -8,7 +11,7 @@ from user.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PracticeCreateForm, CommentForm
 from team.models import TeamInvitation
-from practice.models import Practice, Comment
+from practice.models import Practice, Comment, User
 from django.conf import settings
 
 
@@ -16,10 +19,26 @@ class IndexView(generic.ListView):
     model = Practice
     template_name = 'practice/index.html'
     context_object_name = 'practices'
-    paginate_by = 10
+    paginate_by = 5
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
+    def get_queryset(self, *args, **kwargs):
+        qs = Practice.objects.all()
+        query = self.request.GET.get("qs", None)
+        attribute = self.request.GET.get("attribute", None)
+        if query is not None:
+            if attribute == 'title':
+                qs = qs.filter(title__icontains=query)
+            elif attribute == 'author':
+                qs = qs.filter(author__icontains=query)
+            elif attribute == 'tier':
+                qs = qs.filter(tier=query)
+            elif attribute == 'text':
+                qs = qs.filter(text__icontains=query)
+        print(self.request.GET)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(IndexView, self).get_context_data(*args,**kwargs)
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
@@ -37,6 +56,7 @@ class IndexView(generic.ListView):
         context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
 
         return context
+
 
 class DetailView(generic.DetailView):
     model = Practice
