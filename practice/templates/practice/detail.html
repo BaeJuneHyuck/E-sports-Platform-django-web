@@ -3,6 +3,8 @@
 
 {% block title %} esportsPlatform : practice-detail{% endblock %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 <div class = "container mt-3">
 
@@ -17,7 +19,7 @@
     <img class = "practice_img" src = "/static/practice/images/overwatch.jpg">
     </a>
     {% endif %}
-    <table class = "contents_table">
+    <table class = "table">
         <tr>
             <th>게임분야</th>
             <td> {{ practice.game }} </td>
@@ -47,10 +49,16 @@
 
 <div class = "comment">
     <h3>Comments</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_ul }}
-        <button type="submit" class="save btn btn-default">Save</button>
+    <b>참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 '참가신청합니다'가 포함된 모든 댓글을 삭제해주세요.</b>
+    <form method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col-10">
+                {{ form.content }}
+            </div>
+            <div class="col-6">
+                <button type="submit" class="save btn btn-success">Save</button>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -66,9 +74,8 @@
             <td>{{ comment.author.name }}</td>
             <td>{{ comment.content }}</td>
             {% if comment.author.name == request.user.name %}
-            <td style="text-align:right">삭제</td>
+            <td style="text-align:right"><a href = "{% url 'practice:delete_comment' practice.id comment.id %}">삭제</a></td>
             {% endif %}
-
         </tr>
         {% endfor %}
     </table>

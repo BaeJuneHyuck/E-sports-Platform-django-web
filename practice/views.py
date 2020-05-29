@@ -62,8 +62,8 @@ class DetailView(generic.DetailView):
     model = Practice
     template_name = 'practice/detail.html'
 
-    def comment(self, pk):
-        practice = Practice.objects.get(pk=pk)
+    def comment(self, practice_pk):
+        practice = Practice.objects.get(pk=practice_pk)
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
         today = timezone.now().strftime("%Y-%m-%d")
@@ -83,6 +83,31 @@ class DetailView(generic.DetailView):
 
         return render(self, 'practice/detail.html', {'practice':practice, 'comments':comments, 'form':form,
                                                      'total_practice':total_practice, 'today':today})
+
+    def delete(self, practice_pk, comment_pk):
+        delete_comment = Comment.objects.get(pk=comment_pk)
+        delete_comment.delete()
+        practice = Practice.objects.get(pk=practice_pk)
+        comments = Comment.objects.filter(practice=practice)
+        total_practice = Practice.total_practice()
+        today = timezone.now().strftime("%Y-%m-%d")
+        if self.method == 'POST':
+            form = CommentForm(self.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = self.user
+                comment.practice = practice
+                comment.save()
+            else:
+                return HttpResponse('fail')
+        else:
+            form = CommentForm()
+
+        form = CommentForm()
+
+        return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
+                                                     'total_practice': total_practice, 'today': today})
+
 
 class AttendView(generic.CreateView):
     model = Practice

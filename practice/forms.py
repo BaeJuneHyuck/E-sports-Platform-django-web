@@ -29,7 +29,7 @@ class PracticeCreateForm(forms.ModelForm):
         return practice_time
 
 class CommentForm(forms.ModelForm):
-    content = forms.CharField(max_length=600, widget=forms.Textarea)
+    content = forms.CharField(max_length=600)
 
     class Meta:
         model = Comment
