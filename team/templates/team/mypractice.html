@@ -1,0 +1,77 @@
+
+{% extends "home/base.html" %}
+
+{% block title %} esportsPlatform {% endblock %}
+
+{% block content %}
+
+    <div class="competition">
+
+        <div class="contents mb-0">
+            <div class="contents_title">
+                <a href="/team/myprac">참가신청한 연습경기</a>
+            </div>
+            {% if practices %}
+                <table class="table table-hover text-white">
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">제목</th>
+                          <th scope="col">경기 날짜</th>
+                        </tr>
+                    {% for practice in practices %}
+                    <tr>
+                    <td><a href="{% url 'practice:detail' practice.pk %}">{{ practice.title }}</a></td>
+                    <td>{{ practice.practice_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> 참가신청한 연습경기가 없습니다.</p>
+            {% endif %}
+        </div>
+
+
+        {# Pagination #}
+        <div class="pagination">
+        {% if is_paginated %}
+        <nav>
+            <ul class="pagination justify-content-center pagination-sm">
+                {% if page_obj.has_previous %}
+                <li class = "page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    <span>Previous</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">
+                    <span>Previous</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% for page in page_range %}
+                <li class = "page-item {% if page == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class = "page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    <span>Next</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                    <span>Next</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        </div>
+
+
+    </div>
+{% endblock %}

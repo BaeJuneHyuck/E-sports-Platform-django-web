@@ -78,6 +78,29 @@
 
         <div class="contents">
             <div class="contents_title">
+                <a href="myprac" data-toggle="tooltip" data-placement="right" title="더보기">참가신청한 연습경기</a>
+            </div>
+            {% if practices %}
+                <table class="table table-hover text-white">
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">제목</th>
+                          <th scope="col">경기 날짜</th>
+                        </tr>
+                    {% for practice in practices %}
+                    <tr>
+                    <td><a href="{% url 'practice:detail' practice.pk %}">{{ practice.title }}</a></td>
+                    <td>{{ practice.practice_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> 참가신청한 연습경기가 없습니다.</p>
+            {% endif %}
+        </div>
+
+        <div class="contents">
+            <div class="contents_title">
                 <a href="/team/create">새로운 팀 만들기</a>
             </div>
         </div>

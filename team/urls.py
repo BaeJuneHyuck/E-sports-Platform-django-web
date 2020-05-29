@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import IndexView, CreateView, DetailView, InviteView, AttendView, ListView,MyteamView,InvitationView, MyInvitationView
-from django.contrib.auth.views import LogoutView
+from .views import IndexView, CreateView, DetailView, InviteView, AttendView, ListView, MyteamView, InvitationView, \
+    MyInvitationView, MyPracticeView
 from django.contrib.auth.decorators import login_required
 
 
@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('myteam/',  login_required(MyteamView.as_view()), name='myteam'),
     path('myinvitation/',  login_required(MyInvitationView.as_view()), name='myinvitation'),
+    path('myprac/',  login_required(MyPracticeView.as_view()), name='myprac'),
     path('attend/<int:pk>/', login_required(AttendView.post_new), name='attend'),
     path('invitation/<int:pk>/', login_required(InvitationView.as_view()), name='invitation'),
 ]
