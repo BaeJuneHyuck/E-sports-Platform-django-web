@@ -1,5 +1,5 @@
 from django.db import models
-import requests
+from django.http import request
 from bs4 import BeautifulSoup
 
 # Create your models here.

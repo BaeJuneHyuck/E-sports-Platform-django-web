@@ -15,22 +15,29 @@
                 <div class="col-sm">
                     <form action="" method="get" class="form-inline md-form form-sm mt-0 float-right">
                        <i class="fas fa-search" aria-hidden="true"></i>
-                        <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ q }}">
+                        <input class="form-control" type="text" placeholder="팀명으로 검색" aria-label="Search" name="q" value="{{ q }}">
                       <input type="submit" value="검색">
                     </form>
                 </div>
             </div>
             {% if teams %}
                 <table class="table table-dark">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="50%">
+                    </colgroup>
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
                           <th scope="col">게임</th>
+                          <th scope="col">상세</th>
                         </tr>
                     {% for team in teams %}
                     <tr>
                     <td><a href="{% url 'team:detail' team.pk %}">{{ team.name }}</a></td>
                     <td>{{ team.game }}</td>
+                    <td>{{ team.text }}</td>
                     </tr>
                     {% endfor %}
                 </table>

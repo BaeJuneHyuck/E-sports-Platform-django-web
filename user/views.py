@@ -45,12 +45,12 @@ class UserLoginView(LoginView):
 class UserMypageView(UpdateView):
     model = get_user_model()
     template_name = 'user/mypage.html'
-    fields = ['lolid']
     form_class= UserMypageForm
 
     def get(self, request):
         form = UserMypageForm(instance=request.user)
-        lolid = self.model.objects.get(pk = 1)
+        lolid = self.model.objects.get(pk = request.user.pk)
+        print(lolid.lolid)
         records = lol_record.objects.filter(nickName = lolid.lolid)
         args = {'form': form, 'records':records}
 

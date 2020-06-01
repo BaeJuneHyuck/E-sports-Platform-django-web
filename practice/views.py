@@ -80,9 +80,10 @@ class DetailView(generic.DetailView):
             form = CommentForm()
 
         form = CommentForm()
+        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
 
         return render(self, 'practice/detail.html', {'practice':practice, 'comments':comments, 'form':form,
-                                                     'total_practice':total_practice, 'today':today})
+                                                     'total_practice':total_practice, 'today':today, 'invitations':invitations})
 
     def delete(self, practice_pk, comment_pk):
         delete_comment = Comment.objects.get(pk=comment_pk)
@@ -104,9 +105,10 @@ class DetailView(generic.DetailView):
             form = CommentForm()
 
         form = CommentForm()
+        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
 
         return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
-                                                     'total_practice': total_practice, 'today': today})
+                                                     'total_practice': total_practice, 'today': today, 'invitations':invitations})
 
 
 class AttendView(generic.CreateView):
@@ -125,6 +127,8 @@ class CreateView(generic.CreateView):
         if not self.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
 
+        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+
         form = PracticeCreateForm(self.POST)
         if self.method == 'POST':
             form = PracticeCreateForm(self.POST)
@@ -134,8 +138,8 @@ class CreateView(generic.CreateView):
                 practice.save()
                 return redirect(reverse('practice:index'))
             else:
-                return render(self, 'practice/create.html', {'form': form})
-        return render(self, 'practice/create.html', {'form': form})
+                return render(self, 'practice/create.html', {'form': form, 'invitations':invitations})
+        return render(self, 'practice/create.html', {'form': form, 'invitations':invitations})
 
 
 

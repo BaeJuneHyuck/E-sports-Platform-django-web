@@ -75,6 +75,8 @@ class OngoingView(generic.ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+
         return context
 
 
@@ -100,6 +102,8 @@ class ScheduledView(generic.ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
+        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+
         return context
 
 

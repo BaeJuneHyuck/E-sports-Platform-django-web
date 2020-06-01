@@ -13,15 +13,22 @@
             </div>
             {% if myteams %}
                 <table class="table table-hover text-white">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="50%">
+                    </colgroup>
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
                           <th scope="col">게임</th>
+                          <th scope="col">상세</th>
                         </tr>
                     {% for team in myteams %}
                     <tr>
                     <td><a href="{% url 'team:detail' team.team_pk.pk %}">{{ team.team_pk }}</a></td>
                     <td>{{ team.team_pk.game }}</td>
+                    <td>{{ team.team_pk.text }}</td>
                     </tr>
                     {% endfor %}
                 </table>

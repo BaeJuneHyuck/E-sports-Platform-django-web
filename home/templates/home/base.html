@@ -83,7 +83,10 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">알림!</span>
+                <span id="alerts" class="badge badge-danger badge-counter"></span>
+                <script>
+                    var alert_count = 0;
+                </script>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -91,6 +94,10 @@
                   알림 센터
                 </h6>
                 {% if not request.user.usage_agree %}
+                <script>
+                  alert_count = alert_count+1;
+                </script>
+
                 <a class="dropdown-item d-flex align-items-center" href="/user/mypage">
                   <div class="mr-3">
                     <div class="icon-circle bg-primary">
@@ -100,11 +107,15 @@
                   <div>
                     <div class="small text-gray-500">정보 제공 동의 필요</div>
                     <span class="font-weight-bold">마이페이지에서 각 게임별 정보를 입력하고 사용 동의해주세요.</span>
+
                   </div>
                 </a>
                 {% endif %}
                 {% if invitations %}
                   {% for invitation in invitations %}
+                    <script>
+                      alert_count = alert_count+1;
+                    </script>
                     <a class="dropdown-item d-flex align-items-center" href="/team/invitation/{{invitation.pk}}">
                       <div class="mr-3">
                         <div class="icon-circle bg-success">
@@ -116,11 +127,16 @@
                         <span class="font-weight-bold">팀 {{invitation.team_pk}} 에서 참가를 요청하였습니다.</span>
                       </div>
                     </a>
+
                   {% endfor %}
                 {% endif %}
                 <a class="dropdown-item text-center small text-gray-500" href="#">모든 알림 보기</a>
               </div>
             </li>
+
+            <script>
+              document.getElementById("alerts").innerHTML = alert_count;
+            </script>
 
             <div class="topbar-divider d-none d-sm-block"></div>
 

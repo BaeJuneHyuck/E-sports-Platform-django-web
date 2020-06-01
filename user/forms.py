@@ -24,5 +24,5 @@ class UserMypageForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['usage_agree', 'lolid', 'overwid']
+        fields = ['message', 'lolid', 'overwid', 'usage_agree']
 

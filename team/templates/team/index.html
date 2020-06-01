@@ -12,15 +12,22 @@
             </div>
             {% if teams %}
                 <table class="table table table-hover text-white">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="50%">
+                    </colgroup>
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
                           <th scope="col">게임</th>
+                          <th scope="col">상세</th>
                         </tr>
                     {% for team in teams %}
                     <tr>
                     <td><a href="{% url 'team:detail' team.team_pk.pk %}">{{ team.team_pk }}</a></td>
                     <td>{{ team.team_pk.game }}</td>
+                    <td>{{ team.team_pk.text }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -35,15 +42,22 @@
             </div>
             {% if visible %}
                 <table class="table table-hover text-white">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="50%">
+                    </colgroup>
                     <thead class="thead-light">
                         <tr>
                           <th scope="col">팀명</th>
                           <th scope="col">게임</th>
+                          <th scope="col">상세</th>
                         </tr>
                     {% for visibleteam in visible %}
                     <tr>
                     <td><a href="{% url 'team:detail' visibleteam.pk %}">{{ visibleteam.name }}</a></td>
                     <td>{{ visibleteam.game }}</td>
+                    <td>{{ visibleteam.text }}</td>
                     </tr>
                     {% endfor %}
                 </table>
