@@ -12,6 +12,7 @@ class CompetitionsAdmin(admin.ModelAdmin):
         (None, {'fields': ['competition_game']}),
         (None, {'fields': ['competition_name']}),
         (None, {'fields': ['competition_text']}),
+        (None, {'fields': ['origin_image']}),
         (None, {'fields': ['date_start']}),
         (None, {'fields': ['date_end']}),
         (None, {'fields': ['attend_start']}),

@@ -9,14 +9,18 @@
 
     <div class = "contents_detail"  >
         <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
-        {% if competition.competition_game in 'LOL' %}
-        <a href = "https://kr.leagueoflegends.com/ko-kr/">
-        <img class = "competition_img" src = "/static/competitions/images/lol.jpg">
-        </a>
-        {% elif competition.competition_game in 'Overwatch' %}
-        <a href = "https://playoverwatch.com/ko-kr/">
-        <img class = "competition_img" src = "/static/competitions/images/overwatch.jpg">
-        </a>
+        {% if competition.formatted_image %}
+            <img src="{{ competition.formatted_image.url }}" class="rounded competition_img">
+        {% else %}
+            {% if competition.competition_game in 'LOL' %}
+            <a href = "https://kr.leagueoflegends.com/ko-kr/">
+            <img class = "competition_img rounded" src = "/static/competitions/images/lol.jpg">
+            </a>
+            {% elif competition.competition_game in 'Overwatch' %}
+            <a href = "https://playoverwatch.com/ko-kr/">
+            <img class = "competition_img rounded" src = "/static/competitions/images/overwatch.jpg">
+            </a>
+            {% endif %}
         {% endif %}
         <table class = "contents_table">
             <tr>

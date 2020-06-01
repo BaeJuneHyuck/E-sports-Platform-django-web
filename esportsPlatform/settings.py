@@ -153,3 +153,7 @@ DISQUS_WEBSITE_SHORTNAME='esportsplatform'
 
 #Crispy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#Media
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
