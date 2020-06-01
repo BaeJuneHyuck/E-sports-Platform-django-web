@@ -1,10 +1,13 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from team.models import Team
 from user.models import User
 
 class Practice(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_name = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     text = models.CharField(max_length=600)
     game = models.CharField(max_length=50)
@@ -18,6 +21,10 @@ class Practice(models.Model):
     @staticmethod
     def total_practice():
         return Practice.objects.count()
+
+@receiver(pre_save, sender=Practice)
+def practice_save(sender, instance, update_fields, **kwargs):
+    instance.author_name = instance.author.name
 
 class PracticeParticipate(models.Model):
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE)

@@ -29,7 +29,7 @@ class IndexView(generic.ListView):
             if attribute == 'title':
                 qs = qs.filter(title__icontains=query)
             elif attribute == 'author':
-                qs = qs.filter(author__icontains=query)
+                qs = qs.filter(author_name__icontains=query)
             elif attribute == 'tier':
                 qs = qs.filter(tier=query)
             elif attribute == 'text':
