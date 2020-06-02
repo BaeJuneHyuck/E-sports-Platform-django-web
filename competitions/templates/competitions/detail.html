@@ -1,16 +1,16 @@
 
 {% extends "home/base.html" %}
 
-{% block title %} esportsPlatform : competition-detail{% endblock %}
+{% block title %} esportsPlatform : 대회 상세정보{% endblock %}
 
 {% block content %}
 
 <div class ="container mt-3">
 
-    <div class = "contents_detail"  >
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
         <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
         {% if competition.formatted_image %}
-            <img src="{{ competition.formatted_image.url }}" class="rounded competition_img">
+            <img src="{{ competition.formatted_image.url }}" class="rounded competition_img mt-1">
         {% else %}
             {% if competition.competition_game in 'LOL' %}
             <a href = "https://kr.leagueoflegends.com/ko-kr/">
@@ -22,38 +22,38 @@
             </a>
             {% endif %}
         {% endif %}
-        <table class = "contents_table">
-            <tr>
-                <th>게임분야</th>
+        <table class = "table contents_table head-light table-hover mb-2 " style="color:black">
+            <tr >
+                <th>종목</th>
                 <td> {{ competition.competition_game }} </td>
             </tr>
             <tr>
                 <th>주최자</th>
-                <td> {{ competition.competition_author}} </td>
+                <td> {{ competition.master}} </td>
             </tr>
             <tr>
                 <th>참가자격</th>
-                <td> {{ competition.competition_qualification }} </td>
+                <td> {{ competition.required_tier}} </td>
             </tr>
             <tr>
-                <th>참가신청일</th>
+                <th>대회 등록 일자</th>
                 <td> {{ competition.pub_date }} </td>
             </tr>
             <tr>
-                <th>대회일</th>
+                <th>대회 기간</th>
                 <td> {{ competition.date_start|date:"Y-m-d" }} ~ {{ competition.date_end|date:"Y-m-d" }}</td>
             </tr>
             <tr>
-                <th>참가신청일</th>
+                <th>참가 신청 기간</th>
                 <td> {{ competition.attend_start|date:"Y-m-d" }} ~ {{ competition.attend_end|date:"Y-m-d" }}</td>
             </tr>
             <tr>
                 <th>게시일</th>
-                <td> {{ competition.date_published|date:"Y-m-d" }}</td>
+                <td> {{ competition.pub_date|date:"Y-m-d" }}</td>
             </tr>
             <tr>
                 <th>대회소개</th>
-                <td> {{ competition.description }} </td>
+                <td> {{ competition.competition_text }} </td>
             </tr>
             <tr>
                 <th>홈페이지</th>
@@ -64,6 +64,13 @@
                 {% endif %}
             </tr>
         </table>
+
+        {% if competition.attend_start <= today and competition.attend_end >= today %}
+        <form action="{% url 'competitions:attend' competition.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="대회 참가하기" class="save btn btn-success">
+        </form>
+        {% endif %}
     </div>
 
     <div class = "pager">
@@ -83,12 +90,7 @@
         <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
         {% endif %}
     </div>
-        {% if competition.attend_start <= today and competition.attend_end >= today %}
-        <form action="{% url 'competitions:attend' competition.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="대회 참가하기">
-        </form>
-        {% endif %}
+
 
     <!-- comment -->
     <div class = "Comment">

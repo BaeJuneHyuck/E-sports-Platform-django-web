@@ -17,6 +17,13 @@ class CompetitionsAdmin(admin.ModelAdmin):
         (None, {'fields': ['date_end']}),
         (None, {'fields': ['attend_start']}),
         (None, {'fields': ['attend_end']}),
+
+        (None, {'fields': ['master']}),
+        (None, {'fields': ['is_public']}),
+        (None, {'fields': ['tournament_type']}),
+        (None, {'fields': ['required_tier']}),
+        (None, {'fields': ['total_teams']}),
+        (None, {'fields': ['current_teams']}),
     ]
     list_display = ('competition_game', 'competition_name', 'competition_text', 'date_start', 'date_end', 'attend_start', 'attend_end')
     list_filter = ['pub_date']

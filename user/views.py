@@ -50,7 +50,6 @@ class UserMypageView(UpdateView):
     def get(self, request):
         form = UserMypageForm(instance=request.user)
         lolid = self.model.objects.get(pk = request.user.pk)
-        print(lolid.lolid)
         records = lol_record.objects.filter(nickName = lolid.lolid)
         args = {'form': form, 'records':records}
 

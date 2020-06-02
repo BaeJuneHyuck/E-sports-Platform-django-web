@@ -6,6 +6,9 @@ from django.views import generic
 from django.utils import timezone
 from .models import Competition, CompetitionParticipate
 from team.models import TeamInvitation
+from .forms import CompetitionCreateForm
+from django.urls import reverse
+
 
 NOW = timezone.now()
 
@@ -37,9 +40,34 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         context['total_competition'] = Competition.total_competition()
-        context['today'] = timezone.now().strftime("%Y-%m-%d")
+        context['today'] = timezone.now()
         context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         return context
+
+class CreateView(generic.CreateView):
+    login_url = settings.LOGIN_URL
+    model = Competition
+
+    def post_new(self):
+        if not self.user.is_authenticated:
+            return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
+
+        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+
+        form = CompetitionCreateForm(self.POST)
+        if self.method == 'POST':
+            form = CompetitionCreateForm(self.POST)
+            if form.is_valid():
+                print("form valid")
+                competition = form.save(commit=False)
+                competition.master = self.user
+                competition.save()
+                return redirect('competitions:detail', pk=competition.pk)
+            else:
+                print("form invalid")
+                return render(self, 'competitions/create.html', {'form': form, 'invitations':invitations})
+        return render(self, 'competitions/create.html', {'form': form, 'invitations':invitations})
+
 
 
 class AttendView(generic.DetailView):
