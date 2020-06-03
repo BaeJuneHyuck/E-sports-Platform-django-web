@@ -1,467 +1,511 @@
 <!DOCTYPE html>
+
 <head>
     <title>대진표</title>
-    <script language="javascript" type="text/javascript">
-    function scoreWinner( personA, personB, next1, next2, next3, personAwin, personBwin ){
+    <script language="javascript" type="text/javascript" src="jquery.bracket.min.js">
+        function scoreWinner( personA, personB, next1, next2, next3, personAwin, personBwin ){
         with ( personAwin.form ){
-            if ( ! personAwin.checked && ! personBwin.checked ){
-                next1.value = "";
-                next2.value = "";
-                next3.value = "";
-            }
-            else {
-                next1.value = ( personAwin.checked ? personA.value : " " );
-                personBwin.checked = false;
-                next2.value = "";
-                next3.value = "";
-            }
+        if ( ! personAwin.checked && ! personBwin.checked ){
+        next1.value = "";
+        next2.value = "";
+        next3.value = "";
         }
-    }
+        else {
+        next1.value = ( personAwin.checked ? personA.value : " " );
+        personBwin.checked = false;
+        next2.value = "";
+        next3.value = "";
+        }
+        }
+        }
 
-    function advance( winner, loser, place ){
-        place.value = winner.value; 
-    }
+        function advance( winner, loser, place ){
+        place.value = winner.value;
+        }
     </script>
     <style>
-        h1{
+        body{
+            background-image:url('https://kr-publish.s3.amazonaws.com/notice/9953f3d80078b1dba531ba4620bd1919410fad44.jpg');
+            background-repeat:no-repeat;
+            background-size:cover;
+        }
+        h1 {
             text-shadow: 5px 5px 5px whitesmoke;
         }
+
         .col1 {
             position: relative;
         }
-        .col1 > #_1st {
-            background-color: coral;
-            position: absolute;
-            margin: 0 auto;
-            top: 50px;
-            left: 20px;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_2nd {
-            background-color: coral;
-            position: absolute;
-            top: 110px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_3rd {
-            background-color: coral;
-            position: absolute;
-            top: 230px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_4th {
-            background-color: coral;
-            position: absolute;
-            top: 290px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_5th {
-            background-color: coral;
-            position: absolute;
-            top: 410px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_6th {
-            background-color: coral;
-            position: absolute;
-            top: 470px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_7th {
-            background-color: coral;
-            position: absolute;
-            top: 590px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col1 > #_8th {
-            background-color: coral;
-            position: absolute;
-            top: 650px;
-            left: 20px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col1 > #_1st {
+                background-color: coral;
+                position: absolute;
+                margin: 0 auto;
+                top: 50px;
+                left: 20px;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_2nd {
+                background-color: coral;
+                position: absolute;
+                top: 110px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_3rd {
+                background-color: coral;
+                position: absolute;
+                top: 230px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_4th {
+                background-color: coral;
+                position: absolute;
+                top: 290px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_5th {
+                background-color: coral;
+                position: absolute;
+                top: 410px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_6th {
+                background-color: coral;
+                position: absolute;
+                top: 470px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_7th {
+                background-color: coral;
+                position: absolute;
+                top: 590px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col1 > #_8th {
+                background-color: coral;
+                position: absolute;
+                top: 650px;
+                left: 20px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col2 {
             position: relative;
         }
-        .col2 > #_1st {
-            background-color: coral;
-            position: absolute;
-            top: 80px;
-            left: 320px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col2 > #_2nd {
-            background-color: coral;
-            position: absolute;
-            top: 260px;
-            left: 320px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col2 > #_3rd {
-            background-color: coral;
-            position: absolute;
-            top: 440px;
-            left: 320px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col2 > #_4th {
-            background-color: coral;
-            position: absolute;
-            top: 620px;
-            left: 320px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col2 > #_1st {
+                background-color: coral;
+                position: absolute;
+                top: 80px;
+                left: 320px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col2 > #_2nd {
+                background-color: coral;
+                position: absolute;
+                top: 260px;
+                left: 320px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col2 > #_3rd {
+                background-color: coral;
+                position: absolute;
+                top: 440px;
+                left: 320px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col2 > #_4th {
+                background-color: coral;
+                position: absolute;
+                top: 620px;
+                left: 320px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col3 {
             position: relative;
         }
-        .col3 > #_1st {
-            background-color: coral;
-            position: absolute;
-            top: 170px;
-            left: 620px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col3 > #_2nd {
-            background-color: coral;
-            position: absolute;
-            top: 530px;
-            left: 620px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col3 > #_1st {
+                background-color: coral;
+                position: absolute;
+                top: 170px;
+                left: 620px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col3 > #_2nd {
+                background-color: coral;
+                position: absolute;
+                top: 530px;
+                left: 620px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col4 {
             position: relative;
         }
-        .col4 > #_1st {
-            background-color: coral;
-            position: absolute;
-            top: 350px;
-            left: 820px;
-            margin: 0 auto;
-            border: 4px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col4 > #_1st {
+                background-color: coral;
+                position: absolute;
+                top: 350px;
+                left: 820px;
+                margin: 0 auto;
+                border: 4px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col5 {
             position: relative;
         }
-        .col5 > #_1st {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 350px;
-            left: 970px;
-            margin: 0 auto;
-            border: 4px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col5 > #_1st {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 350px;
+                left: 970px;
+                margin: 0 auto;
+                border: 4px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col6 {
             position: relative;
         }
-        .col6 > #_1st {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 170px;
-            left: 1170px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col6 > #_2nd {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 530px;
-            left: 1170px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col6 > #_1st {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 170px;
+                left: 1170px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col6 > #_2nd {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 530px;
+                left: 1170px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col7 {
             position: relative;
         }
-        .col7 > #_1st {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 80px;
-            left: 1370px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col7 > #_2nd {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 260px;
-            left: 1370px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col7 > #_3rd {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 440px;
-            left: 1370px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col7 > #_4th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 620px;
-            left: 1370px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col7 > #_1st {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 80px;
+                left: 1370px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col7 > #_2nd {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 260px;
+                left: 1370px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col7 > #_3rd {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 440px;
+                left: 1370px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col7 > #_4th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 620px;
+                left: 1370px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
         .col8 {
             position: relative;
         }
-        .col8 > #_1st {
-            background-color: whitesmoke;
-            position: absolute;
-            margin: 0 auto;
-            top: 50px;
-            left: 1570px;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_2nd {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 110px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_3rd {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 230px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_4th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 290px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_5th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 410px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_6th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 470px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_7th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 590px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
-        .col8 > #_8th {
-            background-color: whitesmoke;
-            position: absolute;
-            top: 650px;
-            left: 1570px;
-            margin: 0 auto;
-            border: 3px solid black;
-            width: 110px;
-            height: 50px;
-        }
+
+            .col8 > #_1st {
+                background-color: whitesmoke;
+                position: absolute;
+                margin: 0 auto;
+                top: 50px;
+                left: 1570px;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_2nd {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 110px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_3rd {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 230px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_4th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 290px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_5th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 410px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_6th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 470px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_7th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 590px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
+
+            .col8 > #_8th {
+                background-color: whitesmoke;
+                position: absolute;
+                top: 650px;
+                left: 1570px;
+                margin: 0 auto;
+                border: 3px solid black;
+                width: 110px;
+                height: 50px;
+            }
     </style>
-    
+
 </head>
-<body background="C:\abc.jpg">
-<h1 style="text-align:center;">대진표</h1>
+<body>
+    <h1 style="text-align:center;">대진표</h1>
     <form name=tournament>
-    <div class="col1">
-        <div id="_1st" align=center>
-            <input type=text name=player1 size=10><input type=checkbox name=player1win onClick="scoreWinner(this.form.player1, this.form.player2, this.form.round1winner1, this.form.round2winner1, this.form.round3winner, this, this.form.player2win);">
+        <div class="col1">
+            <div id="_1st" align=center>
+                <input type=text name=player1 size=10><input type=checkbox name=player1win onClick="scoreWinner(this.form.player1, this.form.player2, this.form.round1winner1, this.form.round2winner1, this.form.round3winner, this, this.form.player2win);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=text name=player2 size=10><input type=checkbox name=player2win onClick="scoreWinner(this.form.player2, this.form.player1, this.form.round1winner1, this.form.round2winner1, this.form.round3winner, this, this.form.player1win);">
+            </div>
+            <div id="_3rd" align=center>
+                <input type=text name=player3 size=10><input type=checkbox name=player3win onClick="scoreWinner(this.form.player3, this.form.player4, this.form.round1winner2, this.form.round2winner1, this.form.round3winner, this, this.form.player4win);">
+            </div>
+            <div id="_4th" align=center>
+                <input type=text name=player4 size=10><input type=checkbox name=player4win onClick="scoreWinner(this.form.player4, this.form.player3, this.form.round1winner2, this.form.round2winner1, this.form.round3winner, this, this.form.player3win);">
+            </div>
+            <div id="_5th" align=center>
+                <input type=text name=player5 size=10><input type=checkbox name=player5win onClick="scoreWinner(this.form.player5, this.form.player6, this.form.round1winner3, this.form.round2winner2, this.form.round3winner, this, this.form.player6win);">
+            </div>
+            <div id="_6th" align=center>
+                <input type=text name=player6 size=10><input type=checkbox name=player6win onClick="scoreWinner(this.form.player6, this.form.player5, this.form.round1winner3, this.form.round2winner2, this.form.round3winner, this, this.form.player5win);">
+            </div>
+            <div id="_7th" align=center>
+                <input type=text name=player7 size=10><input type=checkbox name=player7win onClick="scoreWinner(this.form.player7, this.form.player8, this.form.round1winner4, this.form.round2winner2, this.form.round3winner, this, this.form.player8win);">
+            </div>
+            <div id="_8th" align=center>
+                <input type=text name=player8 size=10><input type=checkbox name=player8win onClick="scoreWinner(this.form.player8, this.form.player7, this.form.round1winner4, this.form.round2winner2, this.form.round3winner, this, this.form.player7win);">
+            </div>
         </div>
-        <div id="_2nd" align=center>
-            <input type=text name=player2 size=10><input type=checkbox name=player2win onClick="scoreWinner(this.form.player2, this.form.player1, this.form.round1winner1, this.form.round2winner1, this.form.round3winner, this, this.form.player1win);">
+        <div class="col2">
+            <div id="_1st" align=center>
+                <input type=button name=round1winner1 value=" " onClick="advance(this, this.form.round1winner2, this.form.round2winner1);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=button name=round1winner2 value=" " onClick="advance(this, this.form.round1winner1, this.form.round2winner1);">
+            </div>
+            <div id="_3rd" align=center>
+                <input type=button name=round1winner3 value=" " onClick="advance(this, this.form.round1winner4, this.form.round2winner2);">
+            </div>
+            <div id="_4th" align=center>
+                <input type=button name=round1winner4 value=" " onClick="advance(this, this.form.round1winner3, this.form.round2winner2);">
+            </div>
         </div>
-        <div id="_3rd" align=center>
-            <input type=text name=player3 size=10><input type=checkbox name=player3win onClick="scoreWinner(this.form.player3, this.form.player4, this.form.round1winner2, this.form.round2winner1, this.form.round3winner, this, this.form.player4win);">
+        <div class="col3">
+            <div id="_1st" align=center>
+                <input type=button name=round2winner1 value=" " onClick="advance(this, this.form.round2winner2, this.form.round3winner);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=button name=round2winner2 value=" " onClick="advance(this, this.form.round2winner1, this.form.round3winner);">
+            </div>
         </div>
-        <div id="_4th" align=center>
-            <input type=text name=player4 size=10><input type=checkbox name=player4win onClick="scoreWinner(this.form.player4, this.form.player3, this.form.round1winner2, this.form.round2winner1, this.form.round3winner, this, this.form.player3win);">
+        <div class="col4">
+            <div id="_1st" align=center>
+                <input type=button name=round3winner value=" ">
+            </div>
         </div>
-        <div id="_5th" align=center>
-            <input type=text name=player5 size=10><input type=checkbox name=player5win onClick="scoreWinner(this.form.player5, this.form.player6, this.form.round1winner3, this.form.round2winner2, this.form.round3winner, this, this.form.player6win);">
+        <div class="col5">
+            <div id="_1st" align=center>
+                <input type=button name=round6winner value=" ">
+            </div>
         </div>
-        <div id="_6th" align=center>
-            <input type=text name=player6 size=10><input type=checkbox name=player6win onClick="scoreWinner(this.form.player6, this.form.player5, this.form.round1winner3, this.form.round2winner2, this.form.round3winner, this, this.form.player5win);">
+        <div class="col6">
+            <div id="_1st" align=center>
+                <input type=button name=round5winner1 value=" " onClick="advance(this, this.form.round5winner2, this.form.round6winner);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=button name=round5winner2 value=" " onClick="advance(this, this.form.round5winner1, this.form.round6winner);">
+            </div>
         </div>
-        <div id="_7th" align=center>
-            <input type=text name=player7 size=10><input type=checkbox name=player7win onClick="scoreWinner(this.form.player7, this.form.player8, this.form.round1winner4, this.form.round2winner2, this.form.round3winner, this, this.form.player8win);">
+        <div class="col7">
+            <div id="_1st" align=center>
+                <input type=button name=round4winner1 value=" " onClick="advance(this, this.form.round4winner2, this.form.round5winner1);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=button name=round4winner2 value=" " onClick="advance(this, this.form.round4winner1, this.form.round5winner1);">
+            </div>
+            <div id="_3rd" align=center>
+                <input type=button name=round4winner3 value=" " onClick="advance(this, this.form.round4winner4, this.form.round5winner2);">
+            </div>
+            <div id="_4th" align=center>
+                <input type=button name=round4winner4 value=" " onClick="advance(this, this.form.round4winner3, this.form.round5winner2);">
+            </div>
         </div>
-        <div id="_8th" align=center>
-            <input type=text name=player8 size=10><input type=checkbox name=player8win onClick="scoreWinner(this.form.player8, this.form.player7, this.form.round1winner4, this.form.round2winner2, this.form.round3winner, this, this.form.player7win);">
+        <div class="col8">
+            <div id="_1st" align=center>
+                <input type=text name=player9 size=10><input type=checkbox name=player9win onClick="scoreWinner(this.form.player9, this.form.player10, this.form.round4winner1, this.form.round5winner1, this.form.round6winner, this, this.form.player10win);">
+            </div>
+            <div id="_2nd" align=center>
+                <input type=text name=player10 size=10><input type=checkbox name=player10win onClick="scoreWinner(this.form.player10, this.form.player9, this.form.round4winner1, this.form.round5winner1, this.form.round6winner, this, this.form.player9win);">
+            </div>
+            <div id="_3rd" align=center>
+                <input type=text name=player11 size=10><input type=checkbox name=player11win onClick="scoreWinner(this.form.player11, this.form.player12, this.form.round4winner2, this.form.round5winner1, this.form.round6winner, this, this.form.player12win);">
+            </div>
+            <div id="_4th" align=center>
+                <input type=text name=player12 size=10><input type=checkbox name=player12win onClick="scoreWinner(this.form.player12, this.form.player11, this.form.round4winner2, this.form.round5winner1, this.form.round6winner, this, this.form.player11win);">
+            </div>
+            <div id="_5th" align=center>
+                <input type=text name=player13 size=10><input type=checkbox name=player13win onClick="scoreWinner(this.form.player13, this.form.player14, this.form.round4winner3, this.form.round5winner2, this.form.round6winner, this, this.form.player14win);">
+            </div>
+            <div id="_6th" align=center>
+                <input type=text name=player14 size=10><input type=checkbox name=player14win onClick="scoreWinner(this.form.player14, this.form.player13, this.form.round4winner3, this.form.round5winner2, this.form.round6winner, this, this.form.player13win);">
+            </div>
+            <div id="_7th" align=center>
+                <input type=text name=player15 size=10><input type=checkbox name=player15win onClick="scoreWinner(this.form.player15, this.form.player16, this.form.round4winner4, this.form.round5winner2, this.form.round6winner, this, this.form.player16win);">
+            </div>
+            <div id="_8th" align=center>
+                <input type=text name=player16 size=10><input type=checkbox name=player16win onClick="scoreWinner(this.form.player16, this.form.player15, this.form.round4winner4, this.form.round5winner2, this.form.round6winner, this, this.form.player15win);">
+            </div>
         </div>
-    </div>
-    <div class="col2">
-        <div id="_1st" align=center>
-            <input type=button name=round1winner1 value=" " onClick="advance(this, this.form.round1winner2, this.form.round2winner1);">
-        </div>
-        <div id="_2nd" align=center>
-            <input type=button name=round1winner2 value=" " onClick="advance(this, this.form.round1winner1, this.form.round2winner1);">
-        </div>
-        <div id="_3rd" align=center>
-            <input type=button name=round1winner3 value=" " onClick="advance(this, this.form.round1winner4, this.form.round2winner2);">
-        </div>
-        <div id="_4th" align=center>
-            <input type=button name=round1winner4 value=" " onClick="advance(this, this.form.round1winner3, this.form.round2winner2);">
-        </div>
-    </div>
-    <div class="col3">
-        <div id="_1st" align=center>
-            <input type=button name=round2winner1 value=" " onClick="advance(this, this.form.round2winner2, this.form.round3winner);">
-        </div>
-        <div id="_2nd" align=center>
-            <input type=button name=round2winner2 value=" " onClick="advance(this, this.form.round2winner1, this.form.round3winner);">
-        </div>
-    </div>
-    <div class="col4">
-        <div id="_1st" align=center>
-            <input type=button name=round3winner value=" ">
-        </div>
-    </div>
-    <div class="col5">
-        <div id="_1st" align=center>
-            <input type=button name=round6winner value=" ">
-        </div>
-    </div>
-    <div class="col6">
-        <div id="_1st" align=center>
-            <input type=button name=round5winner1 value=" " onClick="advance(this, this.form.round5winner2, this.form.round6winner);">
-        </div>
-        <div id="_2nd" align=center>
-            <input type=button name=round5winner2 value=" " onClick="advance(this, this.form.round5winner1, this.form.round6winner);">
-        </div>
-    </div>
-    <div class="col7">
-        <div id="_1st" align=center>
-            <input type=button name=round4winner1 value=" " onClick="advance(this, this.form.round4winner2, this.form.round5winner1);">
-        </div>
-        <div id="_2nd" align=center>
-            <input type=button name=round4winner2 value=" " onClick="advance(this, this.form.round4winner1, this.form.round5winner1);">
-        </div>
-        <div id="_3rd" align=center>
-            <input type=button name=round4winner3 value=" " onClick="advance(this, this.form.round4winner4, this.form.round5winner2);">
-        </div>
-        <div id="_4th" align=center>
-            <input type=button name=round4winner4 value=" " onClick="advance(this, this.form.round4winner3, this.form.round5winner2);">
-        </div>
-    </div>
-    <div class="col8">
-        <div id="_1st" align=center>
-            <input type=text name=player9 size=10><input type=checkbox name=player9win onClick="scoreWinner(this.form.player9, this.form.player10, this.form.round4winner1, this.form.round5winner1, this.form.round6winner, this, this.form.player10win);">
-        </div>
-        <div id="_2nd" align=center>
-            <input type=text name=player10 size=10><input type=checkbox name=player10win onClick="scoreWinner(this.form.player10, this.form.player9, this.form.round4winner1, this.form.round5winner1, this.form.round6winner, this, this.form.player9win);">
-        </div>
-        <div id="_3rd" align=center>
-            <input type=text name=player11 size=10><input type=checkbox name=player11win onClick="scoreWinner(this.form.player11, this.form.player12, this.form.round4winner2, this.form.round5winner1, this.form.round6winner, this, this.form.player12win);">
-        </div>
-        <div id="_4th" align=center>
-            <input type=text name=player12 size=10><input type=checkbox name=player12win onClick="scoreWinner(this.form.player12, this.form.player11, this.form.round4winner2, this.form.round5winner1, this.form.round6winner, this, this.form.player11win);">
-        </div>
-        <div id="_5th" align=center>
-            <input type=text name=player13 size=10><input type=checkbox name=player13win onClick="scoreWinner(this.form.player13, this.form.player14, this.form.round4winner3, this.form.round5winner2, this.form.round6winner, this, this.form.player14win);">
-        </div>
-        <div id="_6th" align=center>
-            <input type=text name=player14 size=10><input type=checkbox name=player14win onClick="scoreWinner(this.form.player14, this.form.player13, this.form.round4winner3, this.form.round5winner2, this.form.round6winner, this, this.form.player13win);">
-        </div>
-        <div id="_7th" align=center>
-            <input type=text name=player15 size=10><input type=checkbox name=player15win onClick="scoreWinner(this.form.player15, this.form.player16, this.form.round4winner4, this.form.round5winner2, this.form.round6winner, this, this.form.player16win);">
-        </div>
-        <div id="_8th" align=center>
-            <input type=text name=player16 size=10><input type=checkbox name=player16win onClick="scoreWinner(this.form.player16, this.form.player15, this.form.round4winner4, this.form.round5winner2, this.form.round6winner, this, this.form.player15win);">
-        </div>
-    </div>
     </form>
 </body>
 </html>
