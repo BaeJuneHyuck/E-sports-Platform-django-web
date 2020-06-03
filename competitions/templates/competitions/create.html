@@ -1,0 +1,72 @@
+
+{% extends "home/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %} esportsPlatform : 대회 생성{% endblock %}
+
+{% block content %}
+
+<div class="container border border-primary rounded bg-light mt-3 p-5 ">
+    <h2>대회 생성</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-12 mb-0">
+              {{ form.competition_name|as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 mb-0">
+              {{ form.competition_text|as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4 mb-0">
+              {{ form.competition_game|as_crispy_field }}
+            </div>
+
+            <div class="form-group col-md-4 mb-0">
+              {{ form.required_tier|as_crispy_field }}
+            </div>
+
+            <div class="form-group col-md-4 mb-0">
+                {{ form.total_teams|as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12 mb-0">
+                {{ form.tournament_type|as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.attend_start|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.attend_end|as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.date_start|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.date_end|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12 mb-0">
+              {{ form.is_public|as_crispy_field }}
+            </div>
+        </div>
+        <button type="submit" class="save btn btn-success">대회 생성</button>
+    </form>
+</div>
+
+{% endblock %}
