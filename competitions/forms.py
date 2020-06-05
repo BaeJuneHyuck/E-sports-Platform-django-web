@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Competition
+from .models import Competition, CompetitionParticipate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
+from team.models import Team, TeamRelation
 NOW = timezone.now()
 
 GAME=[
@@ -51,3 +51,16 @@ class CompetitionCreateForm(forms.ModelForm):
         if date_start <= NOW:
             raise ValidationError('지난 시간은 선택할 수 없습니다.')
         return date_start
+
+class CompetitionAttendForm(forms.ModelForm):
+    avg_tier = forms.IntegerField(required=False)
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        relation =TeamRelation.objects.filter(user_pk=user)
+        self.fields['team'].queryset =Team.objects.filter(teamrelation__in = relation)
+
+    class Meta:
+        model = CompetitionParticipate
+        fields = ['team']
