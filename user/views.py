@@ -16,8 +16,8 @@ from esportsPlatform import settings
 from django.views.generic import CreateView, FormView
 from .mixins import VerifyEmailMixin
 from .forms import VerificationEmailForm
-from .models import User
-from .models import lol_record
+from .models import User, lol_record
+from team.models import TeamInvitation
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
     template_name = 'user/user_model.html'
@@ -51,7 +51,9 @@ class UserMypageView(UpdateView):
         form = UserMypageForm(instance=request.user)
         lolid = self.model.objects.get(pk = request.user.pk)
         records = lol_record.objects.filter(nickName = lolid.lolid)
-        args = {'form': form, 'records':records}
+        invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
+
+        args = {'form': form, 'records':records, 'invitations':invitations}
 
         return render(request, self.template_name, args)
 
@@ -59,11 +61,12 @@ class UserMypageView(UpdateView):
         form = UserMypageForm(request.POST, instance=request.user)
         lolid = self.model.objects.get(pk=1)
         records = lol_record.objects.filter(nickName= lolid.lolid)
+        invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
         if form.is_valid():
             form.save()
             return redirect('/user/mypage/')
 
-        args = {'form': form, 'records':records}
+        args = {'form': form, 'records':records, 'invitations':invitations}
         return render(request, self.template_name, args)
 
 

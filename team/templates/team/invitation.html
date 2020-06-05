@@ -23,28 +23,35 @@
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4"><a href="{% url 'team:detail' team.pk %}">{{ team.name }}</a>에 초대받았습니다.</h1>
+                      {% if myinvitation.checked %}
+                          <h1 class="h4 text-gray-900 mb-4 " >이미 확인한 초대입니다</h1>
+                      {% else  %}
+                            <h1 class="h4 text-gray-900 mb-4 " >
+                                 <a href="{% url 'team:detail' team.pk %}"data-toggle="tooltip" data-placement="right" title="팀 정보 보기  ">
+                                {{ team.name }}</a>에 초대받았습니다.
+                            </h1>
                   </div>
-                    <table class="table table table-hover">
+                  <table class="table table table-hover">
                         <thead class="thead-light">
                         <tr>
                           <th scope="col">종목</th>
                           <th scope="col">팀장</th>
                         </tr>
-                    <tr>
-                        <td>{{ team.game }}</a></td>
-                        <td>{{ team.master }}</a></td>
-                    </tr>
-                </table>
+                        <tr>
+                            <td>{{ team.game }}</a></td>
+                            <td>{{ team.master }}</a></td>
+                        </tr>
+                  </table>
 
-                    <div class="align-items-center justify-content-center text-center">
-                        <form method="POST">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit" class="save btn btn-primary">초대 확인</button>
-                        </form>
-                  </div>
-
+                            <div class="align-items-center justify-content-center text-center">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" value="deny" name="deny"class="save btn btn-danger">초대 거절</button>
+                                    <button type="submit" value="accept" name="accept" class="save btn btn-primary">초대 확인</button>
+                                </form>
+                          </div>
+                        {% endif %}
 
                 </div>
                 {% if messages %}

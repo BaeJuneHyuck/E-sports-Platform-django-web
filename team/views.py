@@ -36,7 +36,6 @@ class IndexView(generic.ListView):
         comments = Comment.objects.filter(Q(author=self.request.user) & Q(content__contains="참가신청합니다")).values_list('practice', flat=True).distinct()[:5]
         practices = Practice.objects.filter(pk__in=comments)
         context['practices'] = practices
-        print(comments)
         return context
 
 
@@ -253,26 +252,36 @@ class InvitationView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(InvitationView, self).get_context_data(**kwargs)
         TeamInvitationObject = TeamInvitation.objects.get(pk=self.kwargs.get('pk'))
+        context['myinvitation'] = TeamInvitationObject
         context['team'] = Team.objects.get(pk=TeamInvitationObject.team_pk.pk)
-        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[
-                                 :5]
+        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         return context
 
     def form_valid(self, form):
-        team_pk = TeamInvitation.objects.get(pk=self.kwargs.get('pk')).team_pk.pk
+        TeamInvitationObject = TeamInvitation.objects.get(pk=self.kwargs.get('pk'))
+        team_pk = TeamInvitationObject.team_pk.pk
+
+        if TeamInvitationObject.checked:
+            messages.success(self.request, '이미 확인한 초대입니다')
+            return redirect('/team/detail/' + str(team_pk))
+
         team = Team.objects.get(pk=team_pk)
         f = form.save(commit=False)
         f.checked = True
-        f.save()
-        if f.accepted:
+        if 'accept' in self.request.POST:
+            f.accepted = True
             messages.success(self.request, '초대를 수락했습니다')
 
             relation = TeamRelation(team_pk=team, user_pk=self.request.user)
             relation.save()
+            f.save()
+
             return redirect('/team/detail/' + str(team_pk))
         else:
+            f.accepted = False
             messages.success(self.request, '초대를 거절했습니다')
-            return redirect(self.request.path_info)
+            f.save()
+            return redirect('/team/detail/' + str(team_pk))
 
 
 class AttendView(generic.CreateView):

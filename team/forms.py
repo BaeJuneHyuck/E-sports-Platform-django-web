@@ -48,5 +48,6 @@ class TeamInvitationUpdateForm(forms.ModelForm):
         model = TeamInvitation
         fields = ('accepted',)
         widgets = {
+            'accepted':forms.HiddenInput,
             'checked': forms.HiddenInput
         }
