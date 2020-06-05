@@ -5,10 +5,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from django.utils import timezone
 from .models import Competition, CompetitionParticipate
-from team.models import TeamInvitation
-from .forms import CompetitionCreateForm
+from team.models import TeamInvitation, TeamRelation
+from .forms import CompetitionCreateForm, CompetitionAttendForm
 from django.urls import reverse
-
+from django.contrib import messages
 
 NOW = timezone.now()
 
@@ -39,6 +39,7 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
+        context['otherteams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).select_related('team')
         context['total_competition'] = Competition.total_competition()
         context['today'] = timezone.now()
         context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
@@ -69,22 +70,47 @@ class CreateView(generic.CreateView):
         return render(self, 'competitions/create.html', {'form': form, 'invitations':invitations})
 
 
-
 class AttendView(generic.DetailView):
     login_url = settings.LOGIN_URL
     model = CompetitionParticipate
-    template_name = 'competitions/attend.html'
 
-    def attend(self):
+    def post_new(self, pk):
         if not self.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
-        return HttpResponse('not yet :(')
 
+
+        competition = Competition.objects.get(pk=pk)
+        if competition.current_teams >= competition.total_teams:
+            messages.info(self, '신청이 마감된 대회입니다.')
+            return redirect('competitions:detail', pk=competition.pk)
+
+        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+        myteams = TeamRelation.objects.filter(user_pk=self.user.pk).select_related('team_pk')
+        form = CompetitionAttendForm(self.user.pk, self.POST)
+        if self.method == 'POST':
+            form = CompetitionAttendForm(self.user.pk, self.POST)
+            if form.is_valid():
+                print("form valid")
+                competitionParticipate = form.save(commit=False)
+                competitionParticipate.competition = Competition.objects.get(pk=pk)
+                competitionParticipate.save()
+
+                competition = Competition.objects.get(pk=pk)
+                competition.current_teams = competition.current_teams+1
+                competition.save()
+
+                messages.info(self, '참가 신청이 완료되었습니다.')
+                return redirect('competitions:detail', pk=competition.pk)
+            else:
+                print("form invalid")
+                return render(self, 'competitions/attend.html', {'form': form, 'invitations':invitations, 'competition':competition, 'myteams':myteams})
+        return render(self, 'competitions/attend.html', {'form': form, 'invitations':invitations, 'competition':competition, 'myteams':myteams})
 
 class OngoingView(generic.ListView):
     template_name = 'competitions/ongoing.html'
     context_object_name = 'latest_competitions_list'
-    queryset = Competition.objects.filter(state='ONGOING').order_by('-pub_date')
+    queryset = Competition.objects.filter(
+            Q(date_start__lte=timezone.now()) & Q(date_end__gte=timezone.now())).order_by('-pub_date')[:5]
     paginate_by = 10
 
     def get_context_data(self, **kwargs):

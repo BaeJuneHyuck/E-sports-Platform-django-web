@@ -6,93 +6,102 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class = "container mt-3">
 
-    <div class = "practice_detail">
-    <h1 class = "practice_name"> {{ practice.title }} </h1>
-    {% if practice.game in 'lol' %}
-    <a href = "https://kr.leagueoflegends.com/ko-kr/">
-    <img class = "practice_img" src = "/static/practice/images/lol.jpg">
-    </a>
-    {% elif practice.game in 'overwatch' %}
-    <a href = "https://playoverwatch.com/ko-kr/">
-    <img class = "practice_img" src = "/static/practice/images/overwatch.jpg">
-    </a>
-    {% endif %}
-    <table class = "table">
-        <tr>
-            <th>게임분야</th>
-            <td> {{ practice.game }} </td>
-        </tr>
-        <tr>
-            <th>게시자</th>
-            <td> {{ practice.author_name }} </td>
-        </tr>
-        <tr>
-            <th>티어</th>
-            <td> {{ practice.tier }} </td>
-        </tr>
-        <tr>
-            <th>소개</th>
-            <td> {{ practice.text }} </td>
-        </tr>
-        <tr>
-            <th>연습일</th>
-            <td> {{ practice.practice_time|date:"Y-m-d h:m" }} </td>
-        </tr>
-        <tr>
-            <th>게시일</th>
-            <td> {{ practice.pub_date|date:"Y-m-d h:m" }} </td>
-        </tr>
-    </table>
-</div>
+<div class = "container mt-3"  style="color:black">
 
-<div class = "comment">
-    <h3>Comments</h3>
-    <b>참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 '참가신청합니다'가 포함된 모든 댓글을 삭제해주세요.</b>
-    <form method="post">{% csrf_token %}
-        <div class="row">
-            <div class="col-10">
-                {{ form.content }}
-            </div>
-            <div class="col-6">
-                <button type="submit" class="save btn btn-success">Save</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div class = "comment">
-    <table class="table table-dark">
-        <tr>
-            <th>작성자</th>
-            <th>내용</th>
-            <th></th>
-        </tr>
-        {% for comment in comments %}
-        <tr>
-            <td>{{ comment.author.name }}</td>
-            <td>{{ comment.content }}</td>
-            {% if comment.author.name == request.user.name %}
-            <td style="text-align:right"><a href = "{% url 'practice:delete_comment' practice.id comment.id %}">삭제</a></td>
+    <div class = "border border-primary rounded bg-light mt-3 p-5">
+            <h1 class = "practice_name"> {{ practice.title }} </h1>
+            {% if practice.game in 'lol' %}
+                <a href = "https://kr.leagueoflegends.com/ko-kr/">
+                    <img class = "competition_img rounded" src = "/static/practice/images/lol.jpg">
+                </a>
+            {% elif practice.game in 'overwatch' %}
+                <a href = "https://playoverwatch.com/ko-kr/">
+                    <img class = "competition_img rounded" src = "/static/practice/images/overwatch.jpg">
+                </a>
             {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-</div>
 
-<div class = "pager">
-    {% if practice.id|add:'-1' > 0 %}
-    <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
-    {% endif %}
+        <table class = "table"  style="color:black">
+            <tr>
+                <th>게임분야</th>
+                <td> {{ practice.game }} </td>
+            </tr>
+            <tr>
+                <th>게시자</th>
+                <td> {{ practice.author_name }} </td>
+            </tr>
+            <tr>
+                <th>티어</th>
+                <td> {{ practice.tier }} </td>
+            </tr>
+            <tr>
+                <th>소개</th>
+                <td> {{ practice.text }} </td>
+            </tr>
+            <tr>
+                <th>연습일</th>
+                <td> {{ practice.practice_time|date:"Y-m-d h:m" }} </td>
+            </tr>
+            <tr>
+                <th>게시일</th>
+                <td> {{ practice.pub_date|date:"Y-m-d h:m" }} </td>
+            </tr>
+        </table>
+    </div>
 
-    <a class = "list" href="{% url 'practice:index' %}">목록</a>
+    <div class = "comment mt-4">
+        <h3>Comments</h3>
+        <table class="table table-dark">
+            <colgroup>
+                <col width="25%">
+                <col width="65%">
+                <col width="10%">
+            </colgroup>
+            <thead class="thead-light">
+                <tr>
+                  <th scope="col">작성자</th>
+                  <th scope="col">내용</th>
+                  <th scope="col"></th>
+                </tr>
+            </thead>
 
-    {% if practice.id|add:'1' <= total_practice %}
-    <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
-    {% endif %}
-</div>
+            {% for comment in comments %}
+            <tr>
+                <td>{{ comment.author.name }}</td>
+                <td>{{ comment.content }}</td>
+                {% if comment.author.name == request.user.name %}
+                <td style="text-align:right;"><a style="color:red" href = "{% url 'practice:delete_comment' practice.id comment.id %}">삭제</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        <form method="post">{% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" name="content" maxlength="600" required="" id="id_content"
+                     placeholder="참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 댓글을 삭제해주세요">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button">Button</button>
+              </div>
+            </div>
 
+        </form>
+    </div>
+
+    <div class = "comment">
+
+    </div>
+
+    <div class = "pager">
+        {% if practice.id|add:'-1' > 0 %}
+        <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
+        {% endif %}
+
+        <a class = "list" href="{% url 'practice:index' %}">목록</a>
+
+        {% if practice.id|add:'1' <= total_practice %}
+        <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
+        {% endif %}
+    </div>
 
 </div>
 {% endblock %}

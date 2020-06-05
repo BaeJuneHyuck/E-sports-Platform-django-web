@@ -1,28 +1,50 @@
 
 {% extends "home/base.html" %}
 
-{% block title %} esportsPlatform {% endblock %}
+{% block title %} 연습 경기 {% endblock %}
 
 {% block content %}
 
 
-<div class="practice">
+<div class="competition">
     <div class="contents_list">
-        <div class="contents_title">
-            <a href="/practice">연습 경기</a>
-        </div>
+
+        <div class="contents_title row">
+                <div class="col-sm">
+                    <a href="/practice">연습 경기</a>
+                </div>
+                <div class="col-sm">
+                    {# Search #}
+                    <div class="container">
+                        <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'practice:search' %}">
+                           <i class="fas fa-search mr-1" aria-hidden="true"></i>
+                            <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
+                                <option value="title">제목</option>
+                                <option value="author">작성자</option>
+                                <option value="text">내용</option>
+                                <option value="tier">티어</option>
+                            </select>
+                            <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
+                            <input class="btn btn-primary" type="submit" value="검색">
+
+                        </form>
+                    </div>
+                </div>
+            </div>
         {% if practices %}
         <table class = "practice_list table table-hover text-white">
-            <thead>
+            <thead class="thead-light">
                 <tr>
-                    <th><a href="{% url 'practice:search' %}">번호</a></th>
-                    <th><a href="{% url 'practice:search' %}">제목</a></th>
-                    <th><a href="{% url 'practice:search' %}">게임</a></th>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>게임</th>
                     <th>티어</th>
                     <th>연습일</th>
                     <th>게시일</th>
                 </tr>
             </thead>
+
+
             <tbody>
             {% for practice in practices %}
                 <tr>
@@ -85,19 +107,7 @@
         <a href="create"><button type="submit" class="save btn btn-primary">연습경기 만들기</button></a>
 
     </div>
-    {# Search #}
-    <div class="container">
-        <form class="form-inline text-center" method='GET' action="{% url 'practice:search' %}">
-            <select class="form-control" name="attribute" value="{{ request.GET.attribute }}">
-                <option value="title">제목</option>
-                <option value="author">작성자</option>
-                <option value="text">내용</option>
-                <option value="tier">티어</option>
-            </select>
-            <input type="text" name="qs" value="{{ request.GET.qs }}"/>
-            <input type="submit" value="Search"/>
-        </form>
-    </div>
+
 </div>
 
 {% endblock %}

@@ -10,19 +10,26 @@
             <a href="/competitions/ongoing">진행중인 대회</a>
             </div>
             {% if latest_competitions_list %}
+
             <table class = "competition_list table table-hover  text-white">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>대회명</th>
-                    <th>게임</th>
-                    <th>게시일</th>
-                </tr>
+                <colgroup>
+                    <col width="10%">
+                    <col width="25%">
+                    <col width="25%">
+                    <col width="40%">
+                </colgroup>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col">대회명</th>
+                        <th scope="col">게임</th>
+                        <th scope="col">게시일</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {% for competition in latest_competitions_list %}
                 <tr>
-                    <th>{{ competition.id }}</th>
+                    <td>{{ competition.id }}</td>
                     <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
                     <td>{{ competition.competition_game }}</td>
                     <td>{{ competition.pub_date }}</td>

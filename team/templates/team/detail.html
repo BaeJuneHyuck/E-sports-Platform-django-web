@@ -4,11 +4,16 @@
 {% block title %} {{ team.name }} 팀정보 {% endblock %}
 
 {% block content %}
-    <div class = "container ">
+    <div class = "container" style="color:black">
         <div class = "border border-primary rounded bg-light mt-3 p-5 " >
             <script text="text/javascript">var attending = false</script>
             <div class = "practice_detail">
-                <h1 class = "practice_name">  {{ team.name }}</h1> <h3 class = "practice_name">  게임 : {{ team.game }}</h3>
+                <h1 class = "practice_name">  {{ team.name }}</h1>
+                <div class="card-footer bg-transparent border-dark"></div>
+
+                <h3 class = "practice_name">  종목 : {{ team.game }}</h3>
+                <div class="card-footer bg-transparent border-dark"></div>
+
                 <h4>
                 {% if team.visible %}
                     팀종류 : 공개팀
@@ -16,8 +21,11 @@
                     팀종류 : 비공개팀
                 {% endif %}
                 </h4>
+                <div class="card-footer bg-transparent border-dark"></div>
+
                 팀 소개 : {{ team.text }}
-                <div class="card-footer bg-transparent border-primary"></div>
+                <div class="card-footer bg-transparent border-dark"></div>
+
 
                 {% if messages %}
                     {% for message in messages %}
@@ -56,7 +64,8 @@
                     {% endfor %}
                 </table>
 
-                <div class="card-footer bg-transparent border-primary"></div>
+                <div class="card-footer bg-transparent border-dark"></div>
+
                 <a href="/team/attend/{{team.pk}}" id="attend" class="btn btn-primary" role="button">팀 참가하기</a>
                     <script>
                         if(attending) {

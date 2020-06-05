@@ -11,15 +11,21 @@
             </div>
             {% if scheduled_competitions_list %}
             <table class = "competition_list table table-hover  text-white">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>대회명</th>
-                    <th>게임</th>
-                    <th>게시일</th>
-                </tr>
+                <colgroup>
+                    <col width="10%">
+                    <col width="25%">
+                    <col width="25%">
+                    <col width="40%">
+                </colgroup>
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col">대회명</th>
+                        <th scope="col">게임</th>
+                        <th scope="col">게시일</th>
+                    </tr>
                 </thead>
-                <tbody>
+                <tbody class="tbody-light">
                 {% for competition in scheduled_competitions_list %}
                 <tr>
                     <th>{{ competition.id }}</th>

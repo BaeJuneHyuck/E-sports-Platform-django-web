@@ -106,6 +106,13 @@ body {
     color:black;
 }
 
+
+.practice a:link, .practice a:visited, .practice a:hover, .practice a:active {
+    font-size: 20px;
+    font-color:white;
+    text-decoration: none;  color:white;
+}
+
 .contents_title a:link, .contents_title a:visited, .contents_title a:hover, .contents_title a:active {
     font-size: 30px;
     font-color:#FA9C1D;

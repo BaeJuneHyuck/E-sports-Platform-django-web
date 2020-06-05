@@ -4,7 +4,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from . import models
-from .models import Competition
+from .models import Competition, CompetitionParticipate
 
 
 class CompetitionsAdmin(admin.ModelAdmin):
@@ -31,3 +31,17 @@ class CompetitionsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Competition, CompetitionsAdmin)
+
+
+class CompetitionParticipateAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['competition']}),
+        (None, {'fields': ['team']}),
+        (None, {'fields': ['avg_tier']}),
+    ]
+    list_display = ('competition', 'team', 'avg_tier')
+    list_filter = ['competition']
+    search_fields = ['competition']
+
+
+admin.site.register(CompetitionParticipate, CompetitionParticipateAdmin)

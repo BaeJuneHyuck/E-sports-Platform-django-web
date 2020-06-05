@@ -70,31 +70,35 @@
     </div>
 
     <div class="practice">
-        <div class="contents_title">
-            <a href="/practice"  data-toggle="tooltip" data-placement="right" title="더보기">연습경기 모집</a>
+        <div class="contents">
+            <div class="contents_title">
+                <a href="/practice"  data-toggle="tooltip" data-placement="right" title="더보기">연습경기 모집</a>
+            </div>
+                {% if practices %}
+                    <ul>
+                        {% for practice in practices %}
+                        <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p> No Practice are available.</p>
+                {% endif %}
         </div>
-            {% if practices %}
-                <ul>
-                    {% for practice in practices %}
-                    <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p> No Practice are available.</p>
-            {% endif %}
 
-        <div class="contents_title">
-            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
-        </div>
-            {% if recommend_practice %}
-                <ul>
-                    {% for practice in recommend_practice %}
-                    <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p> No Practice are available.</p>
-            {% endif %}
+         <div class="contents">
+            <div class="contents_title">
+                <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
+            </div>
+                {% if recommend_practice %}
+                    <ul>
+                        {% for practice in recommend_practice %}
+                        <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p> No Practice are available.</p>
+                {% endif %}
+         </div>
     </div>
 
 {% endblock %}

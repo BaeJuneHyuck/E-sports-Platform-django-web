@@ -15,8 +15,9 @@ class PracticeCreateForm(forms.ModelForm):
     text = forms.CharField(max_length=600, widget=forms.Textarea)
     game = forms.CharField(label='game', widget=forms.Select(choices=GAME))
     tier = forms.IntegerField()
-    practice_time = forms.DateTimeField(widget=forms.SelectDateWidget)
-
+    practice_time = forms.DateTimeField(label='연습일',widget=forms.TextInput(
+        attrs={'type': 'date'}
+    ))
     class Meta:
         model = Practice
         fields = ['title', 'text', 'game', 'tier', 'practice_time']

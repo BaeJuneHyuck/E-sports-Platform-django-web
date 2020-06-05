@@ -5,10 +5,23 @@
 
 {% block content %}
 
-<div class ="container mt-3">
+<div class ="container mt-3 " style="color:black">
 
     <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
         <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="row" style="margin:20px auto;">
+            <div class="col-sm-12">
+                <div class="alert alert-primary">
+                    {{ message.message }}
+                </div>
+            </div>
+            </div><!-- Logout Modal-->
+        {% endfor %}
+    {% endif %}
+
         {% if competition.formatted_image %}
             <img src="{{ competition.formatted_image.url }}" class="rounded competition_img mt-1">
         {% else %}
@@ -65,40 +78,74 @@
             </tr>
         </table>
 
-        {% if competition.attend_start <= today and competition.attend_end >= today %}
-        <form action="{% url 'competitions:attend' competition.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="대회 참가하기" class="save btn btn-success">
-        </form>
-        {% endif %}
+
     </div>
+        <div class="col-xl col-lg border border-primary rounded bg-light mt-3 p-5 ">
+              <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">참가 현황</h6>
+                        {% if competition.current_teams >= competition.total_teams %}
+                            <a href="#" class="btn btn-primary" role="button">신청이 마감되었습니다</a>
+                        {% elif competition.attend_start <= today and competition.attend_end >= today %}
+                            <a href="/competitions/attend/{{competition.pk}}" id="attend" class="btn btn-primary" role="button">대회 참가하기</a>
+                        {% endif %}
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div>
+                            <h6 class="m-0 font-weight-bold text-primary m-3">현재 참여팀수 : {{competition.current_teams}} 모집 팀 : {{competition.total_teams}}</h6>
+                            <div class="progress">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {% widthratio competition.current_teams competition.total_teams 100 %}%"></div>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class = "pager">
-        {% if competition.id|add:'-1' > 0 %}
-        <a class = "previous" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
-        {% endif %}
+                    <div class="card-columns" style="color:black">
+                        {% for otherteam in otherteams %}
+                            <div class="card bg-light  m-3" style="max-width: 18rem;">
+                              <div class="card-header"><a href="/team/detail/{{otherteam.team.pk}}" data-toggle="tooltip" data-placement="right" title="팀 정보 보기">{{otherteam.team.name}}</a></div>
+                              <div class="card-body">
+                                <p class="card-text">{{otherteam.team.text}}</p>
+                              </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+              </div>
+        </div>
 
-        {% if compare_date < 0 %}
-        <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
-        {% elif compare_date > 0 %}
-        <a class = "list" href="{% url 'competitions:past' %}">목록</a>
-        {% else %}
-        <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
-        {% endif %}
-
-        {% if competition.id|add:'1' <= total_competition %}
-        <a class = "next" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
-        {% endif %}
-    </div>
-
-
-    <!-- comment -->
-    <div class = "Comment">
+     <!-- comment -->
+    <div class = "Comment mt-2">
         {% load disqus_tags %}
         <div>
             {% disqus_show_comments %}
         </div>
     </div>
+
+
+    <div class="row mt-4">
+        <div class = "pager">
+            {% if competition.id|add:'-1' > 0 %}
+            <a class = "previous col-sm-3 algin-left" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
+            {% endif %}
+
+            {% if compare_date < 0 %}
+            <a class = "list col" href="{% url 'competitions:scheduled' %}">목록</a>
+            {% elif compare_date > 0 %}
+            <a class = "list col" href="{% url 'competitions:past' %}">목록</a>
+            {% else %}
+            <a class = "list col" href="{% url 'competitions:ongoing' %}">목록</a>
+            {% endif %}
+
+            {% if competition.id|add:'1' <= total_competition %}
+            <a class = "next col" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
+            {% endif %}
+        </div>
+    </div>
+
+
+
 
 </div>
 

@@ -51,6 +51,9 @@ class Competition(models.Model):
     total_teams = models.IntegerField(default=8, verbose_name='전체 모집 팀') # 대회 참가팀수, 마감시 모집종료
     current_teams = models.IntegerField(default=0, verbose_name='현재 모집 팀') # 대회 참가팀수, 마감시 모집종료
 
+    def __str__(self):
+        return '{}'.format(self.competition_name)
+
     @staticmethod
     def total_competition():
         return Competition.objects.count()
@@ -75,8 +78,10 @@ def competition_save_state(sender, instance, update_fields, **kwargs):
 class CompetitionParticipate(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    avg_tier = models.IntegerField()
+    avg_tier = models.IntegerField(default=0, null=True)
 
+    def __str__(self):
+        return '{}{}'.format(self.competition, self.team)
 
 class Match(models.Model):
     game = models.IntegerField(default=1, verbose_name='게임') # 1=롤, 2=오버워치

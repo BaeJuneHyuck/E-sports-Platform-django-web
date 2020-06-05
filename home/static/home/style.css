@@ -3,81 +3,6 @@ body {
     margin:0px;
 }
 
-a:link, a:visited, a:hover, a:active {
-  text-decoration: none;  color:white;
-}
-
-
-.topmain {
-    width: 100%;
-    height: 800px;
-    background: url("images/overwatch.jpg") no-repeat;
-    background-size: cover;
-}
-
-.top {
-    width: 100%;
-    height: 70px;
-    background: url("images/overwatch.jpg") no-repeat;
-    background-size: cover;
-}
-/* Add a black background color to the top navigation */
-.topnav {
-  position: relative;
-  overflow: hidden;
-  color: black;
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-  color: black;
-  float: left;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 25px;
-}
-
-.topnav a:hover {
-  color: white;
-}
-
-.topnav a.active {
-  color: black;
-}
-
-.topnav-centered a {
-  color: black;
-  float: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.topnav-centered a:hover {
-  color: black;
-}
-
-.topnav-right {
-  float: right;
-}
-
-@media screen and (max-width: 600px) {
-  .topnav a, .topnav-right {
-    float: none;
-    display: block;
-  }
-
-  .topnav-centered a {
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
-  }
-}
-
-
 .competition{
     padding:100px;
     background: black;
@@ -93,30 +18,80 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
 
+.contents_list {
+    color:white;
+    margin-bottom:100px;
+    padding: 15px;
+    margin-bottom: 50px solid green;
+    border-bottom: 5px solid white;
+    font-size: 20px;
+}
+
+.contents_list li a{
+    text-decoration: none;
+}
+
+
+/* Style of detail */
+
+.competition_img{
+    max-width: 100%;
+    height: auto !important;
+}
+
+.contents_detail .contents_table{
+    border-collapse: separate;
+    border-spacing: 1px;
+    text-align: left;
+    line-height: 1.5;
+    border-top: 1px solid #ccc;
+    margin: 20px 10px;
+}
+
+.contents_detail .contents_table th{
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    background: #efefef;
+}
+
+.contents_detail .contents_table td{
+    width: max-width;
+    padding: 10px;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+}
+
+.contents_detail{
+    font-size: 20px;
+}
+
+.contents_detail a{
+    color: black;
+}
+
+.contents_detail a:hover{
+    color: red;
+}
+
+.pager a{
+    font-size: 20px;
+    color: black;
+}
+
+
 #footer{
     background: white;
     padding:0px 50px 50px 30px;
 }
 
 
-.banner{
-    margin: 0 auto;
-    height:500px;
-    padding: 5%;
-}
-
-.logo{
-    margin:0 auto;
-    width:500px;
-    height:550px;
-    background: url("images/OW.png") no-repeat;
-    background-size: cover;
-}
-
 .button{
   margin:20px auto;
   width:5%;
-  background-color: #4A4C4E; /* Green */
+  background-color: #4A4C4E;
   color: white;
   padding: 15px 32px;
   text-align: center;
@@ -126,10 +101,25 @@ a:link, a:visited, a:hover, a:active {
 
 .practice{
     padding:100px;
-    background: gray;
+    background:#4A4C4E;
     font-size:20px;
     color:black;
 }
+
+
+.practice a:link, .practice a:visited, .practice a:hover, .practice a:active {
+    font-size: 20px;
+    font-color:white;
+    text-decoration: none;
+
+}
+
+.competition a:link, .competition a:visited, .competition a:hover, .competition a:active {
+    font-size: 20px;
+    font-color:red;
+    text-decoration: none;
+}
+
 
 .contents_title a:link, .contents_title a:visited, .contents_title a:hover, .contents_title a:active {
     font-size: 30px;
