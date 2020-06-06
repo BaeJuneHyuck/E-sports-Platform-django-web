@@ -49,7 +49,8 @@ class UserMypageView(UpdateView):
 
     def get(self, request):
         form = UserMypageForm(instance=request.user)
-        lolid = self.model.objects.get(pk = request.user.pk)
+        cur_user = request.user
+        lolid = self.model.objects.get(email=cur_user.email)
         records = lol_record.objects.filter(nickName = lolid.lolid)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
 
@@ -59,7 +60,8 @@ class UserMypageView(UpdateView):
 
     def post(self, request):
         form = UserMypageForm(request.POST, instance=request.user)
-        lolid = self.model.objects.get(pk=1)
+        cur_user = request.user
+        lolid = self.model.objects.get(email=cur_user.email)
         records = lol_record.objects.filter(nickName= lolid.lolid)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
         if form.is_valid():
