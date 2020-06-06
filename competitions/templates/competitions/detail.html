@@ -128,20 +128,20 @@
 
     <div class="row mt-4">
         <div class = "pager">
-            {% if competition.id|add:'-1' > 0 %}
-            <a class = "previous col-sm-3 algin-left" href="{% url 'competitions:detail' competition.id|add:'-1' %}">이전페이지</a>
+            {% if previous %}
+                <a class = "list" href="{% url 'competitions:detail' previous.id %}">이전페이지</a>
             {% endif %}
 
-            {% if compare_date < 0 %}
-            <a class = "list col" href="{% url 'competitions:scheduled' %}">목록</a>
-            {% elif compare_date > 0 %}
-            <a class = "list col" href="{% url 'competitions:past' %}">목록</a>
+            {% if state == 'ONGOING' %}
+                <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
+            {% elif state == 'PAST' %}
+                <a class = "list" href="{% url 'competitions:past' %}">목록</a>
             {% else %}
-            <a class = "list col" href="{% url 'competitions:ongoing' %}">목록</a>
+                <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
             {% endif %}
 
-            {% if competition.id|add:'1' <= total_competition %}
-            <a class = "next col" href="{% url 'competitions:detail' competition.id|add:'1' %}">다음페이지</a>
+            {% if next %}
+                <a class = "list" href="{% url 'competitions:detail' next.id %}">다음페이지</a>
             {% endif %}
         </div>
     </div>

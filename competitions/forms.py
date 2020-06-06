@@ -11,9 +11,21 @@ GAME=[
     ('LOL', 'LOL'),
 ]
 
+TIER = [
+    ('Iron, Unranker', 'IRON, UNRANKER'),
+    ('Bronze', 'BRONZE'),
+    ('Silver', 'SILVER'),
+    ('Gold', 'GOLD'),
+    ('Platinum', 'PLATINUM'),
+    ('Diamond', 'DIAMOND'),
+    ('Master', 'MASTER'),
+    ('Grandmaster', 'GRANDMASTER'),
+    ('Ranker/Challenger', 'RANKERE/CHALLENGER')
+]
+
 TOURNAMENT_TYPE = [
     (-1, 'Single Elimination'),    # 1패 하면 탈락하는 토너먼트
-    ( -2, 'Double Elimination'),   # 패배시 패자전에서 한번더 기회있는 토너먼트
+    (-2, 'Double Elimination'),   # 패배시 패자전에서 한번더 기회있는 토너먼트
     (2, 'Round Robin'),            # 모든 상대팀과 N번 경기를 치룬다
 ]
 
@@ -43,7 +55,8 @@ class CompetitionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Competition
-        fields = ['competition_name', 'competition_text', 'competition_game', 'required_tier','tournament_type', 'date_start','date_end','attend_start','attend_end','is_public']
+        fields = ['competition_name', 'competition_text', 'competition_game', 'required_tier', 'tournament_type',
+                  'date_start', 'date_end', 'attend_start', 'attend_end', 'is_public']
 
     def clean_date_start(self):
         NOW = timezone.now()

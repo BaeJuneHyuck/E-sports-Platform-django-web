@@ -1,19 +1,20 @@
-from team.models import Team
-from django.contrib.postgres import search
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
-from django.template import RequestContext
 from django.urls import reverse
 from django.views import generic
-from django.utils import timezone
 
-
-from user.models import User
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import PracticeCreateForm, CommentForm
 from team.models import TeamInvitation
 from practice.models import Practice, Comment, User
 from django.conf import settings
 
+NOW = datetime.now()
+one_years = NOW+relativedelta(years=-1)
+two_years = NOW+relativedelta(years=-2)
+three_years = NOW+relativedelta(years=-3)
 
 class IndexView(generic.ListView):
     model = Practice
@@ -39,6 +40,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(IndexView, self).get_context_data(*args,**kwargs)
+        context['practices'] = Practice.objects.filter(practice_time__gt=three_years)
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
@@ -55,6 +57,8 @@ class IndexView(generic.ListView):
         context['page_range'] = page_range
         context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
 
+        attribute = self.request.GET.get("attribute", None)
+        context['attribute'] = attribute
         return context
 
 
@@ -66,7 +70,7 @@ class DetailView(generic.DetailView):
         practice = Practice.objects.get(pk=practice_pk)
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
-        today = timezone.now().strftime("%Y-%m-%d")
+        today = NOW.strftime("%Y-%m-%d")
         if self.method == 'POST':
             form = CommentForm(self.POST)
             if form.is_valid():
@@ -91,7 +95,7 @@ class DetailView(generic.DetailView):
         practice = Practice.objects.get(pk=practice_pk)
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
-        today = timezone.now().strftime("%Y-%m-%d")
+        today = NOW.strftime("%Y-%m-%d")
         if self.method == 'POST':
             form = CommentForm(self.POST)
             if form.is_valid():
@@ -105,7 +109,7 @@ class DetailView(generic.DetailView):
             form = CommentForm()
 
         form = CommentForm()
-        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
 
         return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
                                                      'total_practice': total_practice, 'today': today, 'invitations':invitations})

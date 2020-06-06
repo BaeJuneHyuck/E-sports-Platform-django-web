@@ -68,7 +68,7 @@
                     {% for competition in last_year %}
                     <tr>
                         <th>{{ competition.id }}</th>
-                        <td><a href="{% url 'competitions:past_detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
                         <td>{{ competition.competition_game }}</td>
                         <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
                     </tr>
@@ -94,7 +94,7 @@
                     {% for competition in last_last_year %}
                     <tr>
                         <th>{{ competition.id }}</th>
-                        <td><a href="{% url 'competitions:past_detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
                         <td>{{ competition.competition_game }}</td>
                         <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
                     </tr>

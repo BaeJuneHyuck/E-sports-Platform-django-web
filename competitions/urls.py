@@ -11,7 +11,9 @@ urlpatterns = [
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('attend/<int:pk>/', login_required(views.AttendView.post_new), name='attend'),
     path('ongoing/', views.OngoingView.as_view(), name='ongoing'),
+    path('ongoing/search', views.OngoingView.as_view(), name='ongoing_search'),
     path('scheduled/', views.ScheduledView.as_view(), name='scheduled'),
+    path('scheduled/search', views.ScheduledView.as_view(), name='scheduled_search'),
     path('past/', views.PastView.as_view(), name='past'),
     path('create/', views.CreateView.post_new, name='create'),
 

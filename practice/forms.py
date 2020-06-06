@@ -1,14 +1,30 @@
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 
 from .models import Practice, Comment
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 GAME=[
     ('overwatch', 'Overwatch'),
     ('lol', 'LOL'),
 ]
+
+TIER = [
+    ('Iron, Unranker', 'IRON, UNRANKER'),
+    ('Bronze', 'BRONZE'),
+    ('Silver', 'SILVER'),
+    ('Gold', 'GOLD'),
+    ('Platinum', 'PLATINUM'),
+    ('Diamond', 'DIAMOND'),
+    ('Master', 'MASTER'),
+    ('Grandmaster', 'GRANDMASTER'),
+    ('Ranker/Challenger', 'RANKERE/CHALLENGER')
+]
+
+NOW = datetime.now()
+three_year_over = NOW + relativedelta(years=3)
 
 class PracticeCreateForm(forms.ModelForm):
     title = forms.CharField(max_length=200)
@@ -23,10 +39,11 @@ class PracticeCreateForm(forms.ModelForm):
         fields = ['title', 'text', 'game', 'tier', 'practice_time']
 
     def clean_practice_time(self):
-        now = timezone.now().strftime("%Y-%m-%d")
-        practice_time = self.cleaned_data['practice_time'].strftime("%Y-%m-%d")
-        if practice_time <= now:
+        practice_time = self.cleaned_data['practice_time'].strftime("%Y-%m-%d %H:%M")
+        if practice_time < NOW:
             raise ValidationError('지난 시간은 선택할 수 없습니다.')
+        elif practice_time > three_year_over:
+            raise ValidationError('최대 3년까지 선택할 수 있습니다.')
         return practice_time
 
 class CommentForm(forms.ModelForm):

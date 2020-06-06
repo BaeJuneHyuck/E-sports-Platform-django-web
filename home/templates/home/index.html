@@ -99,6 +99,30 @@
                     <p> No Practice are available.</p>
                 {% endif %}
          </div>
+        <div class="contents_title">
+            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
+        </div>
+            {% if recommend_practice %}
+                <ul>
+                    {% for practice in recommend_practice %}
+                    <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Practice are available.</p>
+            {% endif %}
+        <div class="contents_title">
+            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가가능한 연습경기</a>
+        </div>
+            {% if recommend_practice %}
+                <ul>
+                    {% for practice in recommend_practice %}
+                    <li><a href="{% url 'practice:recommand' %}">{{ practice.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p> No Practice are available.</p>
+            {% endif %}
     </div>
 
 {% endblock %}

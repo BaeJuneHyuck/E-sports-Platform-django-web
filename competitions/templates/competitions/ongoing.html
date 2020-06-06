@@ -9,8 +9,25 @@
             <div class="contents_title">
             <a href="/competitions/ongoing">진행중인 대회</a>
             </div>
-            {% if latest_competitions_list %}
 
+            <div class="col-sm">
+                {# Search #}
+                <div class="container">
+                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'practice:search' %}">
+                        <i class="fas fa-search mr-1" aria-hidden="true"></i>
+                        <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
+                            <option value="title" {% if attribute == "title" or attirbute is None %} selected {% endif %}>제목</option>
+                            <option value="master" {% if attribute == "master" %} selected {% endif %}>작성자</option>
+                            <option value="text" {% if attribute == "text" %} selected {% endif %}>내용</option>
+                            <option value="game" {% if attribute == "game" %} selected {% endif %}>티어</option>
+                        </select>
+                        <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
+                        <input class="btn btn-primary" type="submit" value="검색">
+                    </form>
+                </div>
+            </div>
+
+            {% if latest_competitions_list %}
             <table class = "competition_list table table-hover  text-white">
                 <colgroup>
                     <col width="10%">

@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from team.models import Team
 from user.models import User
 
 class Practice(models.Model):
@@ -11,7 +10,7 @@ class Practice(models.Model):
     title = models.CharField(max_length=200)
     text = models.CharField(max_length=600)
     game = models.CharField(max_length=50)
-    tier = models.IntegerField(default=1000)
+    tier = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     practice_time = models.DateTimeField('practice time')
 

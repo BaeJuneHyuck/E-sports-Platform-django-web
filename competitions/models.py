@@ -47,7 +47,7 @@ class Competition(models.Model):
     master = models.ForeignKey(User, null=True, on_delete=models.CASCADE,verbose_name='대회관리자') # 작성자
     is_public = models.BooleanField(default=True, verbose_name='공개 대회')
     tournament_type = models.IntegerField(default=-1, verbose_name='대회 방식') # -1=싱글, -2=더블 / 양수 1이상=라운드로빈(모든팀이 서로 값만큼 경기)
-    required_tier = models.IntegerField(default=1000, verbose_name='참가 최소 티어')
+    required_tier = models.CharField(max_length=200, verbose_name='참가 최소 티어')
     total_teams = models.IntegerField(default=8, verbose_name='전체 모집 팀') # 대회 참가팀수, 마감시 모집종료
     current_teams = models.IntegerField(default=0, verbose_name='현재 모집 팀') # 대회 참가팀수, 마감시 모집종료
 
