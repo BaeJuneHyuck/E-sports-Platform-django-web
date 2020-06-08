@@ -13,7 +13,7 @@
             <div class="col-sm">
                 {# Search #}
                 <div class="container">
-                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'practice:search' %}">
+                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'competitions:scheduled_search' %}">
                         <i class="fas fa-search mr-1" aria-hidden="true"></i>
                         <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
                             <option value="title" {% if attribute == "title" or attirbute is None %} selected {% endif %}>제목</option>
@@ -46,7 +46,7 @@
                 <tbody class="tbody-light">
                 {% for competition in scheduled_competitions_list %}
                 <tr>
-                    <th>{{ competition.id }}</th>
+                    <th>{{ competition.page_num }}</th>
                     <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
                     <td>{{ competition.competition_game }}</td>
                     <td>{{ competition.pub_date }}</td>
