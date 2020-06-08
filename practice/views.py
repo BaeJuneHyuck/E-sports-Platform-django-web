@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.http import HttpResponse
@@ -11,15 +11,15 @@ from team.models import TeamInvitation
 from practice.models import Practice, Comment, User
 from django.conf import settings
 
-NOW = datetime.now()
+NOW = datetime.datetime.now()
 one_years = NOW+relativedelta(years=-1)
 two_years = NOW+relativedelta(years=-2)
 three_years = NOW+relativedelta(years=-3)
 
 class IndexView(generic.ListView):
-    model = Practice
     template_name = 'practice/index.html'
     context_object_name = 'practices'
+    queryset = Practice.objects.filter(practice_time__gt=three_years)
     paginate_by = 5
 
     def get_queryset(self, *args, **kwargs):
@@ -32,15 +32,15 @@ class IndexView(generic.ListView):
             elif attribute == 'author':
                 qs = qs.filter(author_name__icontains=query)
             elif attribute == 'tier':
-                qs = qs.filter(tier=query)
+                qs = qs.filter(tier__icontains=query)
             elif attribute == 'text':
                 qs = qs.filter(text__icontains=query)
+            print(qs)
         print(self.request.GET)
         return qs
 
     def get_context_data(self, *args, **kwargs):
         context = super(IndexView, self).get_context_data(*args,**kwargs)
-        context['practices'] = Practice.objects.filter(practice_time__gt=three_years)
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
@@ -55,7 +55,7 @@ class IndexView(generic.ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
-        context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
 
         attribute = self.request.GET.get("attribute", None)
         context['attribute'] = attribute

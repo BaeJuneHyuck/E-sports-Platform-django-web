@@ -35,7 +35,7 @@ class CompetitionCreateForm(forms.ModelForm):
     competition_game = forms.CharField(label='대회종목', widget=forms.Select(choices=GAME))
 
     tournament_type = forms.CharField(label='대회 방식', widget=forms.Select(choices=TOURNAMENT_TYPE))
-    required_tier = forms.IntegerField(label='최소 티어')
+    required_tier = forms.CharField(label='최소 티어', widget = forms.Select(choices=TIER))
     total_teams = forms.IntegerField(label='참여 팀 수')
     date_start = forms.DateTimeField(label='대회 시작',widget = forms.TextInput(
         attrs={'type': 'date'}

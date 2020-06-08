@@ -55,12 +55,29 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
+        i=1
         context['otherteams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).select_related(
             'team')
         context['total_competition'] = Competition.total_competition()
         context['today'] = NOW
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[
                                  :5]
+        state = self.object.state
+        print(state)
+        page_num = self.object.page_num
+        competition_list = Competition.objects.filter(state=state)
+        for competition in competition_list:
+            competition.page_num = i
+            competition.save()
+            i += 1
+        context['state'] = state
+        if page_num + 1 <= competition_list.count() and page_num!=0:
+            next = Competition.objects.get(Q(state=state) & Q(page_num=page_num + 1))
+            context['next'] = next
+        if page_num - 1 > 0 and page_num!=0:
+            previous = Competition.objects.get(Q(state=state) & Q(page_num=page_num - 1))
+            context['previous'] = previous
+        context['notSetting'] = 0
         return context
 
 
@@ -143,7 +160,7 @@ class OngoingView(generic.ListView):
             if attribute == 'title':
                 qs = qs.filter(competition_name__icontains=query)
             elif attribute == 'master':
-                qs = qs.filter(master__name__icontains=query)
+                qs = qs.filter(master_name__icontains=query)
             elif attribute == 'game':
                 qs = qs.filter(competition_game__icontains=query)
             elif attribute == 'text':
@@ -233,6 +250,7 @@ class ScheduledView(generic.ListView):
 
 
 class PastView(generic.ListView):
+    model = Competition
     template_name = 'competitions/past.html'
     context_object_name = 'past_competitions_list'
 

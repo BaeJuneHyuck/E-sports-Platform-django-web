@@ -43,8 +43,10 @@ class Competition(models.Model):
     attend_start = models.DateTimeField('attend_start')
     attend_end = models.DateTimeField('attend_end')
     state = models.CharField(max_length=10, choices=STATE, default='none')
+    page_num = models.IntegerField(default=0)
 
     master = models.ForeignKey(User, null=True, on_delete=models.CASCADE,verbose_name='대회관리자') # 작성자
+    mast_name = models.CharField(max_length=200)
     is_public = models.BooleanField(default=True, verbose_name='공개 대회')
     tournament_type = models.IntegerField(default=-1, verbose_name='대회 방식') # -1=싱글, -2=더블 / 양수 1이상=라운드로빈(모든팀이 서로 값만큼 경기)
     required_tier = models.CharField(max_length=200, verbose_name='참가 최소 티어')
@@ -74,6 +76,10 @@ def competition_save_state(sender, instance, update_fields, **kwargs):
         instance.state = 'PAST'
     else:
         instance.state = 'ONGOING'
+
+@receiver(pre_save, sender=Competition)
+def practice_save(sender, instance, update_fields, **kwargs):
+    instance.master_name = instance.master.name
 
 class CompetitionParticipate(models.Model):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE)

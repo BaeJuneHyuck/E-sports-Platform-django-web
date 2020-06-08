@@ -128,7 +128,7 @@
 
     <div class="row mt-4">
         <div class = "pager">
-            {% if previous %}
+            {% if previous and page_num is not notSetting %}
                 <a class = "list" href="{% url 'competitions:detail' previous.id %}">이전페이지</a>
             {% endif %}
 
@@ -140,7 +140,7 @@
                 <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
             {% endif %}
 
-            {% if next %}
+            {% if next and page_num is not notSetting %}
                 <a class = "list" href="{% url 'competitions:detail' next.id %}">다음페이지</a>
             {% endif %}
         </div>

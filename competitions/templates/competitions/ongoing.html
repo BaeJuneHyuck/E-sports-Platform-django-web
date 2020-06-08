@@ -13,13 +13,13 @@
             <div class="col-sm">
                 {# Search #}
                 <div class="container">
-                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'practice:search' %}">
+                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'competitions:ongoing_search' %}">
                         <i class="fas fa-search mr-1" aria-hidden="true"></i>
                         <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
                             <option value="title" {% if attribute == "title" or attirbute is None %} selected {% endif %}>제목</option>
                             <option value="master" {% if attribute == "master" %} selected {% endif %}>작성자</option>
                             <option value="text" {% if attribute == "text" %} selected {% endif %}>내용</option>
-                            <option value="game" {% if attribute == "game" %} selected {% endif %}>티어</option>
+                            <option value="game" {% if attribute == "game" %} selected {% endif %}>게임</option>
                         </select>
                         <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
                         <input class="btn btn-primary" type="submit" value="검색">
@@ -46,7 +46,7 @@
                 <tbody>
                 {% for competition in latest_competitions_list %}
                 <tr>
-                    <td>{{ competition.id }}</td>
+                    <td>{{ competition.page_num }}</td>
                     <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
                     <td>{{ competition.competition_game }}</td>
                     <td>{{ competition.pub_date }}</td>
