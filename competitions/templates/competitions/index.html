@@ -41,15 +41,11 @@
             <div class = "contents_title">
                 <a href="/competitions/past"  data-toggle="tooltip" data-placement="right" title="더보기">지난 대회</a>
             </div>
-            {% if pasts %}
-                <ul>
-                    {% for competition in pasts %}
-                    <li><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p> No Competitions in past scheduled are available.</p>
-            {% endif %}
+            <ul>
+                <li><a href="{% url 'competitions:past_current' %}">{{ current_year }} 대회</a></li>
+                <li><a href="{% url 'competitions:past_last' %}">{{ last_year }} 대회</a></li>
+                <li><a href="{% url 'competitions:past_last_last' %}">{{ last_last_year }} 대회</a></li>
+            </ul>
         </div>
 
 

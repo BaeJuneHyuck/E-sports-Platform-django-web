@@ -1,6 +1,7 @@
 import datetime
 
 from dateutil.relativedelta import relativedelta
+from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views import generic
@@ -17,7 +18,21 @@ two_years = NOW+relativedelta(years=-2)
 three_years = NOW+relativedelta(years=-3)
 
 class IndexView(generic.ListView):
+    model = Practice
     template_name = 'practice/index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(IndexView, self).get_context_data(*args,**kwargs)
+        context['practices'] = Practice.objects.all().order_by('-pub_date')[:5]
+        if self.request.user.is_authenticated:
+            comments = Comment.objects.filter(Q(author=self.request.user) & Q(content__contains="참가신청합니다"))\
+                .values_list('practice', flat=True).distinct()
+            attend_practice = Practice.objects.filter(pk__in=comments)[:5]
+            context['attend_practice'] = attend_practice
+        return context
+
+class TotalListView(generic.ListView):
+    template_name = 'practice/list.html'
     context_object_name = 'practices'
     queryset = Practice.objects.filter(practice_time__gt=three_years)
     paginate_by = 5
@@ -40,7 +55,7 @@ class IndexView(generic.ListView):
         return qs
 
     def get_context_data(self, *args, **kwargs):
-        context = super(IndexView, self).get_context_data(*args,**kwargs)
+        context = super(TotalListView, self).get_context_data(*args,**kwargs)
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
@@ -55,7 +70,8 @@ class IndexView(generic.ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
-        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5
+                                 ]
 
         attribute = self.request.GET.get("attribute", None)
         context['attribute'] = attribute
@@ -83,11 +99,11 @@ class DetailView(generic.DetailView):
         else:
             form = CommentForm()
 
-        form = CommentForm()
-        invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
 
-        return render(self, 'practice/detail.html', {'practice':practice, 'comments':comments, 'form':form,
-                                                     'total_practice':total_practice, 'today':today, 'invitations':invitations})
+        return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
+                                                     'total_practice': total_practice, 'today': today,
+                                                     'invitations': invitations})
 
     def delete(self, practice_pk, comment_pk):
         delete_comment = Comment.objects.get(pk=comment_pk)
@@ -112,7 +128,8 @@ class DetailView(generic.DetailView):
         invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
 
         return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
-                                                     'total_practice': total_practice, 'today': today, 'invitations':invitations})
+                                                     'total_practice': total_practice, 'today': today,
+                                                     'invitations':invitations})
 
 
 class AttendView(generic.CreateView):
@@ -140,7 +157,7 @@ class CreateView(generic.CreateView):
                 practice = form.save(commit=False)
                 practice.author = self.user
                 practice.save()
-                return redirect(reverse('practice:index'))
+                return redirect(reverse('practice:list'))
             else:
                 return render(self, 'practice/create.html', {'form': form, 'invitations':invitations})
         return render(self, 'practice/create.html', {'form': form, 'invitations':invitations})

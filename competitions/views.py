@@ -2,6 +2,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -42,6 +43,9 @@ class IndexView(generic.ListView):
         context['pasts'] = past_competition[:5]
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[
                                  :5]
+        context['current_year'] = NOW.strftime('%Y')
+        context['last_year'] = one_years.strftime('%Y')
+        context['last_last_year'] = two_years.strftime('%Y')
         return context
 
 
@@ -249,13 +253,13 @@ class ScheduledView(generic.ListView):
         return context
 
 
-class PastView(generic.ListView):
+class CurrentPastView(generic.ListView):
     model = Competition
     template_name = 'competitions/past.html'
     context_object_name = 'past_competitions_list'
 
     def get_context_data(self, **kwargs):
-        context = super(PastView, self).get_context_data(**kwargs)
+        context = super(CurrentPastView, self).get_context_data(**kwargs)
         competition_current_list = Competition.objects.filter(
             Q(date_start__gt=one_years) & Q(date_end__lt=NOW)).order_by('-pub_date')
         competition_last_list = Competition.objects.filter(
@@ -285,4 +289,45 @@ class PastView(generic.ListView):
         context['current_year'] = competition_current_list
         context['last_year'] = competition_last_list
         context['last_last_year'] = competition_last_last_list
+
+        paginator = Paginator(competition_current_list, 2)
+        page_current = self.request.GET.get('page1')
+        try:
+            competition_current_list = paginator.page(page_current)
+        except PageNotAnInteger:
+            competition_current_list = paginator.page(1)
+        except EmptyPage:
+            competition_current_list = paginator.page(paginator.num_pages)
+
+        context['competition_current_list'] = competition_current_list
+
+        # Pagination
+
+        paginator = Paginator(competition_current_list, 2)
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range_last = paginator.page_range[start_index:end_index]
+        context['page_range_last'] = page_range_last
+
         return context
+
+class LastPastView(CurrentPastView):
+
+    def get_queryset(self):
+        return Competition.objects.filter(
+            Q(date_start__gt=two_years) & Q(date_end__lt=one_years)).order_by('-pub_date')
+
+class LastLastPastView(CurrentPastView):
+
+    def get_queryset(self):
+        return Competition.objects.filter(
+            Q(date_start__gt=three_years) & Q(date_end__lt=two_years)).order_by('-pub_date')

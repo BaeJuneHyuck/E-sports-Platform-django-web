@@ -9,21 +9,9 @@
             <div class="contents_title">
             <a href="/competitions/past">지난 대회</a>
             </div>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#current">2020</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#last">2019</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#last_last">2018</a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="current">
-                    {% if current_year %}
-                    <table class = "competition_list table table-hover  text-white">
+            <div class="content">
+                {% if past_competitions_list %}
+                <table class = "competition_list table table-hover  text-white">
                     <colgroup>
                         <col width="10%">
                         <col width="25%">
@@ -39,7 +27,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for competition in current_year %}
+                    {% for competition in past_competitions_list %}
                     <tr>
                         <th>{{ competition.id }}</th>
                         <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
@@ -48,63 +36,10 @@
                     </tr>
                     {% endfor %}
                     </tbody>
-                    </table>
-                    {% else %}
-                    <span>지난 게임이 존재하지 않습니다.</span>
-                    {% endif %}
-                </div>
-                <div class="tab-pane fade in active" id="last">
-                    {% if last_year %}
-                    <table class = "competition_list table table-hover  text-white">
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>대회명</th>
-                        <th>게임</th>
-                        <th>대회일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for competition in last_year %}
-                    <tr>
-                        <th>{{ competition.id }}</th>
-                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
-                        <td>{{ competition.competition_game }}</td>
-                        <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                    </table>
-                    {% else %}
-                    <span>지난 게임이 존재하지 않습니다.</span>
-                    {% endif %}
-                </div>
-                <div class="tab-pane fade in active" id="last_last">
-                    {% if last_last_year %}
-                    <table class = "competition_list table table-hover  text-white">
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>대회명</th>
-                        <th>게임</th>
-                        <th>대회일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for competition in last_last_year %}
-                    <tr>
-                        <th>{{ competition.id }}</th>
-                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
-                        <td>{{ competition.competition_game }}</td>
-                        <td>{{ competition.date_start }} ~ {{ competition.date_end }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                    </table>
-                    {% else %}
-                    <span>지난 게임이 존재하지 않습니다.</span>
-                    {% endif %}
-                </div>
+                </table>
+                {% else %}
+                <span>지난 게임이 존재하지 않습니다.</span>
+                {% endif %}
             </div>
         </div>
     </div>

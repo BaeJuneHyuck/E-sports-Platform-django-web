@@ -75,12 +75,12 @@
             </tr>
             {% endfor %}
         </table>
-        <form method="post">{% csrf_token %}
+        <form action='{% url "practice:new_comment" practice.id %}'method="post">{% csrf_token %}
             <div class="input-group mb-3">
               <input type="text" class="form-control" name="content" maxlength="600" required="" id="id_content"
                      placeholder="참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 댓글을 삭제해주세요">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button">Button</button>
+                <button class="btn btn-outline-secondary" type="submit">Button</button>
               </div>
             </div>
 

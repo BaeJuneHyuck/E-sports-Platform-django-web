@@ -14,7 +14,9 @@ urlpatterns = [
     path('ongoing/search', views.OngoingView.as_view(), name='ongoing_search'),
     path('scheduled/', views.ScheduledView.as_view(), name='scheduled'),
     path('scheduled/search', views.ScheduledView.as_view(), name='scheduled_search'),
-    path('past/', views.PastView.as_view(), name='past'),
+    path('past/current', views.CurrentPastView.as_view(), name='past_current'),
+    path('past/last', views.LastPastView.as_view(), name='past_last'),
+    path('past/lastlast', views.LastLastPastView.as_view(), name='past_last_last'),
     path('create/', views.CreateView.post_new, name='create'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
