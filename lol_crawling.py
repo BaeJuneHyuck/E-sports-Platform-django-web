@@ -1,13 +1,12 @@
-from datetime import datetime
-import timedelta
-import pandas as pd
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
+import pymongo
 import sqlite3
 
 def LoLCrawling(Container,soup):
     nickName = []
+    rank = []
     gameId = []
     outCome = []
     gameType = []
@@ -102,18 +101,22 @@ def LoLCrawling(Container,soup):
 
     for i in soup.findAll("tr", {"class":{"Row first isRequester", "Row isRequester", "Row last isRequester"}}):
         name = i.find_next("a", {"class" :{"Link"}})
+        tier = i.find_next("td", {"class": {"Tier Cell tip"}})
         dmg = i.find_next("div", {"class" :{"ChampionDamage"}})
         pWard = i.find_next("span", {"class" :{"SightWard"}})
         ward = i.find_next("div", {"class" :{"Stats"}})
         nickName.append(name.text)
+        rank.append(tier.text.replace("\t","").replace("\n","").replace(" ", ""))
         damage.append(dmg.text.replace(",",""))
         pinkWard.append(pWard.text)
         wardlist = ward.text.replace("\n", "").replace("\t","").replace(" ", "").split("/")
         wardSet.append(wardlist[0])
         wardDel.append(wardlist[1])
 
+
     # for i in soup.select('.Row.isRequester'):
     Container['nickName'] = nickName
+    Container['rank'] = rank
     Container['startTime'] = startTime
     Container['gameId'] = gameId
     Container['outCome'] = outCome
@@ -213,18 +216,36 @@ def clickbuttonloop(driver):
             return
 
 if __name__ == "__main__":
-    Name = input("검색을 원하는 닉네임을 입력해 주세요.\n")
+    username = 'team6'
+    password = '000111222'
+    client = pymongo.MongoClient('mongodb://%s:%s@218.146.229.191:27017/Game_record' % (username, password))
+    db = client.Game_record
+    loldb = db.lol
 
-    Dic = parseOPGG(Name)
-    if(Dic == 1):
-        print("error_driver")
-        exit(0)
-    elif(Dic == 2):
-        print("error_no_user")
-        exit(0)
-
-    db = sqlite3.connect('db.sqlite3')
+    con = sqlite3.connect("db.sqlite3")
+    cursor = con.cursor()
+    cursor.execute("SELECT lolid FROM user_user")
+    lolids = cursor.fetchall()
 
 
-    df = pd.DataFrame(Dic)
-    df.to_sql('user_lol_record', db, if_exists='append', index = False)
+    for lolid in lolids:
+        Dic = parseOPGG(lolid[0])
+        if (Dic == 1):
+            print("error_driver")
+            continue
+        elif (Dic == 2):
+            print("error_no_user")
+            continue
+
+        for i in range(len(Dic['gameId'])):
+            json = dict()
+            for key, value in Dic.items():
+                json[key] = value[i]
+            loldb.insert_one(json)
+
+        for i in range(len(Dic['gameId'])):
+            while loldb.count_documents({"gameId": Dic['gameId'][i]}) >= 2:
+                loldb.delete_one({"gameId": Dic['gameId'][i]})
+
+    con.close()
+    client.close()

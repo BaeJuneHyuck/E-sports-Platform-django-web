@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import LoginView
@@ -18,6 +18,9 @@ from .mixins import VerifyEmailMixin
 from .forms import VerificationEmailForm
 from .models import User, lol_record
 from team.models import TeamInvitation
+# mongodb
+import pymongo
+
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
     template_name = 'user/user_model.html'
@@ -49,26 +52,41 @@ class UserMypageView(UpdateView):
 
     def get(self, request):
         form = UserMypageForm(instance=request.user)
-        cur_user = request.user
-        lolid = self.model.objects.get(email=cur_user.email)
-        records = lol_record.objects.filter(nickName = lolid.lolid)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
 
-        args = {'form': form, 'records':records, 'invitations':invitations}
-
+        args = {'form': form, 'invitations':invitations}
         return render(request, self.template_name, args)
 
     def post(self, request):
         form = UserMypageForm(request.POST, instance=request.user)
-        cur_user = request.user
-        lolid = self.model.objects.get(email=cur_user.email)
-        records = lol_record.objects.filter(nickName= lolid.lolid)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
         if form.is_valid():
             form.save()
             return redirect('/user/mypage/')
 
-        args = {'form': form, 'records':records, 'invitations':invitations}
+        args = {'form': form,  'invitations':invitations}
+        return render(request, self.template_name, args)
+
+class UserlolpageView(ListView):
+    model = get_user_model()
+    template_name = 'user/leagueoflegends.html'
+
+    def get(self, request, *args, **kwargs):
+        username = 'team6'
+        password = '000111222'
+        client = pymongo.MongoClient('mongodb://%s:%s@218.146.229.191:27017/Game_record' % (username, password))
+        db = client.Game_record
+        loldb = db.lol
+
+        cur_user = request.user
+        lolid = self.model.objects.get(email=cur_user.email)
+        records = loldb.find({"nickName" : lolid.lolid})
+        jsonToDic = []
+        for record in records:
+             jsonToDic.append(record)
+        sortedDic = sorted(jsonToDic, key=lambda jsonToDic: (jsonToDic['startTime']),reverse=True)
+        args = {'records':sortedDic}
+        client.close()
         return render(request, self.template_name, args)
 
 
