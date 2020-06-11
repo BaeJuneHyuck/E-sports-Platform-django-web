@@ -292,17 +292,30 @@ class AttendView(generic.CreateView):
         if not self.user.is_authenticated:
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
 
+        relation = TeamRelation.objects.filter(user_pk=self.user.pk).filter(team_pk = pk)
+        print(relation)
+        if relation:
+            messages.success(self, '이미 가입한 팀입니다')
+            return redirect('/team/detail/' + str(pk))
+
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+        team = Team.objects.get(pk=pk)
+
         if self.method == 'POST':
             form = TeamRelationCreateForm(self.POST)
             if form.is_valid():
-                teamRelation = form.save(commit=False)
-                teamRelation.team_pk = Team.objects.get(pk=pk)
-                teamRelation.user_pk = self.user
-                teamRelation.save()
-
+                if 'accept' in self.POST:
+                    messages.success(self, '팀에 가입했습니다')
+                    teamRelation = form.save(commit=False)
+                    teamRelation.team_pk = Team.objects.get(pk=pk)
+                    teamRelation.user_pk = self.user
+                    teamRelation.save()
+                else:
+                    messages.success(self, '가입을 취소 했습니다')
                 return redirect('team:detail', pk=pk)
             else:
                 return HttpResponse('fail')
         else:
             form = TeamRelationCreateForm()
-        return render(self, 'team/attend.html', {'form': form})
+        return render(self, 'team/attend.html', {'form': form , 'invitations':invitations, 'team': team})
+
