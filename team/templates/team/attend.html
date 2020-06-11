@@ -1,15 +1,76 @@
 
 {% extends "home/base.html" %}
 
-{% block title %} esportsPlatform : competition-detail{% endblock %}
+{% block title %} esportsPlatform {% endblock %}
+
 
 {% block content %}
-<div class="container mt-3">
-    <h2>팀 참가하기</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_ul }}
-        <button type="submit" class="save btn btn-primary">참가합니다</button>
-    </form>
-</div>
+
+<div class="bg-gradient">
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-10 col-lg-12 col-md-9">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4 " >
+                         <a href="{% url 'team:detail' team.pk %}"data-toggle="tooltip" data-placement="right" title="팀 정보 보기  ">
+                        {{ team.name }}</a>에 참가합니다.
+                    </h1>
+                  </div>
+                  <table class="table table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                          <th scope="col">종목</th>
+                          <th scope="col">팀장</th>
+                        </tr>
+                        <tr>
+                            <td>{{ team.game }}</a></td>
+                            <td>{{ team.master }}</a></td>
+                        </tr>
+                  </table>
+
+                            <div class="align-items-center justify-content-center text-center">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" value="deny" name="deny"class="save btn btn-danger">취소</button>
+                                    <button type="submit" value="accept" name="accept" class="save btn btn-primary">확인</button>
+                                </form>
+                          </div>
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="row" style="margin:20px auto;">
+                        <div class="col-sm-12">
+                            <div class="alert alert-primary">
+                                {{ message.message }}
+                            </div>
+                        </div>
+                        </div><!-- Logout Modal-->
+                    {% endfor %}
+                {% endif %}
+            </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 {% endblock %}

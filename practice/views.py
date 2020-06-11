@@ -24,6 +24,8 @@ class IndexView(generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(IndexView, self).get_context_data(*args,**kwargs)
         context['practices'] = Practice.objects.all().order_by('-pub_date')[:5]
+        context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+
         if self.request.user.is_authenticated:
             comments = Comment.objects.filter(Q(author=self.request.user) & Q(content__contains="참가신청합니다"))\
                 .values_list('practice', flat=True).distinct()

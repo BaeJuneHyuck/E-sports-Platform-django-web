@@ -55,7 +55,7 @@ class CompetitionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Competition
-        fields = ['competition_name', 'competition_text', 'competition_game', 'required_tier', 'tournament_type',
+        fields = ['competition_name', 'competition_text', 'competition_game', 'required_tier', 'total_teams', 'tournament_type',
                   'date_start', 'date_end', 'attend_start', 'attend_end', 'is_public']
 
     def clean_date_start(self):
