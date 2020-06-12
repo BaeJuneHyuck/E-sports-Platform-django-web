@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
@@ -9,12 +12,18 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from team.models import Team
 from user.models import User
 
-NOW = timezone.now()
+NOW = datetime.now() + relativedelta(seconds=1)
+one_years = NOW + relativedelta(years=-1)
+two_years = NOW + relativedelta(years=-2)
+three_years = NOW + relativedelta(years=-3)
 
 STATE = [
     ('ONGOING', 'Ongoing'),
-    ('PAST', 'Past'),
+    ('CURRENT_PAST', 'Current_past'),
+    ('LAST_PAST', 'Last_past'),
+    ('LAST_LAST_PAST', 'Last_last_past'),
     ('SCHEDULED', 'Scheduled'),
+    ('PAST', 'Past')
 ]
 
 GAME = [
@@ -42,11 +51,10 @@ class Competition(models.Model):
     date_end = models.DateTimeField('date_end')
     attend_start = models.DateTimeField('attend_start')
     attend_end = models.DateTimeField('attend_end')
-    state = models.CharField(max_length=10, choices=STATE, default='none')
+    state = models.CharField(max_length=50, choices=STATE, default='none')
     page_num = models.IntegerField(default=0)
 
     master = models.ForeignKey(User, null=True, on_delete=models.CASCADE,verbose_name='대회관리자') # 작성자
-    mast_name = models.CharField(max_length=200)
     is_public = models.BooleanField(default=True, verbose_name='공개 대회')
     tournament_type = models.IntegerField(default=-1, verbose_name='대회 방식') # -1=싱글, -2=더블 / 양수 1이상=라운드로빈(모든팀이 서로 값만큼 경기)
     required_tier = models.CharField(max_length=200, verbose_name='참가 최소 티어')
@@ -76,10 +84,14 @@ class Competition(models.Model):
 
 @receiver(pre_save, sender=Competition)
 def competition_save_state(sender, instance, update_fields, **kwargs):
-    if instance.date_start > NOW:
+    if instance.date_start.strftime('%Y-%m-%d') > NOW.strftime('%Y-%m-%d'):
         instance.state = 'SCHEDULED'
-    elif instance.date_end < NOW:
-        instance.state = 'PAST'
+    elif instance.date_end.strftime('%Y-%m-%d') < NOW.strftime('%Y-%m-%d'):
+        instance.state = 'CURRENT_PAST'
+    elif instance.date_end.strftime('%Y-%m-%d') < NOW.strftime('%Y-%m-%d'):
+        instance.state = 'LAST_PAST'
+    elif instance.date_end.strftime('%Y-%m-%d') < NOW.strftime('%Y-%m-%d'):
+        instance.state = 'LAST_LAST_PAST'
     else:
         instance.state = 'ONGOING'
 

@@ -140,8 +140,12 @@
 
             {% if state == 'ONGOING' %}
                 <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
-            {% elif state == 'PAST' %}
-                <a class = "list" href="{% url 'competitions:past' %}">목록</a>
+            {% elif state == 'CURRENT_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_current' %}">목록</a>
+            {% elif state == 'LAST_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
+            {% elif state == 'LAST_LAST_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
             {% else %}
                 <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
             {% endif %}
