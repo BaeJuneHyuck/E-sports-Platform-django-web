@@ -85,14 +85,20 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">참가 현황</h6>
+
+                        <row>
+
                         {% if competition.current_teams >= competition.total_teams %}
                             <a href="#" class="btn btn-primary" role="button">신청이 마감되었습니다</a>
-                        {% elif competition.attend_start <= today and competition.attend_end >= today %}
+                            <a href="/competitions/brackets/{{competition.pk}}" class="btn btn-primary" role="button">대진표 보기</a>
+                        {% elif competition.can_attend %}
                             <a href="/competitions/attend/{{competition.pk}}" id="attend" class="btn btn-primary" role="button">대회 참가하기</a>
                         {% else %}
                             <a href="#" class="btn btn-primary" role="button">신청기간이 아닙니다</a>
                         {% endif %}
+                        </row>
                     </div>
+
                     <!-- Card Body -->
                     <div class="card-body">
                         <div>
@@ -134,8 +140,12 @@
 
             {% if state == 'ONGOING' %}
                 <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
-            {% elif state == 'PAST' %}
-                <a class = "list" href="{% url 'competitions:past' %}">목록</a>
+            {% elif state == 'CURRENT_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_current' %}">목록</a>
+            {% elif state == 'LAST_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
+            {% elif state == 'LAST_LAST_PAST' %}
+                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
             {% else %}
                 <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
             {% endif %}

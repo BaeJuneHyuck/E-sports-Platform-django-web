@@ -4,7 +4,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from . import models
-from .models import Competition, CompetitionParticipate
+from .models import Competition, CompetitionParticipate, Match
 
 
 class CompetitionsAdmin(admin.ModelAdmin):
@@ -24,8 +24,9 @@ class CompetitionsAdmin(admin.ModelAdmin):
         (None, {'fields': ['required_tier']}),
         (None, {'fields': ['total_teams']}),
         (None, {'fields': ['current_teams']}),
+        (None, {'fields': ['rounds']}),
     ]
-    list_display = ('competition_game', 'competition_name', 'competition_text', 'date_start', 'date_end', 'attend_start', 'attend_end')
+    list_display = ('competition_game', 'competition_name', 'competition_text', 'date_start', 'date_end', 'attend_start', 'attend_end' ,'rounds')
     list_filter = ['pub_date']
     search_fields = ['competition_text']
 
@@ -37,11 +38,32 @@ class CompetitionParticipateAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['competition']}),
         (None, {'fields': ['team']}),
+        (None, {'fields': ['team_number']}),
         (None, {'fields': ['avg_tier']}),
     ]
-    list_display = ('competition', 'team', 'avg_tier')
+    list_display = ('competition', 'team', 'team_number','avg_tier')
     list_filter = ['competition']
     search_fields = ['competition']
 
 
 admin.site.register(CompetitionParticipate, CompetitionParticipateAdmin)
+
+
+class MatchAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['game']}),
+        (None, {'fields': ['competition']}),
+        (None, {'fields': ['number']}),
+        (None, {'fields': ['round']}),
+        (None, {'fields': ['team1']}),
+        (None, {'fields': ['team2']}),
+        (None, {'fields': ['result']}),
+        (None, {'fields': ['result_lol']}),
+        (None, {'fields': ['result_ow']}),
+    ]
+    list_display = ('game', 'competition', 'number', 'round', 'team1' ,'team2', 'result', 'result_lol', 'result_ow')
+    list_filter = ['competition']
+    search_fields = ['competition']
+
+
+admin.site.register(Match, MatchAdmin)

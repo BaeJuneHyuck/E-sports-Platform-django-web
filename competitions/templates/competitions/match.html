@@ -1,0 +1,52 @@
+
+{% extends "home/base.html" %}
+
+{% block title %} esportsPlatform : 경기 상세정보{% endblock %}
+
+{% block content %}
+
+<div class ="container mt-3 " style="color:black">
+
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+        <h1 class = "competition_name">
+            <a href="/competitions/{{match.competition.pk}}" data-toggle="tooltip" data-placement="right" title="대회 정보 보기">{{ match.competition.competition_name }}</a>
+             의 {{match.number}}번 경기
+        </h1>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+        <h2>
+            경기일 : {{match.date}}
+        </h2>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+        <table class = "table contents_table head-light table-hover mb-2 " style="color:black">
+            <colgroup>
+                <col width="10%">
+                <col width="45%">
+                <col width="45%">
+            </colgroup>
+            <tr>
+                <th>팀</th>
+                <td style="text-align:center"><a href="/team/detail/{{match.team1.pk}}" data-toggle="tooltip" data-placement="right" title="팀 정보 보기">{{ match.team1 }}</a></td>
+
+                {% if team2 %}
+                <td style="text-align:center"><a href="/team/detail/{{match.team2.pk}}" data-toggle="tooltip" data-placement="right" title="팀 정보 보기">{{ match.team2 }}</a></td>
+                {% else %}
+                 <td style="text-align:center"> 부전승 </td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>스코어</th>
+                <td style="text-align:center">10</td>
+                <td style="text-align:center">50</td>
+            </tr>
+        </table>
+
+
+
+
+    </div>
+</div>
+
+
+{% endblock %}
