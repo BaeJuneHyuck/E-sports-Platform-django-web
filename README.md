@@ -14,9 +14,4 @@ PNU 2020 Applied Design and Lab. team 6
 
 추가 db파일(db.sqlite3)은 제외하고 commit, push하기
 
-Game_record Database 접근정보
-adress: 218.146.229.191
-port: 27017
-Database: Game_record
-user: team6
-password: dlckdghd96@mobile.re.kr 로 이메일 주시기 바랍니다.
+lol,overwatch DB aws 원격서버로 이동하였습니다.
