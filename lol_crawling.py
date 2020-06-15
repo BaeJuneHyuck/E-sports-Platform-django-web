@@ -215,7 +215,7 @@ def clickbuttonloop(driver):
         except Exception as error:
             return
 
-if __name__ == "__main__":
+def start():
     username = 'team6'
     password = '000111222'
     client = pymongo.MongoClient('mongodb://%s:%s@218.146.229.191:27017/Game_record' % (username, password))
