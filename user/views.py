@@ -77,7 +77,7 @@ class UserMypageOWView(UpdateView):
         if data.count() == 0:
             OW_BattleTag.objects.create(battle_tag=request.user.overwid)
         obj = OW_BattleTag.objects.get(battle_tag=request.user.overwid)
-        #obj.get_data()
+        obj.get_data()
         data = OW_BattleTag.objects.filter(battle_tag=request.user.overwid)
         json_data = json.loads(obj.data)
         top_heroes = json_data['competitiveStats']['topHeroes']
