@@ -19,6 +19,8 @@ from team.models import TeamInvitation
 # mongodb
 import pymongo
 
+from .models import OW_BattleTag
+
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
     template_name = 'user/user_model.html'
@@ -64,6 +66,22 @@ class UserMypageView(UpdateView):
 
         args = {'form': form,  'invitations':invitations}
         return render(request, self.template_name, args)
+
+class UserMypageOWView(UpdateView):
+    model = get_user_model()
+    template_name = 'user/mypage_OW.html'
+
+    def get(self, request):
+        data = OW_BattleTag.objects.filter(battle_tag=request.user.overwid)
+        print(data)
+        if data.count() == 0:
+            OW_BattleTag.objects.create(battle_tag=request.user.overwid)
+        obj = OW_BattleTag.objects.get(battle_tag=request.user.overwid)
+        obj.get_data()
+        data = OW_BattleTag.objects.filter(battle_tag=request.user.overwid)
+        args = {'data': data}
+        return render(request, self.template_name, args)
+
 
 class UserlolpageView(ListView):
     model = get_user_model()
