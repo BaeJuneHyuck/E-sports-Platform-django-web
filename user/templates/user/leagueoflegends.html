@@ -144,196 +144,235 @@
             <h1 class="h3 mb-0 text-gray-800" style = "font-family:Nanum Gothic;">{{ user.name}}님의 League</h1>
           </div>
 
+          <div class ="User_Explain">
+            <div class="userInfo">
+              <a class="name"> {{records.nickName}}</a><br>
+              <a class="tier"> {{avg.latestrank}}</a><br>
+              <a class="'avgKDA">{{avg.avgKill|floatformat}} / {{avg.svhDeath|floatformat}} / {{avg.avgAssist|floatformat}}</a><br>
+              <a class="'avgRatio">{{avg.avgRatio|floatformat:-0}}%</a><br>
+              <a class="'avgPward">제어와드 설치: {{avg.avgPward|floatformat:-0}}</a><br>
+              <a class="'avgWard">와드 설치, 제거: {{avg.avgWard|floatformat:-0}}</a><br>
+              <a class="'avgCs">{{avg.avgCs|floatformat:-0}} cs / {{avg.csPerMin|floatformat}} cs (분당)</a><br>
+              <a class="'avedmg">평균 딜량: {{avg.avgdmg|floatformat:-0}}</a><br>
+            </div>
+          </div>
+
           <!-- Content Row -->
 
           <div class="row">
+            <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+            <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+            <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
             <!-- Area Chart -->
-            <div class="col-xl-12 col-lg-10 " style = "font-family:Nanum Gothic;">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">전적 미리보기</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                  </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="record-area">
-                    <div class="card-deck text-center">
-                      <div class = "row p-0 m-0">
+            <div class="card shadow mb-4 d-flex" style = "font-family:Nanum Gothic;">
+              <div class = 'card-body'>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                 <li class="nav-item">
+                    <a class="nav-link active" id="record-tab" data-toggle="tab" href="#record" role="tab" aria-controls="record" aria-selected="true">전적 미리보기</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="dmg-tab" data-toggle="tab" href="#dmg" role="tab" aria-controls="dmg" aria-selected="false">딜량</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="Cs-tab" data-toggle="tab" href="#cs" role="tab" aria-controls="cs" aria-selected="false">CS</a>
+                  </li>
+                  <li class="nav-item">
+                   <a class="nav-link" id="ward-tab" data-toggle="tab" href="#ward" role="tab" aria-controls="ward" aria-selected="false">시야 점수</a>
+                  </li>
+                  <li class="nav-item">
+                   <a class="nav-link" id="object-tab" data-toggle="tab" href="#object" role="tab" aria-controls="object" aria-selected="false">오브젝트</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="tab-content" id="mytest">
+                <div class="tab-pane fade show active" id="record" role="tabpanel" aria-labelledby="record-tab">
+                  <div class = "row p-0 m-0 ">
                       {% for record in records %}
                       {% if record.outCome in 'win' %}
-                      <div class="card bg-primary p-0 m-0 text-white col-4" style="width: 7rem">
-                        <div class="card-header bg-primary" >
-                          <h7 text-center>{{record.outCome}}</h7>
+                      <div class="card bg-primary p-0 m-0 text-center text-white col-xs-12 col-sm-6 col-md-4 col-lg-1" style="width: 8rem; height: 13rem;">
+                        <div class="card-header bg-primary " >
+                          <h6>{{record.outCome}}</h6>
                         </div>
                         <div class="card-body">
-                          <h6 text-center>{{record.champion}}</h6>
+                          <h6>{{record.champion}}</h6>
                         </div>
                         <div class="'card-tail">
-                          <h8 text-center>{{record.killratio}}%<br></h8>
-                          <h8 text-center>{{record.kill}} / {{record.death}} / {{record.assist}}</h8>
+                          <h6>{{record.killratio}}%<br></h6>
+                          <h6>{{record.kill}} / {{record.death}} / {{record.assist}}</h6>
                         </div>
                       </div>
                       {% else %}
-                      <div class="card bg-danger p-0 m-0 text-white col-4" style="width: 7rem">
+                      <div class="card bg-danger p-0 m-0 text-center text-white col-xs-12 col-sm-6 col-md-4 col-lg-1" style="width: 8rem; height: 13rem;">
                         <div class="card-header bg-danger text-black">
-                          <h7 text-center>{{record.outCome}}</h7>
+                          <h6>{{record.outCome}}</h6>
                         </div>
                         <div class="card-body">
-                          <h6 text-center>{{record.champion}}</h6>
+                          <h6>{{record.champion}}</h6>
                         </div>
                         <div class="'card-tail">
-                          <h8 text-center>{{record.killratio}}%<br></h8>
-                          <h8 text-center>{{record.kill}} / {{record.death}} / {{record.assist}}</h8>
+                          <h6>{{record.killratio}}%<br></h6>
+                          <h6>{{record.kill}} / {{record.death}} / {{record.assist}}</h6>
                         </div>
                       </div>
                         {% endif %}
-                        {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                        {% if forloop.counter|divisibleby:12 and not forloop.last %}
                         </div><div class="row p-0 m-0">
                         {% endif %}
                       {% endfor %}
-                      </div>
-                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="dmg" role="tabpanel" aria-labelledby="dmg-tab">
+                  <div class = "dmg_chart" id="dmgChart">
+                    <script type="text/javascript">
+                        Highcharts.chart('dmgChart', {
+                          chart: {
+                            type: 'line'
+                          },
+                          title: {
+                            text: ''
+                          },
+                          series: [{
+                          name: 'win',
+                          data: [
+                            {% for record in win %}
+                            {% if record.outCome in 'win' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.damage}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'green'
+                          }, {
+                            name: 'lose',
+                          data: [
+                            {% for record in lose %}
+                            {% if record.outCome in 'lose' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.damage}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'red'
+                          }]
+                        });
+                    </script>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="cs" role="tabpanel" aria-labelledby="Cs-tab">
+                  <div class = "cs_chart" id="csChart">
+                    <script type="text/javascript">
+                        Highcharts.chart('csChart', {
+                          chart: {
+                            type: 'line'
+                          },
+                          title: {
+                            text: ''
+                          },
+                          series: [{
+                          name: 'win',
+                          data: [
+                            {% for record in win %}
+                            {% if record.outCome in 'win' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.cs}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'green'
+                          }, {
+                            name: 'lose',
+                          data: [
+                            {% for record in lose %}
+                            {% if record.outCome in 'lose' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.cs}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'red'
+                          }]
+                        });
+                      </script>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="ward" role="tabpanel" aria-labelledby="ward-tab">
+                  <div class = "ward_chart" id="wardChart">
+                    <script type="text/javascript">
+                        Highcharts.chart('wardChart', {
+                          chart: {
+                            type: 'line'
+                          },
+                          title: {
+                            text: ''
+                          },
+                          series: [{
+                          name: 'win',
+                          data: [
+                            {% for record in win %}
+                            {% if record.outCome in 'win' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.wardSet}} + {{record.wardDel}} + {{record.pinkward}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'green'
+                          }, {
+                            name: 'lose',
+                          data: [
+                            {% for record in lose %}
+                            {% if record.outCome in 'lose' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.wardSet}} + {{record.wardDel}} + {{record.pinkward}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'red'
+                          }]
+                        });
+                      </script>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="object" role="tabpanel" aria-labelledby="object-tab">
+                  <div class = "object_chart" id="objectChart">
+                    <script type="text/javascript">
+                        Highcharts.chart('objectChart', {
+                          chart: {
+                            type: 'line'
+                          },
+                          title: {
+                            text: ''
+                          },
+                          series: [{
+                          name: 'win',
+                          data: [
+                            {% for record in win %}
+                            {% if record.outCome in 'win' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.baron}} + {{record.dragon}} + {{record.tower}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'green'
+                          }, {
+                            name: 'lose',
+                          data: [
+                            {% for record in lose %}
+                            {% if record.outCome in 'lose' %}
+                            {% if forloop.counter <= 10 %}
+                            {{record.baron}} + {{record.dragon}} + {{record.tower}}
+                            {% endif %}
+                            {% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                          ],
+                            color: 'red'
+                          }]
+                        });
+                      </script>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- Pie Chart -->
-
           </div>
-
-          <!-- Content Row -->
-          <div class="row">
-
-            <!-- Content Column -->
-            <div class="col-lg-6 mb-4">
-
-              <!-- Project Card Example -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                </div>
-                <div class="card-body">
-                  <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Color System -->
-              <div class="row">
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-primary text-white shadow">
-                    <div class="card-body">
-                      Primary
-                      <div class="text-white-50 small">#4e73df</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-success text-white shadow">
-                    <div class="card-body">
-                      Success
-                      <div class="text-white-50 small">#1cc88a</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-info text-white shadow">
-                    <div class="card-body">
-                      Info
-                      <div class="text-white-50 small">#36b9cc</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                      Warning
-                      <div class="text-white-50 small">#f6c23e</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-danger text-white shadow">
-                    <div class="card-body">
-                      Danger
-                      <div class="text-white-50 small">#e74a3b</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-secondary text-white shadow">
-                    <div class="card-body">
-                      Secondary
-                      <div class="text-white-50 small">#858796</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="col-lg-6 mb-4">
-
-              <!-- Illustrations -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                </div>
-                <div class="card-body">
-                  <div class="text-center">
-                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/undraw_posting_photo.svg" alt="">
-                  </div>
-                  <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
-                  <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
-                </div>
-              </div>
-
-              <!-- Approach -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                  <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
-                  <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
         <!-- /.container-fluid -->
 

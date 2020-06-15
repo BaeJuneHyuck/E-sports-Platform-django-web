@@ -9,14 +9,12 @@ from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from django.views import generic
 # email 발송
 from django.contrib.auth.tokens import default_token_generator
 from esportsPlatform import settings
 from django.views.generic import CreateView, FormView
 from .mixins import VerifyEmailMixin
 from .forms import VerificationEmailForm
-from .models import User, lol_record
 from team.models import TeamInvitation
 # mongodb
 import pymongo
@@ -73,9 +71,10 @@ class UserlolpageView(ListView):
 
     def get(self, request, *args, **kwargs):
         username = 'team6'
-        password = '000111222'
-        client = pymongo.MongoClient('mongodb://%s:%s@218.146.229.191:27017/Game_record' % (username, password))
-        db = client.Game_record
+        password = 'TEAM6'
+        client = pymongo.MongoClient('mongodb://%s:%s@ec2-52-78-106-39.ap-northeast-2.compute.amazonaws.com:27017/lol' % (username, password))
+
+        db = client.lol
         loldb = db.lol
 
         cur_user = request.user
@@ -83,11 +82,77 @@ class UserlolpageView(ListView):
         records = loldb.find({"nickName" : lolid.lolid})
         jsonToDic = []
         for record in records:
-             jsonToDic.append(record)
+            del (record['_id'])
+            jsonToDic.append(record)
         sortedDic = sorted(jsonToDic, key=lambda jsonToDic: (jsonToDic['startTime']),reverse=True)
-        args = {'records':sortedDic}
+        avg = self.getavg(sortedDic)
+        win = self.winGmae(sortedDic)
+        lose = self.loseGmae(sortedDic)
+        args = {'records':sortedDic, 'avg' : avg, 'win' : win, 'lose' : lose}
         client.close()
         return render(request, self.template_name, args)
+
+    def getavg(self, jsonToDic):
+        Container = dict()
+        gamenum = len(jsonToDic)
+        killsum = 0
+        deathsum = 0
+        asssum = 0
+        pwardsum = 0
+        ratiosum = 0
+        wardsum = 0
+        cssum = 0
+        timesum = 0
+        dmgsum = 0
+        for lol in jsonToDic:
+            killsum += int(lol['kill'])
+            deathsum += int(lol['death'])
+            asssum += int(lol['assist'])
+            pwardsum += int(lol['pinkward'])
+            ratiosum += int(lol['killratio'])
+            wardsum += int(lol['wardSet']) + int(lol['wardDel'])
+            cssum += int(lol['cs'])
+            timesum += int(lol['playTime'])
+            dmgsum += int(lol['damage'])
+
+        avgcs = cssum / gamenum
+        avgTime = timesum / 60 / gamenum
+        Container['latestrank'] = jsonToDic[0]['rank']
+
+        Container['avgKill'] = killsum / gamenum
+        Container['svhDeath'] = deathsum / gamenum
+        Container['avgAssist'] = asssum / gamenum
+        Container['avgRatio'] = ratiosum / gamenum
+        Container['avgPward'] = pwardsum / gamenum
+        Container['avgWard'] = wardsum / gamenum
+        Container['avgCs'] = avgcs
+        Container['csPerMin'] = avgcs / avgTime
+        Container['avgdmg'] = dmgsum / gamenum
+
+        return Container
+
+    def winGmae(self, jsonToDic):
+        maxcnt = 10
+        winrecord = []
+        for lol in jsonToDic:
+            if lol['outCome'] =='win':
+                winrecord.append(lol)
+                maxcnt -=1
+                if maxcnt == 0:
+                    break;
+        return winrecord
+
+    def loseGmae(self, jsonToDic):
+        maxcnt = 10
+        loserecord = []
+        for lol in jsonToDic:
+            if lol['outCome'] =='lose':
+                loserecord.append(lol)
+                maxcnt -=1
+                if maxcnt == 0:
+                    break;
+
+        return loserecord
 
 
 class UserVerificationView(TemplateView):
