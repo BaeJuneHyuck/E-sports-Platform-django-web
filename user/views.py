@@ -20,6 +20,7 @@ from team.models import TeamInvitation
 import pymongo
 
 from .models import OW_BattleTag
+import json
 
 
 class UserRegistrationView(VerifyEmailMixin, CreateView):
@@ -73,13 +74,18 @@ class UserMypageOWView(UpdateView):
 
     def get(self, request):
         data = OW_BattleTag.objects.filter(battle_tag=request.user.overwid)
-        print(data)
         if data.count() == 0:
             OW_BattleTag.objects.create(battle_tag=request.user.overwid)
         obj = OW_BattleTag.objects.get(battle_tag=request.user.overwid)
-        obj.get_data()
+        #obj.get_data()
         data = OW_BattleTag.objects.filter(battle_tag=request.user.overwid)
-        args = {'data': data}
+        json_data = json.loads(obj.data)
+        top_heroes = json_data['competitiveStats']['topHeroes']
+        for hero, time in top_heroes.items():
+            t = int(time['timePlayed'].replace(":", ""))
+            time['timePlayed'] = ((t//10000)*60) + (t//100)%100
+        top_heroes = sorted(top_heroes.items(), key=lambda x: x[1]['timePlayed'], reverse=True)
+        args = {'data': data, 'top_heroes': top_heroes}
         return render(request, self.template_name, args)
 
 

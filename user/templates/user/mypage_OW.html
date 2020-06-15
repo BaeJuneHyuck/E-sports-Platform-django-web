@@ -49,7 +49,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">종목</h6>
-            <a class="collapse-item" href="mypage_OW.html">오버워치</a>
+            <a class="collapse-item" href="">오버워치</a>
             <a class="collapse-item" href="cards.html">Cards</a>
           </div>
         </div>
@@ -152,8 +152,8 @@
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 돌격군</div>
                       <div class="col-auto">
-                      <img src="{{ datum.tank_icon }}">
-                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.tank_level }}</div>
+                      <img src="https://static.playoverwatch.com/img/pages/career/icon-tank-8a52daaf01.png">
+                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.tank_level }}점</div>
                     
                     </div>
                   </div>
@@ -167,9 +167,10 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 공격군</div>
+                      
                       <div class="col-auto">
-                      <img src="{{ datum.tank_icon }}">
-                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.damage_level }}</div>
+                      <img src="https://static.playoverwatch.com/img/pages/career/icon-offense-6267addd52.png">
+                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.damage_level }}점</div>
                     
                     </div>
                   </div>
@@ -184,8 +185,8 @@
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> 지원군</div>
                       <div class="col-auto">
-                      <img src="{{ datum.tank_icon }}">
-                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.support_level }}</div>
+                      <img src="https://static.playoverwatch.com/img/pages/career/icon-support-46311a4210.png">
+                      <div class="h5 mb-10 font-weight-bold text-gray-800">{{ datum.support_level }}점</div>
                     
                     </div>
                   </div>
@@ -196,7 +197,11 @@
           </div>
         </div>
         <!-- /.container-fluid -->
-<!-- DataTales Example -->
+{% endfor %}
+</div>
+<!-- /.container-fluid -->
+
+
 <div class="card shadow mb-4">
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
@@ -207,50 +212,32 @@
         <thead>
           <tr>
             <th>영웅</th>
-            <th>플레이시간</th>
+            <th>플레이시간(분)</th>
             <th>승리한게임</th>
             <th>승률</th>
             <th>명중률</th>
             <th>목숨당처치</th>
             <th>동시처치</th>
+            <th>임무기여처치</th>
           </tr>
         </thead>
         <tbody>
+          {% for hero in top_heroes %}
           <tr>
-            <td>{{ datum.top1_character }}</td>
-            <td>{{ datum.top1_timePlayed }}</td>
-            <td>{{ datum.top1_gamesWon }}</td>
-            <td>{{ datum.top1_winPercentage }}</td>
-            <td>{{ datum.top1_weaponAccuracy }}</td>
-            <td>{{ datum.top1_eliminationsPerLife }}</td>
-            <td>{{ datum.top1_multiKillBest }}</td>
+            <td>{{ hero.0 }}</td>
+            {% for key, value in hero.1.items %}
+              <td>{{ value }}</td>
+            {% endfor %}
           </tr>
-          <tr>
-            <td>{{ datum.top2_character }}</td>
-            <td>{{ datum.top2_timePlayed }}</td>
-            <td>{{ datum.top2_gamesWon }}</td>
-            <td>{{ datum.top2_winPercentage }}</td>
-            <td>{{ datum.top2_weaponAccuracy }}</td>
-            <td>{{ datum.top2_eliminationsPerLife }}</td>
-            <td>{{ datum.top2_multiKillBest }}</td>
-          </tr>
-          <tr>
-            <td>{{ datum.top3_character }}</td>
-            <td>{{ datum.top3_timePlayed }}</td>
-            <td>{{ datum.top3_gamesWon }}</td>
-            <td>{{ datum.top3_winPercentage }}</td>
-            <td>{{ datum.top3_weaponAccuracy }}</td>
-            <td>{{ datum.top3_eliminationsPerLife }}</td>
-            <td>{{ datum.top3_multiKillBest }}</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
 </div>
-{% endfor %}
-</div>
-<!-- /.container-fluid -->
+
+
+
 
 </div>
 <!-- End of Main Content -->
