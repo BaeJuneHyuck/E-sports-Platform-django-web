@@ -51,6 +51,11 @@ INSTALLED_APPS = [
     'disqus',
     'crispy_forms',
     'OW_parse',
+    'django_crontab',
+]
+
+CRONJOBS = [
+    ( '* */6 * * *', 'esportPlatform.cron.lol_scheduler')
 ]
 
 MIDDLEWARE = [

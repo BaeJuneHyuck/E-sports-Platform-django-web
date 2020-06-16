@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import User
 from .models import lol_record
-
+from .models import OW_BattleTag
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -24,3 +24,4 @@ class UserAdmin(admin.ModelAdmin):
     last_login_at.short_description = '최근로그인'
 
 admin.site.register(lol_record)
+admin.site.register(OW_BattleTag)

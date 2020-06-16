@@ -37,7 +37,7 @@ class TotalListView(generic.ListView):
     template_name = 'practice/list.html'
     context_object_name = 'practices'
     queryset = Practice.objects.filter(practice_time__gt=three_years)
-    paginate_by = 5
+    paginate_by = 10
 
     def get_queryset(self, *args, **kwargs):
         qs = Practice.objects.all()
@@ -47,11 +47,13 @@ class TotalListView(generic.ListView):
             if attribute == 'title':
                 qs = qs.filter(title__icontains=query)
             elif attribute == 'author':
-                qs = qs.filter(author_name__icontains=query)
+                qs = qs.filter(author__name__icontains=query)
             elif attribute == 'tier':
                 qs = qs.filter(tier__icontains=query)
             elif attribute == 'text':
                 qs = qs.filter(text__icontains=query)
+            elif attribute == 'game':
+                qs = qs.filter(game__icontains=query)
             print(qs)
         print(self.request.GET)
         return qs

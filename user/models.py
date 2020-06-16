@@ -5,6 +5,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 import django.db.models.manager 
+import requests
+import json
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -89,3 +91,90 @@ class lol_record(models.Model):
     
     def __str__(self):
         return '{}_{}'.format(self.nickName, self.gameId)
+
+
+
+class OW_BattleTag(models.Model):
+    user_key = models.CharField(max_length=50)
+    battle_tag = models.CharField(max_length=50, unique=True)
+    data = models.TextField()
+    tank_level = models.CharField(max_length=10)
+    tank_icon = models.TextField()
+    tank_rank = models.TextField()
+    damage_level = models.CharField(max_length=10)
+    damage_icon = models.TextField()
+    damage_rank = models.TextField()
+    support_level = models.CharField(max_length=10)
+    support_icon = models.TextField()
+    support_rank = models.TextField()
+    top1_character = models.CharField(max_length=20)
+    top1_timePlayed = models.CharField(max_length=10)
+    top1_gamesWon = models.IntegerField(null=True)
+    top1_winPercentage = models.IntegerField(null=True)
+    top1_weaponAccuracy = models.IntegerField(null=True)
+    top1_eliminationsPerLife = models.IntegerField(null=True)
+    top1_multiKillBest = models.IntegerField(null=True)
+    top1_objectiveKills = models.IntegerField(null=True)
+    top2_character = models.CharField(max_length=20)
+    top2_timePlayed = models.CharField(max_length=10)
+    top2_gamesWon = models.IntegerField(null=True)
+    top2_winPercentage = models.IntegerField(null=True)
+    top2_weaponAccuracy = models.IntegerField(null=True)
+    top2_eliminationsPerLife = models.IntegerField(null=True)
+    top2_multiKillBest = models.IntegerField(null=True)
+    top2_objectiveKills = models.IntegerField(null=True)
+    top3_character = models.CharField(max_length=20)
+    top3_timePlayed = models.CharField(max_length=10)
+    top3_gamesWon = models.IntegerField(null=True)
+    top3_winPercentage = models.IntegerField(null=True)
+    top3_weaponAccuracy = models.IntegerField(null=True)
+    top3_eliminationsPerLife = models.IntegerField(null=True)
+    top3_multiKillBest = models.IntegerField(null=True)
+    top3_objectiveKills = models.IntegerField(null=True)
+
+    def get_data(self):
+        point = self.battle_tag.find('#')
+        name = self.battle_tag[:point]
+        code = self.battle_tag[point+1:]
+        URL = f'https://ow-api.com/v1/stats/pc/asia/{name}-{code}/complete'
+        data = requests.get(URL)
+        self.data = data.text
+        json_data = data.json()
+        self.tank_level = json_data['ratings'][0]['level']
+        self.tank_icon = json_data['ratings'][0]['roleIcon']
+        self.tank_rank = json_data['ratings'][0]['rankIcon']
+        self.damage_level  = json_data['ratings'][1]['level']
+        self.damage_icon = json_data['ratings'][1]['roleIcon']
+        self.damage_rank = json_data['ratings'][1]['rankIcon']
+        self.support_level = json_data['ratings'][2]['level']
+        self.support_icon = json_data['ratings'][2]['roleIcon']
+        self.support_rank = json_data['ratings'][2]['rankIcon']
+        top_heroes = json_data['competitiveStats']['topHeroes']
+        for hero, time in top_heroes.items():
+            time['timePlayed'] = int(time['timePlayed'].replace(":", ""))
+        top_heroes = sorted(top_heroes.items(), key=lambda x: x[1]['timePlayed'], reverse=True)
+        self.top1_character = top_heroes[0][0]
+        self.top1_timePlayed = json_data['competitiveStats']['topHeroes'][self.top1_character]['timePlayed']
+        self.top1_gamesWon = json_data['competitiveStats']['topHeroes'][self.top1_character]['gamesWon']
+        self.top1_winPercentage = json_data['competitiveStats']['topHeroes'][self.top1_character]['winPercentage']
+        self.top1_weaponAccuracy = json_data['competitiveStats']['topHeroes'][self.top1_character]['weaponAccuracy']
+        self.top1_eliminationsPerLife = json_data['competitiveStats']['topHeroes'][self.top1_character]['eliminationsPerLife']
+        self.top1_multiKillBest = json_data['competitiveStats']['topHeroes'][self.top1_character]['multiKillBest']
+        self.top1_objectiveKills = json_data['competitiveStats']['topHeroes'][self.top1_character]['objectiveKills']
+        self.top2_character = top_heroes[1][0]
+        self.top2_timePlayed = json_data['competitiveStats']['topHeroes'][self.top2_character]['timePlayed']
+        self.top2_gamesWon = json_data['competitiveStats']['topHeroes'][self.top2_character]['gamesWon']
+        self.top2_winPercentage = json_data['competitiveStats']['topHeroes'][self.top2_character]['winPercentage']
+        self.top2_weaponAccuracy = json_data['competitiveStats']['topHeroes'][self.top2_character]['weaponAccuracy']
+        self.top2_eliminationsPerLife = json_data['competitiveStats']['topHeroes'][self.top2_character]['eliminationsPerLife']
+        self.top2_multiKillBest = json_data['competitiveStats']['topHeroes'][self.top2_character]['multiKillBest']
+        self.top2_objectiveKills = json_data['competitiveStats']['topHeroes'][self.top2_character]['objectiveKills']
+        self.top3_character = top_heroes[2][0]
+        self.top3_timePlayed = json_data['competitiveStats']['topHeroes'][self.top3_character]['timePlayed']
+        self.top3_gamesWon = json_data['competitiveStats']['topHeroes'][self.top3_character]['gamesWon']
+        self.top3_winPercentage = json_data['competitiveStats']['topHeroes'][self.top3_character]['winPercentage']
+        self.top3_weaponAccuracy = json_data['competitiveStats']['topHeroes'][self.top3_character]['weaponAccuracy']
+        self.top3_eliminationsPerLife = json_data['competitiveStats']['topHeroes'][self.top3_character]['eliminationsPerLife']
+        self.top3_multiKillBest = json_data['competitiveStats']['topHeroes'][self.top3_character]['multiKillBest']
+        self.top3_objectiveKills = json_data['competitiveStats']['topHeroes'][self.top3_character]['objectiveKills']
+        self.save()

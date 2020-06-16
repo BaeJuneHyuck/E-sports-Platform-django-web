@@ -6,7 +6,6 @@ from user.models import User
 
 class Practice(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    author_name = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     text = models.CharField(max_length=600)
     game = models.CharField(max_length=50)

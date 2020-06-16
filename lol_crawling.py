@@ -215,11 +215,11 @@ def clickbuttonloop(driver):
         except Exception as error:
             return
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     username = 'team6'
-    password = '000111222'
-    client = pymongo.MongoClient('mongodb://%s:%s@218.146.229.191:27017/Game_record' % (username, password))
-    db = client.Game_record
+    password = 'TEAM6'
+    client = pymongo.MongoClient('mongodb://%s:%s@ec2-52-78-106-39.ap-northeast-2.compute.amazonaws.com:27017/lol' % (username, password))
+    db = client.lol
     loldb = db.lol
 
     con = sqlite3.connect("db.sqlite3")

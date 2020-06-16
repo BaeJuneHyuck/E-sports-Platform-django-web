@@ -39,7 +39,7 @@
 
         <div class = "contents">
             <div class = "contents_title">
-                <a href="/competitions/past"  data-toggle="tooltip" data-placement="right" title="더보기">지난 대회</a>
+                <a href="{% url 'competitions:past_current' %}"  data-toggle="tooltip" data-placement="right" title="더보기">지난 대회</a>
             </div>
             <ul>
                 <li><a href="{% url 'competitions:past_current' %}">{{ current_year }} 대회</a></li>
