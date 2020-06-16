@@ -20,6 +20,5 @@ urlpatterns = [
     path('create/', views.CreateView.post_new, name='create'),
     path('brackets/<int:pk>', views.BracketsView.as_view(), name='brackets'),
     path('match/<int:pk>', views.MatchView.as_view(), name='match'),
-
-
+    path('match/edit/<int:pk>', views.MatchEditView.as_view(), name='matchedit'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

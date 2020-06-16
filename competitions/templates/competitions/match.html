@@ -8,6 +8,18 @@
 <div class ="container mt-3 " style="color:black">
 
     <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+        {% if messages %}
+            {% for message in messages %}
+                <div class="row" style="margin:20px auto;">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger">
+                        {{ message.message }}
+                    </div>
+                </div>
+                </div><!-- Logout Modal-->
+            {% endfor %}
+        {% endif %}
+
         <h1 class = "competition_name">
             <a href="/competitions/{{match.competition.pk}}" data-toggle="tooltip" data-placement="right" title="대회 정보 보기">{{ match.competition.competition_name }}</a>
              의 {{match.number}}번 경기
@@ -27,22 +39,35 @@
             </colgroup>
             <tr>
                 <th>팀</th>
+                {% if match.team1 %}
                 <td style="text-align:center"><a href="/team/detail/{{match.team1.pk}}" data-toggle="tooltip" data-placement="right" title="팀 정보 보기">{{ match.team1 }}</a></td>
+                {% else %}
+                 <td style="text-align:center"> 없음 </td>
+                {% endif %}
 
-                {% if team2 %}
+                {% if match.team2 %}
                 <td style="text-align:center"><a href="/team/detail/{{match.team2.pk}}" data-toggle="tooltip" data-placement="right" title="팀 정보 보기">{{ match.team2 }}</a></td>
                 {% else %}
-                 <td style="text-align:center"> 부전승 </td>
+                 <td style="text-align:center"> 없음 </td>
                 {% endif %}
             </tr>
             <tr>
-                <th>스코어</th>
-                <td style="text-align:center">10</td>
-                <td style="text-align:center">50</td>
+                <th>결과</th>
+                {% if match.result == 0 %}
+                    <td colspan="2" style="text-align:center">경기 전</td>
+                {% elif match.result == 1 %}
+                    <td colspan="2" style="text-align:center">1팀승리</td>
+                {% elif match.result == 2%}
+                    <td colspan="2" style="text-align:center">2팀승리</td>
+                {% elif match.result == 3%}
+                    <td  colspan="2" style="text-align:center">무승부</td>
+                {% endif %}
             </tr>
         </table>
-
-
+        <a href="/competitions/brackets/{{match.competition.pk}}" class="btn btn-primary" role="button">경기목록</a>
+        {% if master == user %}
+            <a href="/competitions/match/edit/{{match.pk}}"><button type="submit" class="save btn btn-primary float-right">경기 내용 수정</button></a>
+        {% endif %}
 
 
     </div>

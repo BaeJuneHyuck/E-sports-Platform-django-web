@@ -1,0 +1,61 @@
+
+{% extends "home/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %} esportsPlatform : 경기 결과 수정{% endblock %}
+
+{% block content %}
+
+<div class ="container mt-3 " style="color:black">
+<form method="post">{% csrf_token %}
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+        {% if messages %}
+            {% for message in messages %}
+                <div class="row" style="margin:20px auto;">
+                <div class="col-sm-12">
+                    <div class="alert alert-danger">
+                        {{ message.message }}
+                    </div>
+                </div>
+                </div><!-- Logout Modal-->
+            {% endfor %}
+        {% endif %}
+        <h1 class = "competition_name">
+            <a href="/competitions/{{match.competition.pk}}" data-toggle="tooltip" data-placement="right" title="대회 정보 보기">{{ match.competition.competition_name }}</a>
+             의 {{match.number}}번 경기 내용 수정
+        </h1>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8 mb-0">
+                        {{ form.date | as_crispy_field}}
+            </div>
+        </div>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+
+        <table class = "table contents_table head-light table-hover mb-2 " style="color:black">
+            <colgroup>
+                <col width="10%">
+                <col width="45%">
+                <col width="45%">
+            </colgroup>
+            <tr>
+                <th>팀</th>
+                <td style="text-align:center">{{ form.team1 |as_crispy_field }}</td>
+                <td style="text-align:center">{{ form.team2 |as_crispy_field }}</td>
+
+            </tr>
+            <tr>
+                <th>결과</th>
+                <td colspan="2">{{ form.result|as_crispy_field }}</td>
+            </tr>
+
+        </table>
+
+        <div class="card-footer bg-transparent border-dark"></div>
+        <button type="submit" class="save btn btn-success">수정</button>
+    </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -53,8 +53,10 @@ class Competition(models.Model):
     total_teams = models.IntegerField(default=8, verbose_name='전체 모집 팀', validators=[MinValueValidator(2),
                                        MaxValueValidator(128)]) # 대회 참가팀수, 마감시 모집종료
     current_teams = models.IntegerField(default=0, verbose_name='현재 모집 팀') # 대회 참가팀수, 마감시 모집종료
-    rounds = models.IntegerField(default=7, verbose_name='전체 라운드수') # 전체 라운드수는  single elimination 에서 2인대회 일때 1로 최소 ,128인대회일때 7로 최대)
-                                                                        # dobule이면 패자전이 각각 진행되므로 1라운드 추가
+    rounds = models.IntegerField(default=7, verbose_name='전체 라운드수',null=True,
+                                 validators=[MinValueValidator(1),MaxValueValidator(8)])
+    # 전체 라운드수는  single elimination 에서 2인대회 일때 1로 최소 ,128인대회일때 7로 최대)
+    # dobule이면 패자전이 각각 진행되므로 1라운드 추가
                                                 
     def __str__(self):
         return '{}'.format(self.competition_name)
@@ -92,19 +94,21 @@ class CompetitionParticipate(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     team_number = models.IntegerField(default=-1)   # 대회에서 몇번 팀인가 -> 대진표에 사용, 랜덤으로 유니크 배정
     avg_tier = models.IntegerField(default=0, null=True)
+    win = models.IntegerField(default=0)   # 승
+    lose = models.IntegerField(default=0)   # 패
 
     def __str__(self):
         return '{}-{}'.format(self.competition, self.team)
 
 class Match(models.Model):
     game = models.CharField(max_length=50)
-    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)  # 어느 대회의 경기인가
+    competition = models.ForeignKey(Competition, null=True, on_delete=models.CASCADE)  # 어느 대회의 경기인가
     number = models.IntegerField(default=1, verbose_name='경기 번호') # pk 아님, 각 대회에서 몇번째경기인가, 대진표그리는데 사용
     round = models.IntegerField(default=1, verbose_name='라운드')
 
     team1 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team1')
     team2 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team2')
-    date = models.DateTimeField('date', auto_now=True)
+    date = models.DateTimeField('경기일시', editable=True, null=True,)
     result = models.IntegerField(default=0, verbose_name='경기 결과') # (0 경기전, 1 1팀승리, 2 2팀승리 , 3 무승부)
 
     result_lol = models.ForeignKey('ResultLOL',blank=True, null=True, on_delete=models.CASCADE)

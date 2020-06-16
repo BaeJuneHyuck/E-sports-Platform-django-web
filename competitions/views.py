@@ -8,10 +8,14 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from .models import Competition, CompetitionParticipate, Match
 from team.models import TeamInvitation, TeamRelation
-from .forms import CompetitionCreateForm, CompetitionAttendForm
+from user.models import User
+from .forms import CompetitionCreateForm, CompetitionAttendForm, MatchEditForm
 from django.contrib import messages
 import random
 import math
+import itertools
+from django.utils import timezone
+
 
 NOW = datetime.now() + relativedelta(seconds=1)
 one_years = NOW + relativedelta(years=-1)
@@ -104,6 +108,15 @@ class CreateView(generic.CreateView):
                 print("form valid")
                 competition = form.save(commit=False)
                 competition.master = self.user
+
+                data = form.cleaned_data
+                type = data['tournament_type']
+                rounds = data['rounds']
+                if type == "-1" or type == "-2":
+                    competition.rounds = 1
+                else:
+                    competition.rounds = rounds
+
                 competition.save()
                 return redirect('competitions:detail', pk=competition.pk)
             else:
@@ -148,7 +161,12 @@ class AttendView(generic.DetailView):
 
                 # 팀 신청 종료 -> 자동으로 매칭 생성
                 if competition.current_teams == competition.total_teams:
-                    makeMatches(pk)
+                    if competition.tournament_type == -1:
+                        makeSingleMatches(pk)
+                    elif competition.tournament_type == -2:
+                        makeDoubleMatches(pk)
+                    else:
+                        makeRoundRobin(pk, competition.tournament_type )
 
                 messages.info(self, '참가 신청이 완료되었습니다.')
                 return redirect('competitions:detail', pk=competition.pk)
@@ -348,12 +366,15 @@ class LastLastPastView(CurrentPastView):
 
 class BracketsView(generic.DetailView):
     model = Competition
-    template_name = 'competitions/brackets.html'
 
+    template_name = 'competitions/brackets.html'
     def get_context_data(self, **kwargs):
         context = super(BracketsView, self).get_context_data(**kwargs)
         context['today'] = NOW
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        
+        # 승리가 많은순, 패배가 적은순 정렬
+        context['teams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).order_by('-win').order_by('lose')
         context['matches1'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=1)
         context['matches2'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=2)
         context['matches3'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=3)
@@ -361,6 +382,7 @@ class BracketsView(generic.DetailView):
         context['matches5'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=5)
         context['matches6'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=6)
         context['matches7'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=7)
+        context['matches8'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=8)
         return context
 
 
@@ -372,19 +394,89 @@ class MatchView(generic.DetailView):
         context = super(MatchView, self).get_context_data(**kwargs)
         context['today'] = NOW
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+        match = Match.objects.get(pk=self.kwargs.get('pk'))
+        context['master'] = User.objects.get(pk=match.competition.master.pk)
         return context
 
 
+class MatchEditView(generic.UpdateView):
+    template_name = 'competitions/match_edit.html'
+    model = Match
+    form_class=MatchEditForm
+
+    def get(self, request, pk ):
+        match = Match.objects.get(pk=pk)
+        competition_pk = match.competition.pk
+        master = User.objects.get(pk=match.competition.master.pk)
+        if self.request.user != master :
+            messages.success(self.request, '대회 관리자만 수정할 수 있습니다')
+            return redirect('/competitions/match/' + str(pk))
+
+        form = MatchEditForm(competition_pk, instance=match)
+        invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
+
+        args = {'form': form, 'invitations':invitations, 'match':match}
+        return render(request, self.template_name, args)
+
+    def post(self, request, pk):
+        match = Match.objects.get(pk=pk)
+        competition_pk = match.competition.pk
+        form =  MatchEditForm(competition_pk, request.POST, instance=match)
+        invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
+        if form.is_valid():
+            f = form.save(commit=False)
+            data = form.cleaned_data
+            result = data['result']
+            if result == "1":
+                f.result = 1
+            elif result == "2":
+                f.result = 2
+            elif result == "3":
+                f.result = 3
+            elif result == "0":
+                f.result = 0
+            f.save()
+
+            # 라운드로빈이면 매치 결과로 승점 계산 실행
+            competition =Competition.objects.get(pk=competition_pk)
+            if competition.tournament_type >= 1:
+                calculate_score(competition_pk)
+
+            messages.info(request, '경기 정보를 수정했습니다')
+            return redirect('/competitions/match/' + str(pk))
+        args = {'form': form, 'invitations':invitations, 'match':match}
+        return render(request, self.template_name, args)
+
+def calculate_score(competition_pk):
+    # 승패 0으로 초기화
+    relations =CompetitionParticipate.objects.filter(competition=competition_pk)
+    for relation in relations:
+        relation.win=0
+        relation.lose=0
+        relation.save()
+
+    # 모든 경기로 다시 계산
+    allmatches = Match.objects.filter(competition=competition_pk)
+    for match in allmatches:
+        team1 = CompetitionParticipate.objects.filter(competition=competition_pk).get(team = match.team1.pk)
+        team2 = CompetitionParticipate.objects.filter(competition=competition_pk).get(team = match.team2.pk)
+        if match.result == 1:
+            team1.win = team1.win+1
+            team2.lose = team2.lose+1
+        elif match.result == 2:
+            team2.win = team2.win+1
+            team1.lose = team1.lose+1
+        team1.save()
+        team2.save()
+
 """
-대회에 참가중인 팀에게 1번부터 팀번호 할당 <작성완료>
+대회에 참가중인 팀에게 1번부터 팀번호 할당
 => (12팀->1경기),  34팀->2경기,  56팀->3경기 ...(1round)
    (1경기승자,2경기승자-> x경기) , ... ( 2round)
    (준결승승자, 준결승승자->결승전) (last round)
     이렇게 경기정보 생성
-    
-=> 이후 대진표 에서는 해당 정보를 읽어서 대진표 그리기 
 """
-def makeMatches(competition_pk):
+def makeSingleMatches(competition_pk):
     competition=Competition.objects.get(pk=competition_pk)
     allRelations = CompetitionParticipate.objects.filter(competition=competition_pk).select_related('team')
     current_number = 1
@@ -402,9 +494,6 @@ def makeMatches(competition_pk):
         relation.save()
         teams_for_match.append(relation.team)
         current_number= current_number+1
-
-    for i in teams_for_match:
-        print(i)
 
     match_number = 0
     prev_round_match_number = 0
@@ -425,7 +514,8 @@ def makeMatches(competition_pk):
                 number = match_number,
                 round = 1,
                 team1 = team1,
-                result = 0)
+                result = 0,
+                date=timezone.now())
             break;
 
         # 팀1, 팀2가 선정됨 => 정상적인 match 생성
@@ -438,7 +528,9 @@ def makeMatches(competition_pk):
                 round = 1,
                 team1 = team1,
                 team2 = team2,
-                result = 0)
+                result = 0,
+                date=timezone.now())
+
 
     # 이후 2라운드 이상 필요한경우( 이전 라운드에 실행한 match가 두개이상인 경우) => 반복
     while prev_round_match_number != 1 :    # 이전 라운드의 경기가 하나밖에없었다 => 결승전임, 루프 종료
@@ -464,7 +556,60 @@ def makeMatches(competition_pk):
                     competition=competition,
                     number = match_number,
                     round = current_round,
-                    result = 0)
+                    result = 0,
+                    date=timezone.now())
+
+
+    #대회에 몇 라운드까지 있는지 기록
+    competition.rounds = current_round
+    competition.save()
+
+
+def makeSingleMatches(competition_pk):
+    pass
+
+
+def makeRoundRobin(competition_pk, rounds):
+    competition=Competition.objects.get(pk=competition_pk)
+    allRelations = CompetitionParticipate.objects.filter(competition=competition_pk).select_related('team')
+    current_number = 1
+
+    team_number = []
+    teams_for_match = []
+    for relation in allRelations:
+        team_number.append(relation.pk)
+
+    random.shuffle(team_number)
+    while team_number:
+        pk = team_number.pop()
+        relation = CompetitionParticipate.objects.get(pk=pk)
+        relation.team_number = current_number
+        relation.save()
+        teams_for_match.append(relation.team)
+        current_number= current_number+1
+
+    match_number = 0
+    current_round = 0
+
+    while current_round != competition.rounds :
+        current_round = current_round + 1       # 라운드 증가
+        print("현재라운드:"+str(current_round))
+        random.shuffle(teams_for_match)
+        matches = itertools.combinations(teams_for_match, 2)
+        print(matches)
+        for match in matches:
+            print (match)
+            match_number = match_number + 1
+            Match.objects.create(
+                    game = competition.competition_game,
+                    competition=competition,
+                    number = match_number,
+                    round = current_round,
+                    team1 = match[0],
+                    team2 = match[1],
+                    result = 0,
+                    date=timezone.now())
+
 
     #대회에 몇 라운드까지 있는지 기록
     competition.rounds = current_round

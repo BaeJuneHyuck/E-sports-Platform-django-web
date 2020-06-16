@@ -38,8 +38,11 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-12 mb-0">
+            <div class="form-group col-md-6 mb-0">
                 {{ form.tournament_type|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.rounds|as_crispy_field }}
             </div>
         </div>
 
@@ -69,4 +72,19 @@
     </form>
 </div>
 
+<script>
+var hello = 'hello';
+var selected;
+    $("#id_tournament_type").
+        change(function () {
+        $( "#id_tournament_type option:selected" ).each(function() {
+            selected += $( this ).text() + " ";
+            if ($( this ).text() == "Round Robin")
+                $("#div_id_rounds").css("display","block");
+            else
+                $("#div_id_rounds").css("display","none");
+        });
+    })
+  .change();
+</script>
 {% endblock %}

@@ -40,8 +40,10 @@ class CompetitionParticipateAdmin(admin.ModelAdmin):
         (None, {'fields': ['team']}),
         (None, {'fields': ['team_number']}),
         (None, {'fields': ['avg_tier']}),
+        (None, {'fields': ['win']}),
+        (None, {'fields': ['lose']}),
     ]
-    list_display = ('competition', 'team', 'team_number','avg_tier')
+    list_display = ('competition', 'team', 'team_number','avg_tier','win','lose')
     list_filter = ['competition']
     search_fields = ['competition']
 

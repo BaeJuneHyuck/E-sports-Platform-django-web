@@ -215,7 +215,7 @@
         <div class="modal-body">아래 "로그아웃"을 클릭하여 로그아웃 합니다.</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-          <a class="btn btn-primary" href="/user/logout">로그아웃</a>
+          <a class="btn btn-primary" href="/user/logout/?next={{ request.path }}">로그아웃</a>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ SECRET_KEY = ')*t7)0791hg4b$(un^o&yychg+e3s41@3tp2k**3ln90a)*kh-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 AUTH_USER_MODEL='user.User'
