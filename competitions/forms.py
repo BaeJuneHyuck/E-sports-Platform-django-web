@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Competition, CompetitionParticipate, Match
+from .models import Competition, CompetitionParticipate, Match, MatchComment
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from team.models import Team, TeamRelation
 NOW = timezone.now()
@@ -101,4 +101,12 @@ class MatchEditForm(forms.ModelForm):
     class Meta:
         model = Match
         fields = ['team1' ,'team2', 'date', 'result']
+
+
+class MatchCommentForm(forms.ModelForm):
+    content = forms.CharField(max_length=600)
+
+    class Meta:
+        model = MatchComment
+        fields = ['content']
 

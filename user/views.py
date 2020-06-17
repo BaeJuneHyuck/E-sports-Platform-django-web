@@ -104,6 +104,8 @@ class UserlolpageView(ListView):
         cur_user = request.user
         lolid = self.model.objects.get(email=cur_user.email)
         records = loldb.find({"nickName" : lolid.lolid})
+
+        print(lolid.lolid)
         jsonToDic = []
         for record in records:
             del (record['_id'])

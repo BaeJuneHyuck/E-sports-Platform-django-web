@@ -56,9 +56,9 @@
                 {% if match.result == 0 %}
                     <td colspan="2" style="text-align:center">경기 전</td>
                 {% elif match.result == 1 %}
-                    <td colspan="2" style="text-align:center">1팀승리</td>
+                    <td colspan="2" style="text-align:center">{{match.team1}} 승리</td>
                 {% elif match.result == 2%}
-                    <td colspan="2" style="text-align:center">2팀승리</td>
+                    <td colspan="2" style="text-align:center">{{match.team2}} 승리</td>
                 {% elif match.result == 3%}
                     <td  colspan="2" style="text-align:center">무승부</td>
                 {% endif %}
@@ -68,10 +68,50 @@
         {% if master == user %}
             <a href="/competitions/match/edit/{{match.pk}}"><button type="submit" class="save btn btn-primary float-right">경기 내용 수정</button></a>
         {% endif %}
-
-
-    </div>
 </div>
 
+<div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+    <div class = "comment mt-4">
+        <h2> 경기 댓글 </h2>
+        <table class="table table-dark">
+            <colgroup>
+                <col width="25%">
+                <col width="65%">
+                <col width="10%">
+            </colgroup>
+            <thead class="thead-light">
+                <tr>
+                  <th scope="col">작성자</th>
+                  <th scope="col">내용</th>
+                  <th scope="col"></th>
+                </tr>
+            </thead>
 
+            {% for comment in comments %}
+            <tr>
+                <td>{{ comment.author.name }}</td>
+                <td>{{ comment.content }}</td>
+                {% if comment.author.name == request.user.name %}
+                <td style="text-align:right;"><a style="color:red" href = "{% url 'competitions:delete_comment' match.id comment.id %}">삭제</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </table>
+
+        <form action='{% url "competitions:new_comment" match.id %}'method="post">{% csrf_token %}
+            <div class="row">
+                <div class="col-2">
+                    <input type="text" class="form-control" placeholder="{{user.name}}" disabled>
+                </div>
+                <div class="col-8">
+                    <textarea type="text" class="form-control" name="content" required="" id="id_content"></textarea>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-outline-secondary" type="submit">입력</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

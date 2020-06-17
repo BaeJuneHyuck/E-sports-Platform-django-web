@@ -117,17 +117,6 @@ class DetailView(generic.DetailView):
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
         today = NOW.strftime("%Y-%m-%d")
-        if self.method == 'POST':
-            form = CommentForm(self.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.author = self.user
-                comment.practice = practice
-                comment.save()
-            else:
-                return HttpResponse('fail')
-        else:
-            form = CommentForm()
 
         form = CommentForm()
         invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]

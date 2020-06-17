@@ -28,15 +28,11 @@
             </tr>
             <tr>
                 <th>게시자</th>
-                <td> {{ practice.author_name }} </td>
+                <td> {{ practice.author.name }} </td>
             </tr>
             <tr>
                 <th>티어</th>
                 <td> {{ practice.tier }} </td>
-            </tr>
-            <tr>
-                <th>소개</th>
-                <td> {{ practice.text }} </td>
             </tr>
             <tr>
                 <th>연습일</th>
@@ -46,10 +42,14 @@
                 <th>게시일</th>
                 <td> {{ practice.pub_date|date:"Y-m-d h:m" }} </td>
             </tr>
+            <tr>
+                <th>소개</th>
+                <td> {{ practice.text }} </td>
+            </tr>
         </table>
     </div>
 
-    <div class = "comment mt-4">
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
         <h3>Comments</h3>
         <table class="table table-dark">
             <colgroup>
@@ -78,32 +78,34 @@
         </table>
         {% if practice_time > today %}
         <form action='{% url "practice:new_comment" practice.id %}'method="post">{% csrf_token %}
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" name="content" maxlength="600" required="" id="id_content"
-                     placeholder="참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 댓글을 삭제해주세요">
-              <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">Button</button>
-              </div>
+            <div class="row">
+                <div class="col-2">
+                    <input type="text" class="form-control" placeholder="{{user.name}}" disabled>
+                </div>
+                <div class="col-8">
+                    <textarea type="text" class="form-control" name="content" required="" id="id_content"
+                              placeholder="참가신청을 원할 경우 '참가신청합니다'가 포함된 댓글을 작성해주세요. 참가신청을 취소하고 싶은 경우 댓글을 삭제해주세요"></textarea>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-outline-secondary" type="submit">입력</button>
+                </div>
             </div>
         </form>
         {% endif %}
     </div>
 
-    <div class = "comment">
 
-    </div>
+        <div class = "pager">
+            {% if practice.id|add:'-1' > 0 %}
+            <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
+            {% endif %}
 
-    <div class = "pager">
-        {% if practice.id|add:'-1' > 0 %}
-        <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
-        {% endif %}
+            <a class = "list" href="{% url 'practice:index' %}">목록</a>
 
-        <a class = "list" href="{% url 'practice:index' %}">목록</a>
-
-        {% if practice.id|add:'1' <= total_practice %}
-        <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
-        {% endif %}
-    </div>
+            {% if practice.id|add:'1' <= total_practice %}
+            <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
+            {% endif %}
+        </div>
 
 </div>
 {% endblock %}

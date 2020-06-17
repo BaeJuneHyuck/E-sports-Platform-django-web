@@ -6,10 +6,10 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import generic
-from .models import Competition, CompetitionParticipate, Match
+from .models import Competition, CompetitionParticipate, Match, MatchComment
 from team.models import TeamInvitation, TeamRelation
 from user.models import User
-from .forms import CompetitionCreateForm, CompetitionAttendForm, MatchEditForm
+from .forms import CompetitionCreateForm, CompetitionAttendForm, MatchEditForm, MatchCommentForm
 from django.contrib import messages
 import random
 import math
@@ -507,7 +507,7 @@ class BracketsView(generic.DetailView):
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         
         # 승리가 많은순, 패배가 적은순 정렬
-        context['teams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).order_by('-win').order_by('lose')
+        context['teams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).order_by('lose').order_by('-win')
         context['matches1'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=1)
         context['matches2'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=2)
         context['matches3'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=3)
@@ -529,7 +529,46 @@ class MatchView(generic.DetailView):
         context['invitations'] = TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
         match = Match.objects.get(pk=self.kwargs.get('pk'))
         context['master'] = User.objects.get(pk=match.competition.master.pk)
+        context['comments'] = MatchComment.objects.filter(match=match)
         return context
+
+    def comment(self, match_pk):
+        match = Match.objects.get(pk=match_pk)
+        comments = MatchComment.objects.filter(match=match)
+        total_match = Match.total_match()
+        today = NOW.strftime("%Y-%m-%d")
+        if self.method == 'POST':
+            form = MatchCommentForm(self.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = self.user
+                comment.match = match
+                comment.save()
+            else:
+                return HttpResponse('fail')
+        else:
+            form = MatchCommentForm()
+
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+
+        return render(self, 'competitions/match.html', {'match': match, 'comments': comments, 'form': form,
+                                                     'total_match': total_match, 'today': today,
+                                                     'invitations': invitations})
+
+    def delete(self, match_pk, comment_pk):
+        delete_comment = MatchComment.objects.get(pk=comment_pk)
+        delete_comment.delete()
+        match = Match.objects.get(pk=match_pk)
+        comments = MatchComment.objects.filter(match=match)
+        total_match = Match.total_match()
+        today = NOW.strftime("%Y-%m-%d")
+        form = CommentForm()
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+
+        return render(self, 'competitions/match.html', {'match': match, 'comments': comments, 'form': form,
+                                                     'total_match': total_match, 'today': today,
+                                                     'invitations': invitations})
+
 
 
 class MatchEditView(generic.UpdateView):
@@ -698,7 +737,7 @@ def makeSingleMatches(competition_pk):
     competition.save()
 
 
-def makeSingleMatches(competition_pk):
+def makeDoubleMatches(competition_pk):
     pass
 
 
