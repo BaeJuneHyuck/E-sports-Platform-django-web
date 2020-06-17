@@ -41,8 +41,18 @@
                 <td> {{ competition.competition_game }} </td>
             </tr>
             <tr>
+                <th>대회방식</th>
+                {% if competition.tournament_type == -1 %}
+                    <td> Single Elimination </td>
+                {% elif competition.tournament_type == -2 %}
+                    <td> Double Elimination </td>
+                {% else%}
+                    <td> 라운드 로빈 (총 {{ competition.rounds}} 라운드) </td>
+                {% endif %}
+            </tr>
+            <tr>
                 <th>주최자</th>
-                <td> {{ competition.master.name0}} </td>
+                <td> {{ competition.master.name}} </td>
             </tr>
             <tr>
                 <th>참가자격</th>
@@ -64,10 +74,7 @@
                 <th>게시일</th>
                 <td> {{ competition.pub_date|date:"Y-m-d" }}</td>
             </tr>
-            <tr>
-                <th>대회소개</th>
-                <td> {{ competition.competition_text }} </td>
-            </tr>
+
             <tr>
                 <th>홈페이지</th>
                 {% if competition.competition_game in 'LOL' %}
@@ -75,6 +82,11 @@
                 {% elif competition.competition_game in 'Overwatch' %}
                 <td><a href="https://playoverwatch.com/ko-kr/">https://playoverwatch.com/ko-kr/</a>
                 {% endif %}
+            </tr>
+
+            <tr>
+                <th>대회소개</th>
+                <td> {{ competition.competition_text }} </td>
             </tr>
         </table>
 

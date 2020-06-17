@@ -144,8 +144,8 @@
                     <td>{{ match.date }}</td>
 
                     {% if match.result == 0 %}<td>경기전</td>
-                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                     {% elif match.result == 3 %}<td> 무승부 </td>
                     {% endif %}
 
@@ -190,8 +190,8 @@
                     <td>{{ match.date }}</td>
 
                     {% if match.result == 0 %}<td>경기전</td>
-                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                     {% elif match.result == 3 %}<td> 무승부 </td>
                     {% endif %}
 
@@ -237,8 +237,8 @@
                     <td>{{ match.date }}</td>
 
                     {% if match.result == 0 %}<td>경기전</td>
-                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                     {% elif match.result == 3 %}<td> 무승부 </td>
                     {% endif %}
 
@@ -283,8 +283,8 @@
                             <td>{{ match.date }}</td>
 
                             {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                             {% elif match.result == 3 %}<td> 무승부 </td>
                             {% endif %}
 
@@ -329,8 +329,8 @@
                             <td>{{ match.date }}</td>
 
                             {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                             {% elif match.result == 3 %}<td> 무승부 </td>
                             {% endif %}
 
@@ -376,8 +376,8 @@
                             <td>{{ match.date }}</td>
 
                             {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                             {% elif match.result == 3 %}<td> 무승부 </td>
                             {% endif %}
 
@@ -422,8 +422,8 @@
                             <td>{{ match.date }}</td>
 
                             {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                             {% elif match.result == 3 %}<td> 무승부 </td>
                             {% endif %}
 
@@ -468,8 +468,8 @@
                             <td>{{ match.date }}</td>
 
                             {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2}}">{{ match.team2}}</a> 승</td>
+                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
                             {% elif match.result == 3 %}<td> 무승부 </td>
                             {% endif %}
 

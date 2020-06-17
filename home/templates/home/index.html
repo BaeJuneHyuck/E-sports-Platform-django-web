@@ -25,7 +25,17 @@ position: relative;
   top: 25%;
   left: 25%;
 }
-.opacityback{
+.opacity_main_logo{
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    width: 80%;
+    height: 70%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius:5px;
+}
+
+.opacityback_logo{
     position: absolute;
     top: 25%;
     left: 25%;
@@ -38,21 +48,40 @@ position: relative;
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li><li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="image_on_image">
-                <img class="image1 d-block w-100 " src="/static/competitions/images/game.jpg" alt="First slide">
-                <div class="opacityback"></div>
-                <a href="/competitions/4/"><img class="image2 w-50" src="/static/competitions/images/LCK.png"></a>
+                <img class="image1 d-block w-100 " src="/static/competitions/images/main.jpg" alt="First slide">
+                <div class="opacity_main_logo align-center">
+                    <div style="color:black; text-align:center; margin-top:5%;">
+                        <p style="font-size:10vh;">E-SPORTS PLATFORM</p>
+                        <p style="font-size:5vh;">나만의 대회를 만들고 운영해보세요!</p>
+                        <p style="font-size:3vh;">간단하게 대회를 관리하고 자동으로 대진표가 생성됩니다</p>
+                        <p style="font-size:3vh;">다른 사용자들과 팀을 편성해서 대회에 참가하세요</p>
+                        <p style="font-size:3vh;">연습경기를 통해 비슷한 실력의 유저들과 겨뤄보세요</p>
+                        <p style="font-size:3vh;">경기에 대해서 다른 사람들과 이야기 해보세요</p>
+                        <a href="/user/registration/"><button type="submit" class="save btn btn-warning">지금 바로 시작하기</button></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+          <div class="carousel-item">
+            <div class="image_on_image">
+                <img class="image1 d-block w-100 " src="/static/competitions/images/game.jpg" alt="Second slide">
+                <div class="opacityback_logo"></div>
+                <a href="/competitions/20/"><img class="image2 w-50" src="/static/competitions/images/LCK.png"></a>
             </div>
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="/static/competitions/images/overwatch.jpg" alt="Second slide">
+          <img class="d-block w-100" src="/static/competitions/images/overwatch.jpg" alt="Third slide">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="/static/competitions/images/lol.jpg" alt="Third slide">
+          <img class="d-block w-100" src="/static/competitions/images/lol.jpg" alt="Fourth slide">
         </div>
       </div>
       <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -108,48 +137,37 @@ position: relative;
 
     <div class="practice">
         <div class="contents">
-            <div class="contents_title">
-                <a href="/practice"  data-toggle="tooltip" data-placement="right" title="더보기">연습경기 모집</a>
-            </div>
-                {% if practices %}
-                    <ul>
-                        {% for practice in practices %}
-                        <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p> No Practice are available.</p>
-                {% endif %}
-        </div>
-
-         <div class="contents">
-            <div class="contents_title">
-                <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
-            </div>
-                {% if recommend_practice %}
-                    <ul>
-                        {% for practice in recommend_practice %}
-                        <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p> No Practice are available.</p>
-                {% endif %}
-         </div>
-        <div class="contents">
         <div class="contents_title">
-            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가가능한 연습경기</a>
+            <a href="/practice/list"  data-toggle="tooltip" data-placement="right" title="더보기">최근 생성된 연습경기</a>
         </div>
-            {% if recommend_practice %}
-                <ul>
-                    {% for practice in recommend_practice %}
-                    <li><a href="{% url 'practice:recommend' %}">{{ practice.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p> No Practice are available.</p>
-            {% endif %}
-        </div>
+        {% if practices %}
+        <ul>
+            {% for practice in practices %}
+            <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p> No Practice are available.</p>
+        {% endif %}
     </div>
+
+    <div class="contents">
+        <div class="contents_title">
+            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
+        </div>
+        {% if attend_practice %}
+        <ul>
+            {% for practice in attend_practice %}
+            <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p> No Practice are available.</p>
+        {% endif %}
+    </div>
+
+
+
+</div>
 
 {% endblock %}

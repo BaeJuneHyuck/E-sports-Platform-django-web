@@ -137,9 +137,12 @@ class OW_BattleTag(models.Model):
         name = self.battle_tag[:point]
         code = self.battle_tag[point+1:]
         URL = f'https://ow-api.com/v1/stats/pc/asia/{name}-{code}/complete'
+        print(URL)
         data = requests.get(URL)
         self.data = data.text
+        print(self.data)
         json_data = data.json()
+        print(json_data)
         self.tank_level = json_data['ratings'][0]['level']
         self.tank_icon = json_data['ratings'][0]['roleIcon']
         self.tank_rank = json_data['ratings'][0]['rankIcon']

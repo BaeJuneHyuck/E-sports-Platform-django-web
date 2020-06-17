@@ -24,4 +24,7 @@ urlpatterns = [
     path('brackets/<int:pk>', views.BracketsView.as_view(), name='brackets'),
     path('match/<int:pk>', views.MatchView.as_view(), name='match'),
     path('match/edit/<int:pk>', views.MatchEditView.as_view(), name='matchedit'),
+
+    path('match/<int:match_pk>/new_comment', views.MatchView.comment, name='new_comment'),
+    path('match/<int:match_pk>/delete_comment/<int:comment_pk>', views.MatchView.delete, name='delete_comment'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
