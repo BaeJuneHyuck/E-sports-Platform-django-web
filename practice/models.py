@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 
 from user.models import User
 
@@ -19,10 +17,6 @@ class Practice(models.Model):
     @staticmethod
     def total_practice():
         return Practice.objects.count()
-
-@receiver(pre_save, sender=Practice)
-def practice_save(sender, instance, update_fields, **kwargs):
-    instance.author_name = instance.author.name
 
 class PracticeParticipate(models.Model):
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE)

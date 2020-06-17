@@ -82,7 +82,8 @@ class Competition(models.Model):
         super(Competition, self).delete(*args, **kwargs)
 
     def can_attend(self):
-        return self.attend_start <= NOW and  self.attend_end >= NOW
+        return self.attend_start.strftime('%Y-%m-%d') <= NOW.strftime('%Y-%m-%d') \
+               and  self.attend_end.strftime('%Y-%m-%d') >= NOW.strftime('%Y-%m-%d')
 
 @receiver(pre_save, sender=Competition)
 def competition_save_state(sender, instance, update_fields, **kwargs):
