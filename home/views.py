@@ -16,8 +16,14 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['practices'] = Practice.objects.all()
+        context['practices'] = Practice.objects.all().order_by('-pub_date')[:5]
         context['latest_competitions'] = Competition.objects.filter(date_end__gt=timezone.now()).order_by('-pub_date')[:5]
         context['possible_attend_competitions'] = Competition.objects.filter(Q(attend_start__lt=timezone.now()) & Q(attend_end__gt=timezone.now())).order_by('-pub_date')[:5]
         context['invitations']= TeamInvitation.objects.filter(invited_pk=self.request.user.pk).filter(checked=False)[:5]
+
+        if self.request.user.is_authenticated:
+            comments = Comment.objects.filter(Q(author=self.request.user) & Q(content__contains="참가신청합니다"))\
+                .values_list('practice', flat=True).distinct()
+            attend_practice = Practice.objects.filter(pk__in=comments)[:5]
+            context['attend_practice'] = attend_practice
         return context
