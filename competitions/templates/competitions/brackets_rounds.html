@@ -1,0 +1,41 @@
+[
+{% for match in matches%}
+    {% if match.result == -1 %}
+        {% if match.team2 %}
+            {
+            player1: { name: "경기예정", ID: -3, url: '/competitions/match/{{match.pk}}' },
+            player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}' }
+            },
+        {% elif match.team1%}
+            {
+            player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
+            player2: { name: "부전승", ID: -3, url: '/competitions/match/{{match.pk}}' }
+            },
+        {% endif %}
+    {% else %}
+        {% if match.team2 %}
+            {% if match.team1 %}
+            {
+                player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
+                player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
+            },
+            {% else %}
+                {
+                player1: { name: "경기예정", ID: 0, url: '/competitions/match/{{match.pk}}' },
+                player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
+                },
+            {% endif %}
+        {% elif match.team1%}
+            {
+                player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
+                player2: { name: "경기예정", ID: 0, url: '/competitions/match/{{match.pk}}' }
+            },
+        {% else %}
+            {
+                player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
+                player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
+            },
+        {% endif %}
+    {% endif %}
+{% endfor %}
+],

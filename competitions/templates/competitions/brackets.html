@@ -122,7 +122,7 @@
                 </colgroup>
                 <thead class="thead-light">
                     <tr>
-                      <th scope="col">경기 번호</th>
+                      <th scope="col">번호</th>
                       <th scope="col"> 팀 </th>
                       <th scope="col">경기 일시</th>
                       <th scope="col">경기 결과</th>
@@ -143,10 +143,12 @@
                     {% endif %}
                     <td>{{ match.date }}</td>
 
-                    {% if match.result == 0 %}<td>경기전</td>
+                    {% if match.result == 0 %}<td style="color:lightgray;">경기전</td>
                     {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
                     {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                    {% elif match.result == 3 %}<td> 무승부 </td>
+                    {% elif match.result == 3 %}<td style="color:yellow;"> 무승부 </td>
+                    {% elif match.result == -1 %}<td style="color:skyblue;"> 부전승 </td>
+
                     {% endif %}
 
                     {% if competition.master == user %}
@@ -157,329 +159,14 @@
             </table>
           </div>
 
-          <div class="tab-pane fade" id="round2" role="tabpanel" aria-labelledby="round2">
-              <table class="table table-dark">
-            <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                    <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                    </svg> </th>
-                </tr>
-            </thead>
+          {% include "competitions/brackets_match.html" with round="round2" matches=matches2 %}
+          {% include "competitions/brackets_match.html" with round="round3" matches=matches3 %}
+          {% include "competitions/brackets_match.html" with round="round4" matches=matches4 %}
+          {% include "competitions/brackets_match.html" with round="round5" matches=matches5 %}
+          {% include "competitions/brackets_match.html" with round="round6" matches=matches6 %}
+          {% include "competitions/brackets_match.html" with round="round7" matches=matches7 %}
+          {% include "competitions/brackets_match.html" with round="round8" matches=matches8 %}
 
-            {% for match in matches2 %}
-                <tr>
-                    <td>{{ match.number }}</td>
-                    {% if match.team1 %}
-                        <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                    {% else %}
-                        <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                    {% endif %}
-                    <td>{{ match.date }}</td>
-
-                    {% if match.result == 0 %}<td>경기전</td>
-                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                    {% elif match.result == 3 %}<td> 무승부 </td>
-                    {% endif %}
-
-                    {% if competition.master == user %}
-                        <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </table>
-
-          </div>
-
-          <div class="tab-pane fade" id="round3" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-            <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                    <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                    </svg> </th>
-                </tr>
-            </thead>
-
-            {% for match in matches3 %}
-                <tr>
-                    <td>{{ match.number }}</td>
-                    {% if match.team1 %}
-                        <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                    {% else %}
-                        <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                    {% endif %}
-                    <td>{{ match.date }}</td>
-
-                    {% if match.result == 0 %}<td>경기전</td>
-                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                    {% elif match.result == 3 %}<td> 무승부 </td>
-                    {% endif %}
-
-                    {% if competition.master == user %}
-                        <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
-          </div>
-
-          <div class="tab-pane fade" id="round4" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-                    <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                            <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                            </svg> </th>
-                        </tr>
-                    </thead>
-
-                    {% for match in matches4 %}
-                        <tr>
-                            <td>{{ match.number }}</td>
-                            {% if match.team1 %}
-                                <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                            {% else %}
-                                <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                            {% endif %}
-                            <td>{{ match.date }}</td>
-
-                            {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                            {% elif match.result == 3 %}<td> 무승부 </td>
-                            {% endif %}
-
-                            {% if competition.master == user %}
-                                <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-          </div>
-
-            <div class="tab-pane fade" id="round5" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-                    <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                            <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                            </svg> </th>
-                        </tr>
-                    </thead>
-
-                    {% for match in matches5 %}
-                        <tr>
-                            <td>{{ match.number }}</td>
-                            {% if match.team1 %}
-                                <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                            {% else %}
-                                <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                            {% endif %}
-                            <td>{{ match.date }}</td>
-
-                            {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                            {% elif match.result == 3 %}<td> 무승부 </td>
-                            {% endif %}
-
-                            {% if competition.master == user %}
-                                <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-          </div>
-
-
-            <div class="tab-pane fade" id="round6" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-                    <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                            <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                            </svg> </th>
-                        </tr>
-                    </thead>
-
-                    {% for match in matches6 %}
-                        <tr>
-                            <td>{{ match.number }}</td>
-                            {% if match.team1 %}
-                                <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                            {% else %}
-                                <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                            {% endif %}
-                            <td>{{ match.date }}</td>
-
-                            {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                            {% elif match.result == 3 %}<td> 무승부 </td>
-                            {% endif %}
-
-                            {% if competition.master == user %}
-                                <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-          </div>
-
-            <div class="tab-pane fade" id="round7" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-                    <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                            <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                            </svg> </th>
-                        </tr>
-                    </thead>
-
-                    {% for match in matches7 %}
-                        <tr>
-                            <td>{{ match.number }}</td>
-                            {% if match.team1 %}
-                                <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                            {% else %}
-                                <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                            {% endif %}
-                            <td>{{ match.date }}</td>
-
-                            {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                            {% elif match.result == 3 %}<td> 무승부 </td>
-                            {% endif %}
-
-                            {% if competition.master == user %}
-                                <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-          </div>
-
-            <div class="tab-pane fade" id="round8" role="tabpanel" aria-labelledby="contact-tab">
-              <table class="table table-dark">
-                    <colgroup>
-                    <col width="10%">
-                    <col width="30%">
-                    <col width="30%">
-                    <col width="15%">
-                    <col width="15%">
-                </colgroup>
-                <thead class="thead-light">
-                    <tr>
-                      <th scope="col">경기 번호</th>
-                      <th scope="col"> 팀 </th>
-                      <th scope="col">경기 일시</th>
-                      <th scope="col">경기 결과</th>
-                      <th scope="col"> 관리자
-                            <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
-                            </svg> </th>
-                        </tr>
-                    </thead>
-
-                    {% for match in matches8 %}
-                        <tr>
-                            <td>{{ match.number }}</td>
-                            {% if match.team1 %}
-                                <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
-                            {% else %}
-                                <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
-                            {% endif %}
-                            <td>{{ match.date }}</td>
-
-                            {% if match.result == 0 %}<td>경기전</td>
-                            {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
-                            {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
-                            {% elif match.result == 3 %}<td> 무승부 </td>
-                            {% endif %}
-
-                            {% if competition.master == user %}
-                                <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-          </div>
         </div>
     </div>
 </div>
@@ -490,205 +177,33 @@
     var rounds;
 
     rounds = [
-        [
-            {% for match in matches1%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1%}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        ],
-
+        {% if matches1 %}
+              {% include "competitions/brackets_rounds.html" with matches=matches1 %}
+        {% endif %}
         {% if matches2 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches2 %}
         {% endif %}
-            {% for match in matches2%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches2 %}
-        ],
-        {% endif %}
-
-
         {% if matches3 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches3 %}
         {% endif %}
-            {% for match in matches3%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches3 %}
-        ],
-        {% endif %}
-
         {% if matches4 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches4 %}
         {% endif %}
-            {% for match in matches4%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches4 %}
-        ],
-        {% endif %}
-
         {% if matches5 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches5 %}
         {% endif %}
-            {% for match in matches5%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches5 %}
-        ],
-        {% endif %}
-
         {% if matches6 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches6 %}
         {% endif %}
-            {% for match in matches6%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches6 %}
-        ],
-        {% endif %}
-
         {% if matches7 %}
-        [
+              {% include "competitions/brackets_rounds.html" with matches=matches7 %}
         {% endif %}
-            {% for match in matches7%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches7 %}
-        ],
-        {% endif %}
-
         {% if matches8 %}
-        [
-        {% endif %}
-            {% for match in matches8%}
-                {% if match.team2 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "{{ match.team2.name }}", ID: {{ match.team2.pk }}, url: '/competitions/match/{{match.pk}}'}
-                    },
-                {% elif match.team1 %}
-                    {
-                        player1: { name: "{{ match.team1.name }}", ID: {{ match.team1.pk }}, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "부전승", ID: 0, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% else %}
-                    {
-                        player1: { name: "경기예정", ID: -1, url: '/competitions/match/{{match.pk}}' },
-                        player2: { name: "경기예정", ID: -2, url: '/competitions/match/{{match.pk}}' }
-                    },
-                {% endif %}
-            {% endfor %}
-        {% if matches8 %}
-        ],
+              {% include "competitions/brackets_rounds.html" with matches=matches8 %}
         {% endif %}
 
         [{
-                        player1: { name: "우승자", ID: -1 }
+            player1: { name: "우승자", ID: 129 },
         },],
     ];
 
