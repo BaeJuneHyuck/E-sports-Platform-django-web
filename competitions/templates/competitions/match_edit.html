@@ -57,5 +57,12 @@
     </div>
     </form>
 </div>
+    {% if competition.tournament_type != -1 and competition.tournament_type != -2 %}
+        <script>
+
+                $("#id_team1").prop('disabled', true);
+                $("#id_team2").prop('disabled', true);
+        </script>
+    {% endif %}
 
 {% endblock %}
