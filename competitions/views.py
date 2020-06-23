@@ -579,6 +579,7 @@ class MatchEditView(generic.UpdateView):
     def get(self, request, pk ):
         match = Match.objects.get(pk=pk)
         competition_pk = match.competition.pk
+        competition = Competition.objects.get(pk=competition_pk)
         master = User.objects.get(pk=match.competition.master.pk)
         if self.request.user != master :
             messages.success(self.request, '대회 관리자만 수정할 수 있습니다')
@@ -587,12 +588,13 @@ class MatchEditView(generic.UpdateView):
         form = MatchEditForm(competition_pk, instance=match)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
 
-        args = {'form': form, 'invitations':invitations, 'match':match}
+        args = {'form': form, 'invitations':invitations, 'match':match , 'competition':competition}
         return render(request, self.template_name, args)
 
     def post(self, request, pk):
         match = Match.objects.get(pk=pk)
         competition_pk = match.competition.pk
+        competition = Competition.objects.get(pk=competition_pk)
         form =  MatchEditForm(competition_pk, request.POST, instance=match)
         invitations= TeamInvitation.objects.filter(invited_pk=request.user.pk).filter(checked=False)[:5]
         if form.is_valid():
@@ -607,6 +609,8 @@ class MatchEditView(generic.UpdateView):
                 f.result = 3
             elif result == "0":
                 f.result = 0
+            elif result == "-1":
+                f.result = -1
             f.save()
 
             # 라운드로빈이면 매치 결과로 승점 계산 실행
@@ -616,7 +620,7 @@ class MatchEditView(generic.UpdateView):
 
             messages.info(request, '경기 정보를 수정했습니다')
             return redirect('/competitions/match/' + str(pk))
-        args = {'form': form, 'invitations':invitations, 'match':match}
+        args = {'form': form, 'invitations':invitations, 'match':match , 'competition':competition}
         return render(request, self.template_name, args)
 
 def calculate_score(competition_pk):
@@ -670,23 +674,24 @@ def makeSingleMatches(competition_pk):
     match_number = 0
     prev_round_match_number = 0
     current_round = 1
-    
+    prev_won_by_default_team = None # 이전라운드에 부전승이 있엇다 => 이번 라운드 마지막경기도 부전승으로 만들어야함
     # 1라운드 생성
     while teams_for_match: # 남은팀이없음 즉, 모든팀이 매치에 들어감 => 종료
         match_number = match_number + 1
         prev_round_match_number = prev_round_match_number + 1
 
         team1 = teams_for_match.pop(0)
-        
+
         # 남은 팀이 없음 , 즉 team1의 경기는 부전승으로 생성
         if not teams_for_match:
+            prev_won_by_default_team = team1
             Match.objects.create(
                 game = competition.competition_game,
                 competition=competition,
                 number = match_number,
                 round = 1,
                 team1 = team1,
-                result = 0,
+                result = -1,
                 date=timezone.now())
             break;
 
@@ -715,7 +720,7 @@ def makeSingleMatches(competition_pk):
         prev_round_match_number = 0         # 라운드의 경기수 초기화
 
         print("지금 라운드:" + str(current_round) + "이번라운드 경기" + str(current_round_match))
-        
+
         # 해당 라운드의 경기들을 생성
         while current_round_match > 0 :  # 만들어야할 매치가 남아있으면 반복
             current_round_match = current_round_match - 1
@@ -723,7 +728,28 @@ def makeSingleMatches(competition_pk):
             prev_round_match_number = prev_round_match_number + 1
             print('\t' + str(match_number))
 
-            Match.objects.create(
+            if prev_won_by_default_team and current_round_match ==0 : # 이전라운드에 부전승있으면 이번라운드 마지막경기도 홀수인원인 부전승일것
+                if (prev_round_match_number+1)%2 == 0:  # 다음번 라운드부터는 부전승이없다 => 마지막 부전승이다 => 뒤집어 줘야함
+                    Match.objects.create(
+                        game = competition.competition_game,
+                        competition=competition,
+                        number = match_number,
+                        round = current_round,
+                        team2= prev_won_by_default_team,
+                        result = -1,
+                        date=timezone.now())
+                    prev_won_by_default_team = None
+                else:
+                    Match.objects.create(
+                        game = competition.competition_game,
+                        competition=competition,
+                        number = match_number,
+                        round = current_round,
+                        team1= prev_won_by_default_team,
+                        result = -1,
+                        date=timezone.now())
+            else:
+                Match.objects.create(
                     game = competition.competition_game,
                     competition=competition,
                     number = match_number,
