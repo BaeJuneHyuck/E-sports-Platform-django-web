@@ -18,7 +18,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/user/mypage/">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -30,9 +30,9 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/user/mypage/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <span>마이페이지</span></a>
       </li>
 
       <!-- Divider -->
@@ -40,91 +40,24 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Interface
+         게임별 통계
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>Components</span>
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>게임별 통계</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Components:</h6>
-            <a class="collapse-item" href="./overwatch">OverWatch</a>
+            <a class="collapse-item" href="lol">League of Legends</a>
+            <a class="collapse-item" href="Overwatch">OverWatch</a>
           </div>
         </div>
       </li>
-
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Utilities</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item" href="utilities-color.html">Colors</a>
-            <a class="collapse-item" href="utilities-border.html">Borders</a>
-            <a class="collapse-item" href="utilities-animation.html">Animations</a>
-            <a class="collapse-item" href="utilities-other.html">Other</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Addons
-      </div>
-
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="login.html">Login</a>
-            <a class="collapse-item" href="register.html">Register</a>
-            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item" href="404.html">404 Page</a>
-            <a class="collapse-item" href="blank.html">Blank Page</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
     </ul>
+
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -137,6 +70,13 @@
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
+        {% if not records %}
+        <div class ="No_data">
+          <h4>아직 전적 정보를 불러오지 못했습니다. 잠시 후에 새로고침을 눌러주세요</h4><br>
+          <button class="new_record " type="new_record">전적갱신</button>
+
+        </div>
+        {% else %}
         <div class="container-fluid">
 
           <!-- Page Heading -->
@@ -144,28 +84,86 @@
             <h1 class="h3 mb-0 text-gray-800" style = "font-family:Nanum Gothic;">{{ user.name}}님의 League</h1>
           </div>
 
-          <div class ="User_Explain">
-            <div class="userInfo">
-              <a class="name"> {{records.nickName}}</a><br>
-              <a class="tier"> {{avg.latestrank}}</a><br>
-              <a class="'avgKDA">{{avg.avgKill|floatformat}} / {{avg.svhDeath|floatformat}} / {{avg.avgAssist|floatformat}}</a><br>
-              <a class="'avgRatio">{{avg.avgRatio|floatformat:-0}}%</a><br>
-              <a class="'avgPward">제어와드 설치: {{avg.avgPward|floatformat:-0}}</a><br>
-              <a class="'avgWard">와드 설치, 제거: {{avg.avgWard|floatformat:-0}}</a><br>
-              <a class="'avgCs">{{avg.avgCs|floatformat:-0}} cs / {{avg.csPerMin|floatformat}} cs (분당)</a><br>
-              <a class="'avedmg">평균 딜량: {{avg.avgdmg|floatformat:-0}}</a><br>
+          <div class ="row">
+
+            <div class="col-xl col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <table>
+                        <thead>
+                        <td>
+                          <img src={{records.0.tierImg}} alt="tier" class="TierImg" style="width: 10rem; height: 10rem;">
+                        </td>
+                        <td>
+                            <div class="name m-0 p-0 display-3"> {{records.0.nickName}}</div>
+                            <div class="rank m-0 p-0 ">{{records.0.rank}}</div>
+                        </td>
+                        </thead>
+
+                        <tbody>
+                        <th>
+                          <div class="mr-3">평균 KDA</div>
+                        </th>
+                          <td>
+                            <a class="'avgKDA">{{avg.avgKill|floatformat}} / {{avg.svhDeath|floatformat}} / {{avg.avgAssist|floatformat}}</a>
+                          </td>
+                        <th>
+                          <div class="mr-5">평균 킬관여</div>
+
+                        </th>
+                        <td>
+                          <a class="'avgRatio">{{avg.avgRatio|floatformat:-0}}%</a>
+                        </td>
+                        </tbody>
+                        <tbody>
+                        <th>
+                          와드 설치제거
+                        </th>
+                        <td>
+                          <a class="'avgWard">{{avg.avgWard|floatformat:-0}}</a>
+                        </td>
+                        <th>
+                          제어와드
+                        </th>
+                        <td>
+                          <a class="'avgPward"> {{avg.avgPward|floatformat:-0}}</a>
+                        </td>
+                        </tbody>
+                        <tbody>
+                        <th>
+                          CS
+                        </th>
+                        <td>
+                          <a class="'avgCs">{{avg.avgCs|floatformat:-0}} cs / {{avg.csPerMin|floatformat}} cs (분당)</a><br>
+                        </td>
+                        <th>
+                          평균 딜량
+                        </th>
+                        <td>
+                          <a class="'avedmg">{{avg.avgdmg|floatformat:-0}}</a><br>
+                        </td>
+                        </tbody>
+
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Content Row -->
 
+          <!-- Content Row -->
           <div class="row">
             <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
             <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
             <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
             <!-- Area Chart -->
-            <div class="card shadow mb-4 d-flex" style = "font-family:Nanum Gothic;">
+            <div class="card shadow mb-4 d-flex col-auto" style = "font-family:Nanum Gothic;">
               <div class = 'card-body'>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                  <li class="nav-item">
@@ -185,17 +183,17 @@
                   </li>
                 </ul>
               </div>
-              <div class="tab-content" id="mytest">
+              <div class="tab-content col-auto " id="mytest">
                 <div class="tab-pane fade show active" id="record" role="tabpanel" aria-labelledby="record-tab">
-                  <div class = "row p-0 m-0 ">
+                  <div class = "row p-0 m-0 col-auto" style="overflow-y: scroll; height: 50rem;">
                       {% for record in records %}
                       {% if record.outCome in 'win' %}
-                      <div class="card bg-primary p-0 m-0 text-center text-white col-xs-12 col-sm-6 col-md-4 col-lg-1" style="width: 8rem; height: 13rem;">
+                    <div class="card bg-primary p-0 m-0 text-center text-white" style="width: 8rem; height: 13rem;">
                         <div class="card-header bg-primary " >
                           <h6>{{record.outCome}}</h6>
                         </div>
                         <div class="card-body">
-                          <h6>{{record.champion}}</h6>
+                          <img src={{record.champImg}} alt={{record.champion}} class="champimg" style="border-radius: 50rem; width: 4rem; height: 4rem;">
                         </div>
                         <div class="'card-tail">
                           <h6>{{record.killratio}}%<br></h6>
@@ -203,21 +201,18 @@
                         </div>
                       </div>
                       {% else %}
-                      <div class="card bg-danger p-0 m-0 text-center text-white col-xs-12 col-sm-6 col-md-4 col-lg-1" style="width: 8rem; height: 13rem;">
+                    <div class="card bg-danger p-0 m-0 text-center text-white" style="width: 8rem; height: 13rem;">
                         <div class="card-header bg-danger text-black">
                           <h6>{{record.outCome}}</h6>
                         </div>
                         <div class="card-body">
-                          <h6>{{record.champion}}</h6>
+                          <img src={{record.champImg}} alt={{record.champion}} class="champimg" style="border-radius: 50rem; width: 4rem; height: 4rem;">
                         </div>
                         <div class="'card-tail">
                           <h6>{{record.killratio}}%<br></h6>
                           <h6>{{record.kill}} / {{record.death}} / {{record.assist}}</h6>
                         </div>
                       </div>
-                        {% endif %}
-                        {% if forloop.counter|divisibleby:12 and not forloop.last %}
-                        </div><div class="row p-0 m-0">
                         {% endif %}
                       {% endfor %}
                   </div>
@@ -374,6 +369,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
         <!-- /.container-fluid -->
 
       </div>

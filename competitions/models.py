@@ -82,8 +82,8 @@ class Competition(models.Model):
         super(Competition, self).delete(*args, **kwargs)
 
     def can_attend(self):
-        print(timezone.now())
-        return self.attend_start <=timezone.now() and  self.attend_end >= timezone.now()
+        return self.attend_start.strftime('%Y-%m-%d') <= NOW.strftime('%Y-%m-%d') \
+               and  self.attend_end.strftime('%Y-%m-%d') >= NOW.strftime('%Y-%m-%d')
 
 @receiver(pre_save, sender=Competition)
 def competition_save_state(sender, instance, update_fields, **kwargs):
@@ -126,21 +126,6 @@ class Match(models.Model):
 
     result_lol = models.ForeignKey('ResultLOL',blank=True, null=True, on_delete=models.CASCADE)
     result_ow = models.ForeignKey('ResultOW',blank=True, null=True, on_delete=models.CASCADE)
-
-    @staticmethod
-    def total_match():
-        return Match.objects.count()
-
-# 매치 코멘트
-class MatchComment(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
-    create_date = models.DateTimeField(auto_now_add=True)
-    modify_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return '{} : {}'.format(self.author, self.content)
 
 
 #롤 경기 정보, 관리자가 수기로 입력

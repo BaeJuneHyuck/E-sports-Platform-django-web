@@ -12,6 +12,7 @@ urlpatterns = [
     path('list/detail/<int:practice_pk>/', login_required(views.DetailView.comment), name='detail'),
     path('list/detail/<int:practice_pk>/new_comment', views.DetailView.comment, name='new_comment'),
     path('list/detail/<int:practice_pk>/delete_comment/<int:comment_pk>', views.DetailView.delete, name='delete_comment'),
+    path('list/detail/<int:practice_pk>/delete_all_comment', views.DetailView.delete_all, name='delete_all_comment'),
     path('<int:pk>/attend/', views.AttendView.as_view(), name='attend'),
     path('list/create/', views.CreateView.post_new, name='create'),
     path('list/search/create/', views.CreateView.post_new, name='create'),

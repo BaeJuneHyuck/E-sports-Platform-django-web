@@ -70,11 +70,13 @@
                 <td>{{ comment.author.name }}</td>
                 <td>{{ comment.content }}</td>
                 {% if comment.author.name == request.user.name %}
-                <td style="text-align:right;"><a style="color:red" href = "{% url 'practice:delete_comment' practice.id comment.id %}">삭제</a></td>
+                <td style="text-align:right;"><a style="color:red" href = "{% url 'practice:delete_comment' practice.id comment.id %}">삭제</a>
+                <a style="color:red" href = "{% url 'practice:delete_all_comment' practice.id %}">일괄삭제</a></td>
                 {% endif %}
             </tr>
             {% endfor %}
         </table>
+        {% if practice_time > today %}
         <form action='{% url "practice:new_comment" practice.id %}'method="post">{% csrf_token %}
             <div class="row">
                 <div class="col-2">
@@ -89,6 +91,7 @@
                 </div>
             </div>
         </form>
+        {% endif %}
     </div>
 
 

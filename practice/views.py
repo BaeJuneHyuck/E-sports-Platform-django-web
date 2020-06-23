@@ -90,6 +90,7 @@ class DetailView(generic.DetailView):
         practice = Practice.objects.get(pk=practice_pk)
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
+        practice_time = practice.practice_time.strftime("%Y-%m-%d")
         today = NOW.strftime("%Y-%m-%d")
         if self.method == 'POST':
             form = CommentForm(self.POST)
@@ -107,7 +108,7 @@ class DetailView(generic.DetailView):
 
         return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
                                                      'total_practice': total_practice, 'today': today,
-                                                     'invitations': invitations})
+                                                     'invitations': invitations, 'practice_time': practice_time})
 
     def delete(self, practice_pk, comment_pk):
         delete_comment = Comment.objects.get(pk=comment_pk)
@@ -116,6 +117,32 @@ class DetailView(generic.DetailView):
         comments = Comment.objects.filter(practice=practice)
         total_practice = Practice.total_practice()
         today = NOW.strftime("%Y-%m-%d")
+
+        form = CommentForm()
+        invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
+
+        return render(self, 'practice/detail.html', {'practice': practice, 'comments': comments, 'form': form,
+                                                     'total_practice': total_practice, 'today': today,
+                                                     'invitations':invitations})
+
+    def delete_all(self, practice_pk):
+        delete_comment = Comment.objects.filter(author__pk=self.user.pk)
+        delete_comment.delete()
+        practice = Practice.objects.get(pk=practice_pk)
+        comments = Comment.objects.filter(practice=practice)
+        total_practice = Practice.total_practice()
+        today = NOW.strftime("%Y-%m-%d")
+        if self.method == 'POST':
+            form = CommentForm(self.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = self.user
+                comment.practice = practice
+                comment.save()
+            else:
+                return HttpResponse('fail')
+        else:
+            form = CommentForm()
 
         form = CommentForm()
         invitations = TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
@@ -142,7 +169,6 @@ class CreateView(generic.CreateView):
             return redirect('%s?next=%s' % (settings.LOGIN_URL, self.path))
 
         invitations= TeamInvitation.objects.filter(invited_pk=self.user.pk).filter(checked=False)[:5]
-
         form = PracticeCreateForm(self.POST)
         if self.method == 'POST':
             form = PracticeCreateForm(self.POST)
