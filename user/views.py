@@ -111,12 +111,16 @@ class UserlolpageView(ListView):
             del (record['_id'])
             jsonToDic.append(record)
         sortedDic = sorted(jsonToDic, key=lambda jsonToDic: (jsonToDic['startTime']),reverse=True)
-        avg = self.getavg(sortedDic)
-        win = self.winGmae(sortedDic)
-        lose = self.loseGmae(sortedDic)
-        args = {'records':sortedDic, 'avg' : avg, 'win' : win, 'lose' : lose}
-        client.close()
-        return render(request, self.template_name, args)
+        if jsonToDic:
+            avg = self.getavg(sortedDic)
+            win = self.winGmae(sortedDic)
+            lose = self.loseGmae(sortedDic)
+            args = {'records':sortedDic, 'avg' : avg, 'win' : win, 'lose' : lose}
+            client.close()
+            return render(request, self.template_name, args)
+        else:
+            client.close()
+            return render(request, self.template_name)
 
     def getavg(self, jsonToDic):
         Container = dict()
