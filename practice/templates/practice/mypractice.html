@@ -9,7 +9,7 @@
 
         <div class="contents mb-0">
             <div class="contents_title">
-                <a href="/team/myprac">참가신청한 연습경기</a>
+                <a href="/practice/myprac">참가신청한 연습경기</a>
             </div>
             {% if practices %}
                 <table class="table table-hover text-white">
@@ -20,8 +20,8 @@
                         </tr>
                     {% for practice in practices %}
                     <tr>
-                    <td><a href="{% url 'practice:detail' practice.pk %}">{{ practice.title }}</a></td>
-                    <td>{{ practice.practice_time }}</td>
+                    <td><a href="{% url 'practice:detail' practice.practice.pk %}">{{ practice.practice.title }}</a></td>
+                    <td>{{ practice.practice.practice_time }}</td>
                     </tr>
                     {% endfor %}
                 </table>

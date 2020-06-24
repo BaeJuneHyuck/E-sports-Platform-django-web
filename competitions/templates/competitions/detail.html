@@ -144,26 +144,30 @@
     </div>
 
 
-    <div class="row mt-4">
-        <div class = "pager">
+    <div class="row mt-4" style="justify-content: center;">
+        <div class = "pagination" >
             {% if previous and page_num is not notSetting %}
-                <a class = "list" href="{% url 'competitions:detail' previous.id %}">이전페이지</a>
+                <a class = "page-link" href="{% url 'competitions:detail' previous.id %}">이전페이지</a>
+            {% else %}
+                <a class="page-link disabled">이전페이지</a>
             {% endif %}
 
             {% if state == 'ONGOING' %}
-                <a class = "list" href="{% url 'competitions:ongoing' %}">목록</a>
+                <a class = "page-link" href="{% url 'competitions:ongoing' %}">목록</a>
             {% elif state == 'CURRENT_PAST' %}
-                <a class = "list" href="{% url 'competitions:past_current' %}">목록</a>
+                <a class = "page-link" href="{% url 'competitions:past_current' %}">목록</a>
             {% elif state == 'LAST_PAST' %}
-                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
+                <a class = "page-link" href="{% url 'competitions:past_last' %}">목록</a>
             {% elif state == 'LAST_LAST_PAST' %}
-                <a class = "list" href="{% url 'competitions:past_last' %}">목록</a>
+                <a class = "page-link" href="{% url 'competitions:past_last' %}">목록</a>
             {% else %}
-                <a class = "list" href="{% url 'competitions:scheduled' %}">목록</a>
+                <a class = "page-link" href="{% url 'competitions:scheduled' %}">목록</a>
             {% endif %}
 
             {% if next and page_num is not notSetting %}
-                <a class = "list" href="{% url 'competitions:detail' next.id %}">다음페이지</a>
+                <a class = "page-link" href="{% url 'competitions:detail' next.id %}">다음페이지</a>
+            {% else %}
+                <a class="page-link disabled">다음페이지</a>
             {% endif %}
         </div>
     </div>

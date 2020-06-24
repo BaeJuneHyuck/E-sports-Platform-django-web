@@ -11,7 +11,7 @@
 
         <div class="contents_title row">
                 <div class="col-sm">
-                    <a href="/practice">연습 경기</a>
+                    <a href="/practice/list">연습 경기</a>
                 </div>
                 <div class="col-sm">
                     {# Search #}
@@ -27,21 +27,20 @@
                             </select>
                             <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
                             <input class="btn btn-primary" type="submit" value="검색">
-
                         </form>
                     </div>
                 </div>
             </div>
         {% if practices %}
         <table class = "practice_list table table-hover text-white">
-            <thead class="thead-light">
+            <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>게임</th>
-                    <th>티어</th>
-                    <th>연습일</th>
-                    <th>게시일</th>
+                    <th><a>번호</a></th>
+                    <th><a href="{% url 'practice:sort_title'%}">제목</a></th>
+                    <th><a href="{% url 'practice:sort_game'%}">게임</a></th>
+                    <th><a href="{% url 'practice:sort_tier'%}">티어</a></th>
+                    <th><a href="{% url 'practice:sort_practice_time'%}">연습일</a></th>
+                    <th><a>게시일</a></th>
                 </tr>
             </thead>
 
@@ -65,7 +64,7 @@
     </div>
 
     {# Pagination #}
-    <div class="pagination pull-left">
+    <div class="pagination pull-left" style="justify-content: center;">
         {% if is_paginated %}
         <nav>
             <ul class="pagination pagination-sm">
@@ -104,9 +103,10 @@
         </nav>
         {% endif %}
     </div>
-    <div class="container-fluid full-width">
-        <a href="create"><button type="submit" class="save btn btn-primary">연습경기 만들기</button></a>
 
+    {# Practice Create #}
+    <div class="container-fluid full-width" style="text-align: right;">
+        <a href="create"><button type="submit" class="save btn btn-primary">연습경기 만들기</button></a>
     </div>
 
 </div>

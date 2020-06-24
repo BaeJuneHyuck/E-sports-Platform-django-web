@@ -130,36 +130,6 @@ class MyInvitationView(generic.ListView):
         context['page_range'] = page_range
         return context
 
-class MyPracticeView(generic.ListView):
-    template_name = 'team/mypractice.html'
-    context_object_name = 'practices'
-    paginate_by = 10
-
-    def get_queryset(self):
-        comments = Comment.objects.filter(Q(author=self.request.user) & Q(content__contains="참가신청합니다")).values_list(
-            'practice', flat=True).distinct()
-        practices = Practice.objects.filter(pk__in=comments)
-        return practices
-
-    def get_context_data(self, **kwargs):
-        context = super(MyPracticeView, self).get_context_data(**kwargs)
-        paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
-        max_index = len(paginator.page_range)
-
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
-
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
-
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
-        return context
-
-
 class CreateView(generic.CreateView):
     login_url = settings.LOGIN_URL
     model = Team

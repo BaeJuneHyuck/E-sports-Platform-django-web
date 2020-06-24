@@ -5,7 +5,6 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.utils import timezone
 from imagekit.models import ImageSpecField
 from pilkit.processors import ResizeToFill, Adjust
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -138,3 +137,14 @@ class ResultLOL(models.Model):
 class ResultOW(models.Model):
     math = models.ForeignKey(Match, null=True, on_delete=models.CASCADE)  # 어느 경기 정보인가
     ''' 맵, 라운드별 점수, , 영웅, 명중률... 등등 추가예정'''
+
+# 매치 코멘트
+class MatchComment(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{} : {}'.format(self.author, self.content)

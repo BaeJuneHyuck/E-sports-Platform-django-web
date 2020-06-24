@@ -24,12 +24,12 @@
 
     <div class="contents">
         <div class="contents_title">
-            <a href="/team/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
+            <a href="/practice/myprac"  data-toggle="tooltip" data-placement="right" title="더보기">참가중인 연습경기</a>
         </div>
         {% if attend_practice %}
         <ul>
             {% for practice in attend_practice %}
-            <li><a href="{% url 'practice:detail' practice.id %}">{{ practice.title }}</a></li>
+            <li><a href="{% url 'practice:detail' practice.practice.id %}">{{ practice.practice.title }}</a></li>
             {% endfor %}
         </ul>
         {% else %}

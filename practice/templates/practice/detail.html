@@ -13,11 +13,11 @@
             <h1 class = "practice_name"> {{ practice.title }} </h1>
             {% if practice.game in 'lol' %}
                 <a href = "https://kr.leagueoflegends.com/ko-kr/">
-                    <img class = "competition_img rounded" src = "/static/practice/images/lol.jpg">
+                    <img class = "competition_img rounded" src = "/static/practice/images/lol practice.jpg">
                 </a>
             {% elif practice.game in 'overwatch' %}
                 <a href = "https://playoverwatch.com/ko-kr/">
-                    <img class = "competition_img rounded" src = "/static/practice/images/overwatch.jpg">
+                    <img class = "competition_img rounded" src = "/static/practice/images/overwatch practice.jpg">
                 </a>
             {% endif %}
 
@@ -95,16 +95,28 @@
     </div>
 
 
-        <div class = "pager">
-            {% if practice.id|add:'-1' > 0 %}
-            <a class = "previous" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
-            {% endif %}
+        <div class = "pagination" style="justify-content: center;">
+            <ul class = "pagination">
+                <li class="page-item">
+                    {% if practice.id|add:'-1' > 0 %}
+                    <a class = "page-link" href="{% url 'practice:detail' practice.id|add:'-1' %}">이전페이지</a>
+                    {% else %}
+                    <a class="page-link disabled">이전페이지</a>
+                    {% endif %}
+                </li>
 
-            <a class = "list" href="{% url 'practice:index' %}">목록</a>
+                <li class="page-item">
+                    <a class = "page-link" href="{% url 'practice:list' %}">목록</a>
+                </li>
 
-            {% if practice.id|add:'1' <= total_practice %}
-            <a class = "next" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
-            {% endif %}
+                <li class="page-item">
+                    {% if practice.id|add:'1' <= total_practice %}
+                    <a class = "page-link" href="{% url 'practice:detail' practice.id|add:'1' %}">다음페이지</a>
+                    {% else %}
+                    <a class="page-link disabled">다음페이지</a>
+                    {% endif %}
+                </li>
+            </ul>
         </div>
 
 </div>
