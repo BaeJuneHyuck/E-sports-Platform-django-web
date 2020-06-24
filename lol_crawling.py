@@ -31,6 +31,8 @@ def LoLCrawling(Container,soup):
     wardSet = []
     wardDel = []
     deadgame = []
+    tierImg = []
+    champImg = []
 
     for i in soup.select('.GameItemWrap > div'):
         startTime.append(i.attrs['data-game-time'])
@@ -113,6 +115,14 @@ def LoLCrawling(Container,soup):
         wardSet.append(wardlist[0])
         wardDel.append(wardlist[1])
 
+    tierimage = soup.find("div", { "class" : "SummonerRatingMedium"}).find_next('img', recursive=False)['src']
+
+    for i in range(len(gameId)):
+        tierImg.append(tierimage)
+
+    for i in soup.find_all("div", { "class" : "GameSettingInfo"}):
+        img = i.find_next('img', recursive=False)
+        champImg.append(img['src'])
 
     # for i in soup.select('.Row.isRequester'):
     Container['nickName'] = nickName
@@ -140,7 +150,8 @@ def LoLCrawling(Container,soup):
     Container['pinkward'] = pinkWard
     Container['wardSet'] = wardSet
     Container['wardDel'] = wardDel
-
+    Container['tierImg'] = tierImg
+    Container['champImg'] = champImg
 
     for i in range(len(Container['playTime'])):
         if Container['playTime'][i] < 600:
@@ -215,7 +226,7 @@ def clickbuttonloop(driver):
         except Exception as error:
             return
 
-if __name__ == '__main__':
+def start():
     username = 'team6'
     password = 'TEAM6'
     client = pymongo.MongoClient('mongodb://%s:%s@ec2-52-78-106-39.ap-northeast-2.compute.amazonaws.com:27017/lol' % (username, password))
@@ -236,16 +247,32 @@ if __name__ == '__main__':
         elif (Dic == 2):
             print("error_no_user")
             continue
-
         for i in range(len(Dic['gameId'])):
             json = dict()
             for key, value in Dic.items():
                 json[key] = value[i]
             loldb.insert_one(json)
-
         for i in range(len(Dic['gameId'])):
             while loldb.count_documents({"gameId": Dic['gameId'][i]}) >= 2:
                 loldb.delete_one({"gameId": Dic['gameId'][i]})
 
     con.close()
     client.close()
+
+def new_account(lolid):
+    username = 'team6'
+    password = 'TEAM6'
+    client = pymongo.MongoClient('mongodb://%s:%s@ec2-52-78-106-39.ap-northeast-2.compute.amazonaws.com:27017/lol' % (username, password))
+    db = client.lol
+    loldb = db.lol
+    Dic = parseOPGG(lolid)
+    for i in range(len(Dic['gameId'])):
+        json = dict()
+        for key, value in Dic.items():
+            json[key] = value[i]
+        loldb.insert_one(json)
+
+    for i in range(len(Dic['gameId'])):
+        while loldb.count_documents({"gameId": Dic['gameId'][i]}) >= 2:
+            loldb.delete_one({"gameId": Dic['gameId'][i]})
+

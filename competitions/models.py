@@ -121,7 +121,7 @@ class Match(models.Model):
     team1 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team1')
     team2 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team2')
     date = models.DateTimeField('경기일시', editable=True, null=True,)
-    result = models.IntegerField(default=0, verbose_name='경기 결과') # (0 경기전, 1 1팀승리, 2 2팀승리 , 3 무승부)
+    result = models.IntegerField(default=0, verbose_name='경기 결과') # (-1 부전승, 0 경기전, 1 1팀승리, 2 2팀승리 , 3 무승부)
 
     result_lol = models.ForeignKey('ResultLOL',blank=True, null=True, on_delete=models.CASCADE)
     result_ow = models.ForeignKey('ResultOW',blank=True, null=True, on_delete=models.CASCADE)
