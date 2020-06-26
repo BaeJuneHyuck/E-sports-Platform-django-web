@@ -76,7 +76,7 @@
             </tr>
             {% endfor %}
         </table>
-        {% if practice_time > today %}
+        {% if practice_time >= today %}
         <form action='{% url "practice:new_comment" practice.id %}'method="post">{% csrf_token %}
             <div class="row">
                 <div class="col-2">

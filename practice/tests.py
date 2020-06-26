@@ -7,6 +7,7 @@ from django.test import TestCase, Client, RequestFactory
 
 # Create your tests here.
 from django.urls import reverse
+from post import POST
 
 from practice.forms import PracticeCreateForm, CommentForm
 from practice.models import Practice, Comment, PracticeParticipate
@@ -256,10 +257,7 @@ class DetailViewTest(TestCase):
 
         login = self.client.login(email='testuser1@test.com', password='1q2w3e4r5t')
         self.assertTrue(login)
-        response = self.client.get(reverse('practice:detail', kwargs={'pk': practice.pk}))
-        view.user = response.context["user"]
-        view.request = response.context['request']
-        view.delete(practice.pk, comment.pk)
+        response = self.client.get(reverse('practice:delete_comment', kwargs={'practice_pk': practice.pk, 'comment_pk':comment.pk}))
         remain_comment = Comment.objects.filter(pk=comment.pk)
         self.assertQuerysetEqual(remain_comment, {})
 
@@ -283,10 +281,6 @@ class DetailViewTest(TestCase):
 
         login = self.client.login(email='testuser1@test.com', password='1q2w3e4r5t')
         self.assertTrue(login)
-        response = self.client.get(reverse('practice:detail', kwargs={'pk': practice.pk}))
-        view.user = response.context["user"]
-        view.request = response.context['request']
-        view.delete_all(practice.pk)
-
+        response = self.client.get(reverse('practice:delete_all_comment', kwargs={'practice_pk': practice.pk}))
         user1Comment = Comment.objects.filter(author=user1)
         self.assertQuerysetEqual(user1Comment, {})
