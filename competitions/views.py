@@ -4,13 +4,12 @@ from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import generic
 from .models import Competition, CompetitionParticipate, Match, MatchComment
-from team.models import TeamInvitation, TeamRelation
+from team.models import TeamInvitation, TeamRelation, Team
 from user.models import User
-from .forms import CompetitionCreateForm, CompetitionAttendForm, MatchEditForm, MatchCommentForm
+from .forms import CompetitionCreateForm, CompetitionAttendForm, MatchEditForm, MatchCommentForm, CompetitionInviteForm
 from django.contrib import messages
 import random
 import math
@@ -173,6 +172,47 @@ class AttendView(generic.DetailView):
                                'myteams': myteams})
         return render(self, 'competitions/attend.html',
                       {'form': form, 'invitations': invitations, 'competition': competition, 'myteams': myteams})
+
+
+class InviteView(generic.FormView):
+    template_name = 'competitions/invite.html'
+    model = Competition
+    form_class = CompetitionInviteForm
+
+    success_url = '/team/'
+
+    def get_context_data(self, **kwargs):
+        context = super(InviteView, self).get_context_data(**kwargs)
+        context['competition'] = Competition.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
+    def form_valid(self, form):
+        competition_pk = self.kwargs.get('pk')
+        competition = Competition.objects.get(pk=competition_pk)
+        f = form.save(commit=False)
+        f.competition = competition
+        team = form.cleaned_data['team']
+
+        if CompetitionParticipate.objects.filter(team=team).filter(
+                competition=competition).exists():
+            messages.error(self.request, '이미 초대한 팀입니다.')
+            return redirect(self.request.path_info)
+        else:
+            f.save()
+            messages.success(self.request, str(team) + '을 초대했습니다')
+
+            competition.current_teams = competition.current_teams + 1
+            competition.save()
+
+            # 팀 신청 종료 -> 자동으로 매칭 생성
+            if competition.current_teams == competition.total_teams:
+                if competition.tournament_type == -1:
+                    makeSingleMatches(competition_pk)
+                elif competition.tournament_type == -2:
+                    makeDoubleMatches(competition_pk)
+                else:
+                    makeRoundRobin(competition_pk, competition.tournament_type )
+            return redirect('competitions:detail', pk=competition.pk)
 
 
 class OngoingView(generic.ListView):
@@ -635,6 +675,12 @@ def calculate_score(competition_pk):
     # 모든 경기로 다시 계산
     allmatches = Match.objects.filter(competition=competition_pk)
     for match in allmatches:
+        if match.team1 == None:
+            print(str(match) + "team1 none")
+            continue
+        if match.team2 == None:
+            print(str(match)+"team2 none")
+            continue
         team1 = CompetitionParticipate.objects.filter(competition=competition_pk).get(team = match.team1.pk)
         team2 = CompetitionParticipate.objects.filter(competition=competition_pk).get(team = match.team2.pk)
         if match.result == 1:
@@ -718,6 +764,7 @@ def makeSingleMatches(competition_pk):
         current_round_match = math.floor(prev_round_match_number / 2)  # 이번 라운드에서 해야할 경기
         if prev_round_match_number % 2 == 1:      # 홀수번 경기를 했다면? -> 부전승경기 하나 더 해야함
             current_round_match = current_round_match + 1
+        saved_prev_round_match_number = prev_round_match_number
         prev_round_match_number = 0         # 라운드의 경기수 초기화
 
         print("지금 라운드:" + str(current_round) + "이번라운드 경기" + str(current_round_match))
@@ -730,7 +777,7 @@ def makeSingleMatches(competition_pk):
             print('\t' + str(match_number))
 
             if prev_won_by_default_team and current_round_match ==0 : # 이전라운드에 부전승있으면 이번라운드 마지막경기도 홀수인원인 부전승일것
-                if (prev_round_match_number+1)%2 == 0:  # 다음번 라운드부터는 부전승이없다 => 마지막 부전승이다 => 뒤집어 줘야함
+                if (saved_prev_round_match_number % 2) == 0:  # 다음번 라운드부터는 부전승이없다 => 마지막 부전승이다 => 뒤집어 줘야함
                     Match.objects.create(
                         game = competition.competition_game,
                         competition=competition,
@@ -765,7 +812,115 @@ def makeSingleMatches(competition_pk):
 
 
 def makeDoubleMatches(competition_pk):
-    pass
+    competition=Competition.objects.get(pk=competition_pk)
+    allRelations = CompetitionParticipate.objects.filter(competition=competition_pk).select_related('team')
+    current_number = 1
+
+    team_number = []
+    teams_for_match = []
+    for relation in allRelations:
+        team_number.append(relation.pk)
+
+    random.shuffle(team_number)
+    while team_number:
+        pk = team_number.pop()
+        relation = CompetitionParticipate.objects.get(pk=pk)
+        relation.team_number = current_number
+        relation.save()
+        teams_for_match.append(relation.team)
+        current_number= current_number+1
+
+    match_number = 0
+    prev_round_match_number = 0
+    current_round = 1
+    prev_won_by_default_team = None # 이전라운드에 부전승이 있엇다 => 이번 라운드 마지막경기도 부전승으로 만들어야함
+    # 1라운드 생성
+    while teams_for_match: # 남은팀이없음 즉, 모든팀이 매치에 들어감 => 종료
+        match_number = match_number + 1
+        prev_round_match_number = prev_round_match_number + 1
+
+        team1 = teams_for_match.pop(0)
+
+        # 남은 팀이 없음 , 즉 team1의 경기는 부전승으로 생성
+        if not teams_for_match:
+            prev_won_by_default_team = team1
+            Match.objects.create(
+                game = competition.competition_game,
+                competition=competition,
+                number = match_number,
+                round = 1,
+                team1 = team1,
+                result = -1,
+                date=timezone.now())
+            break;
+
+        # 팀1, 팀2가 선정됨 => 정상적인 match 생성
+        else:
+            team2 = teams_for_match.pop(0)
+            Match.objects.create(
+                game = competition.competition_game,
+                competition=competition,
+                number = match_number,
+                round = 1,
+                team1 = team1,
+                team2 = team2,
+                result = 0,
+                date=timezone.now())
+
+
+    # 이후 2라운드 이상 필요한경우( 이전 라운드에 실행한 match가 두개이상인 경우) => 반복
+    while prev_round_match_number != 1 :    # 이전 라운드의 경기가 하나밖에없었다 => 결승전임, 루프 종료
+        print("이전 라운드 경기수:" + str(prev_round_match_number))
+
+        current_round = current_round + 1       # 라운드 증가
+        current_round_match = math.floor(prev_round_match_number / 2)  # 이번 라운드에서 해야할 경기
+        if prev_round_match_number % 2 == 1:      # 홀수번 경기를 했다면? -> 부전승경기 하나 더 해야함
+            current_round_match = current_round_match + 1
+        saved_prev_round_match_number = prev_round_match_number
+        prev_round_match_number = 0         # 라운드의 경기수 초기화
+
+        print("지금 라운드:" + str(current_round) + "이번라운드 경기" + str(current_round_match))
+
+        # 해당 라운드의 경기들을 생성
+        while current_round_match > 0 :  # 만들어야할 매치가 남아있으면 반복
+            current_round_match = current_round_match - 1
+            match_number = match_number + 1
+            prev_round_match_number = prev_round_match_number + 1
+            print('\t' + str(match_number))
+
+            if prev_won_by_default_team and current_round_match ==0 : # 이전라운드에 부전승있으면 이번라운드 마지막경기도 홀수인원인 부전승일것
+                if (saved_prev_round_match_number % 2) == 0:  # 다음번 라운드부터는 부전승이없다 => 마지막 부전승이다 => 뒤집어 줘야함
+                    Match.objects.create(
+                        game = competition.competition_game,
+                        competition=competition,
+                        number = match_number,
+                        round = current_round,
+                        team2= prev_won_by_default_team,
+                        result = -1,
+                        date=timezone.now())
+                    prev_won_by_default_team = None
+                else:
+                    Match.objects.create(
+                        game = competition.competition_game,
+                        competition=competition,
+                        number = match_number,
+                        round = current_round,
+                        team1= prev_won_by_default_team,
+                        result = -1,
+                        date=timezone.now())
+            else:
+                Match.objects.create(
+                    game = competition.competition_game,
+                    competition=competition,
+                    number = match_number,
+                    round = current_round,
+                    result = 0,
+                    date=timezone.now())
+
+
+    #대회에 몇 라운드까지 있는지 기록
+    competition.rounds = current_round
+    competition.save()
 
 
 def makeRoundRobin(competition_pk, rounds):
