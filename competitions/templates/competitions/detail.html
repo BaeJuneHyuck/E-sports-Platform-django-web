@@ -8,8 +8,7 @@
 <div class ="container mt-3 " style="color:black">
 
     <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
-        <h1 class = "competition_name"> {{ competition.competition_name }} </h1>
-
+        <h1 class = "competition_name"> {{ competition.competition_name }}  </h1>
     {% if messages %}
         {% for message in messages %}
             <div class="row" style="margin:20px auto;">
@@ -59,6 +58,14 @@
                 <td> {{ competition.required_tier }} </td>
             </tr>
             <tr>
+                <th>참가방법</th>
+                {% if competition.is_public %}
+                    <td>공개 신청</td>
+                {% else %}
+                    <td>비공개 초대</td>
+                {% endif %}
+            </tr>
+            <tr>
                 <th>대회 등록 일자</th>
                 <td> {{ competition.pub_date }} </td>
             </tr>
@@ -99,15 +106,36 @@
                         <h6 class="m-0 font-weight-bold text-primary">참가 현황</h6>
 
                         <row>
-
-                        {% if competition.current_teams >= competition.total_teams %}
-                            <a href="#" class="btn btn-primary" role="button">신청이 마감되었습니다</a>
-                            <a href="/competitions/brackets/{{competition.pk}}" class="btn btn-primary" role="button">대진표 보기</a>
-                        {% elif competition.can_attend %}
-                            <a href="/competitions/attend/{{competition.pk}}" id="attend" class="btn btn-primary" role="button">대회 참가하기</a>
-                        {% else %}
-                            <a href="#" class="btn btn-primary" role="button">신청기간이 아닙니다</a>
-                        {% endif %}
+                            {% if competition.is_public %}
+                                {% if competition.current_teams >= competition.total_teams %}
+                                    <a href="#" class="btn btn-primary" role="button">신청이 마감되었습니다</a>
+                                    <a href="/competitions/brackets/{{competition.pk}}" class="btn btn-primary" role="button">대진표 보기</a>
+                                {% elif competition.can_attend %}
+                                    <a href="/competitions/attend/{{competition.pk}}" id="attend" class="btn btn-primary" role="button">대회 참가하기</a>
+                                {% else %}
+                                    <a href="#" class="btn btn-primary" role="button">신청기간이 아닙니다</a>
+                                {% endif %}
+                            {% else %}
+                                {% if competition.master == user %}
+                                    {% if competition.current_teams >= competition.total_teams %}
+                                        <a href="#" class="btn btn-primary" role="button">신청이 마감되었습니다</a>
+                                        <a href="/competitions/brackets/{{competition.pk}}" class="btn btn-primary" role="button">대진표 보기</a>
+                                    {% elif competition.can_attend %}
+                                        <a href="/competitions/invite/{{competition.pk}}" id="invite" class="btn btn-primary" role="button">대회 초대하기</a>
+                                    {% else %}
+                                        <a href="#" class="btn btn-primary" role="button">신청기간이 아닙니다</a>
+                                    {% endif %}
+                                {% else %}
+                                    {% if competition.current_teams >= competition.total_teams %}
+                                        <a href="#" class="btn btn-primary" role="button">관리자만 초대 가능</a>
+                                        <a href="/competitions/brackets/{{competition.pk}}" class="btn btn-primary" role="button">대진표 보기</a>
+                                    {% elif competition.can_attend %}
+                                        <a href="#" class="btn btn-primary" role="button">관리자만 초대 가능</a>
+                                    {% else %}
+                                        <a href="#" class="btn btn-primary" role="button">신청기간이 아닙니다</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
                         </row>
                     </div>
 

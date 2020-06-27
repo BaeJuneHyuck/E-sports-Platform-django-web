@@ -129,6 +129,7 @@ body {
 
 .bracket-container{
     overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .bracket-container::-webkit-scrollbar {

@@ -88,6 +88,13 @@ class CompetitionAttendForm(forms.ModelForm):
         model = CompetitionParticipate
         fields = ['team']
 
+
+class CompetitionInviteForm(forms.ModelForm):
+    class Meta:
+        model = CompetitionParticipate
+        fields = ['team']
+
+
 class MatchEditForm(forms.ModelForm):
     result = forms.CharField(label='경기 결과', widget=forms.Select(choices=RESULT))# (0 경기전, 1 1팀승리, 2 2팀승리 , 3 무승부)
 

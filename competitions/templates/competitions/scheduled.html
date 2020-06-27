@@ -5,99 +5,102 @@
 
 {% block content %}
     <div class="competition">
-        <div class="contents_list row">
-            <div class="contents_title col-sm">
-            <a href="/competitions/scheduled">예정된 대회</a>
-            </div>
+        <div class="contents_list">
+            <div class="row">
+                <div class="contents_title col-sm">
+                    <a href="/competitions/scheduled">예정된 대회</a>
+                </div>
 
-            <div class="col-sm">
-                {# Search #}
-                <div class="container">
-                    <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'competitions:scheduled_search' %}">
-                        <i class="fas fa-search mr-1" aria-hidden="true"></i>
-                        <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
-                            <option value="title" {% if attribute == "title" or attirbute is None %} selected {% endif %}>제목</option>
-                            <option value="master" {% if attribute == "master" %} selected {% endif %}>작성자</option>
-                            <option value="text" {% if attribute == "text" %} selected {% endif %}>내용</option>
-                            <option value="tier" {% if attribute == "tier" %} selected {% endif %}>티어</option>
-                            <option value="game" {% if attribute == "game" %} selected {% endif %}>게임</option>
-                        </select>
-                        <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
-                        <input class="btn btn-primary" type="submit" value="검색">
-                    </form>
+                <div class="col-sm">
+                    {# Search #}
+                    <div class="container">
+                        <form class="form-inline md-form form-sm mt-0 float-right" method='GET' action="{% url 'competitions:scheduled_search' %}">
+                            <i class="fas fa-search mr-1" aria-hidden="true"></i>
+                            <select class="form-control custom-select mr-1" name="attribute" value="{{ request.GET.attribute }}">
+                                <option value="title" {% if attribute == "title" or attirbute is None %} selected {% endif %}>제목</option>
+                                <option value="master" {% if attribute == "master" %} selected {% endif %}>작성자</option>
+                                <option value="text" {% if attribute == "text" %} selected {% endif %}>내용</option>
+                                <option value="tier" {% if attribute == "tier" %} selected {% endif %}>티어</option>
+                                <option value="game" {% if attribute == "game" %} selected {% endif %}>게임</option>
+                            </select>
+                            <input class="form-control mr-1" type="text" name="qs" value="{{ request.GET.qs }}"/>
+                            <input class="btn btn-primary" type="submit" value="검색">
+                        </form>
+                    </div>
                 </div>
             </div>
 
             {% if scheduled_competitions_list %}
-            <table class = "competition_list table table-hover  text-white">
-                <colgroup>
-                    <col width="10%">
-                    <col width="25%">
-                    <col width="25%">
-                    <col width="40%">
-                </colgroup>
-                <thead class="thead-light">
+                <table class = "competition_list table table-hover  text-white">
+                    <colgroup>
+                        <col width="10%">
+                        <col width="25%">
+                        <col width="25%">
+                        <col width="40%">
+                    </colgroup>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">번호</th>
+                            <th scope="col">대회명</th>
+                            <th scope="col">게임</th>
+                            <th scope="col">게시일</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-light">
+                    {% for competition in scheduled_competitions_list %}
                     <tr>
-                        <th scope="col">번호</th>
-                        <th scope="col">대회명</th>
-                        <th scope="col">게임</th>
-                        <th scope="col">게시일</th>
+                        <th>{{ competition.page_num }}</th>
+                        <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
+                        <td>{{ competition.competition_game }}</td>
+                        <td>{{ competition.pub_date }}</td>
                     </tr>
-                </thead>
-                <tbody class="tbody-light">
-                {% for competition in scheduled_competitions_list %}
-                <tr>
-                    <th>{{ competition.page_num }}</th>
-                    <td><a href="{% url 'competitions:detail' competition.id %}">{{ competition.competition_name }}</a></td>
-                    <td>{{ competition.competition_game }}</td>
-                    <td>{{ competition.pub_date }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
-            <p>예정된 대회가 없습니다</p>
+                <p>예정된 대회가 없습니다</p>
             {% endif %}
-        </div>
-        {# Pagination #}
-        <div class="pagination justify-content-center pagination-sm">
-        {% if is_paginated %}
-        <nav>
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                <li class = "page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                    <span>Previous</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">
-                    <span>Previous</span>
-                    </a>
-                </li>
-                {% endif %}
-                {% for page in page_range %}
-                <li class = "page-item {% if page == page_obj.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                </li>
-                {% endfor %}
-                {% if page_obj.has_next %}
-                <li class = "page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                    <span>Next</span>
-                    </a>
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">
-                    <span>Next</span>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
+
+            {# Pagination #}
+            <div class="pagination justify-content-center pagination-sm">
+            {% if is_paginated %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class = "page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <span>Previous</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">
+                            <span>Previous</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for page in page_range %}
+                        <li class = "page-item {% if page == page_obj.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class = "page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            <span>Next</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">
+                            <span>Next</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            </div>
         </div>
     </div>
 

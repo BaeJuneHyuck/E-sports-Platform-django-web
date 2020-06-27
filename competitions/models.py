@@ -126,6 +126,21 @@ class Match(models.Model):
     result_lol = models.ForeignKey('ResultLOL',blank=True, null=True, on_delete=models.CASCADE)
     result_ow = models.ForeignKey('ResultOW',blank=True, null=True, on_delete=models.CASCADE)
 
+    @staticmethod
+    def total_match():
+        return Match.objects.count()
+
+# 매치 코멘트
+class MatchComment(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    modify_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{} : {}'.format(self.author, self.content)
+
 
 #롤 경기 정보, 관리자가 수기로 입력
 class ResultLOL(models.Model):
