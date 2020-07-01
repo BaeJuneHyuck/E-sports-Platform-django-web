@@ -20,76 +20,82 @@
         <div class="card-footer bg-transparent border-dark"></div>
             <p>팀 이름을 클릭하여 경기 정보를 확인할 수 있습니다.
             {% if competition.tournament_type == -1 or competition.tournament_type == -2 %}
-                <div class="card border-primary mt-3">
-                    <h5 class="card-header">
-                        {% if competition.tournament_type == -2 %} 승자조
-                        {% else %} 대진표
-                        {% endif %}
-                    </h5>
-                    <div class="card-body">
-                        <div class="bracket-container">
-                        <div class="brackets mt-3">
+
+                <ul class="nav nav-tabs" id="bracektTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="bracektTabWiner" data-toggle="tab" href="#TabWinner" role="tab" aria-controls="round1" aria-selected="true">{% if competition.tournament_type == -2 %} 승자조 {% else %} 대진표 {% endif %}</a>
+                    </li>
+                    {% if competition.tournament_type == -2 %}
+                        <li class="nav-item">
+                            <a class="nav-link" id="bracektTabLoser" data-toggle="tab" href="#TabLoser" role="tab" aria-controls="round2" aria-selected="false">패자조</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="bracektTabFinal" data-toggle="tab" href="#TabFinal" role="tab" aria-controls="round3" aria-selected="false">최종전</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="TabWinner" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <div class="card-body">
+                            <div class="bracket-container">
+                                <div class="brackets mt-3">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    </div>
+                    {% if competition.tournament_type == -2 %}
+                        <div class="tab-pane fade" id="TabLoser" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="card-body">
+                                <div class="bracket-container">
+                                    <div class="brackets_loser mt-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="TabFinal" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            <div class="card-body">
+                                <div class="bracket-container">
+                                    <div class="brackets_final mt-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                {% if competition.tournament_type == -2 %}
-                    <div class="card border-primary mt-3">
-                        <h5 class="card-header">패배조</h5>
-                        <div class="card-body">
-                            <div class="bracket-container">
-                                <div class="brackets_loser mt-3">
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    <div class="card border-primary mt-3">
-                        <h5 class="card-header"> 최종전 </h5>
-                        <div class="card-body">
-                            <div class="bracket-container">
-                                <div class="brackets_final mt-3">
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                {% endif %}
-
             <!-- RR 일경우 대진표 대신 순위표 출력 -->
             {% else %}
                 <table class="table table-dark">
-                        <colgroup>
-                            <col width="15%">
-                            <col width="55%">
-                            <col width="15%">
-                            <col width="15%">
-                        </colgroup>
-                        <thead class="thead-light">
-                            <tr>
-                              <th scope="col">순위</th>
-                              <th scope="col">팀</th>
-                              <th scope="col">승</th>
-                              <th scope="col">패</th>
-                            </tr>
-                        </thead>
+                    <colgroup>
+                        <col width="15%">
+                        <col width="55%">
+                        <col width="15%">
+                        <col width="15%">
+                    </colgroup>
+                    <thead class="thead-light">
+                        <tr>
+                          <th scope="col">순위</th>
+                          <th scope="col">팀</th>
+                          <th scope="col">승</th>
+                          <th scope="col">패</th>
+                        </tr>
+                    </thead>
 
-                        {% for team in teams %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td><a href="/team/detail/{{team.team.pk}}">{{team.team.name}}</a></td>
-                                <td>{{ team.win }}</td>
-                                <td>{{ team.lose }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                    {% for team in teams %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="/team/detail/{{team.team.pk}}">{{team.team.name}}</a></td>
+                            <td>{{ team.win }}</td>
+                            <td>{{ team.lose }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             {% endif %}
+        </div>
 
-    </div>
     <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
 
-        <h1 class = "practice_name">
-            경기목록</h1>
+        <h1 class = "practice_name">{% if competition.tournament_type == -2 %} 승자조 경기목록 {% else %} 경기목록 {% endif %}</h1>
         <div class="card-footer bg-transparent border-dark"></div>
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -200,6 +206,192 @@
 
         </div>
     </div>
+
+    {% if competition.tournament_type == -2 %}
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+
+        <h1 class = "practice_name">
+            패자조 경기목록</h1>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+        <ul class="nav nav-tabs" id="loser_tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="loser_round1-tab" data-toggle="tab" href="#loser_round1" role="tab" aria-controls="round1" aria-selected="true">1 라운드</a>
+          </li>
+
+          {% if matches2 %}
+              <li class="nav-item">
+                <a class="nav-link" id="loser_round2-tab" data-toggle="tab" href="#loser_round2" role="tab" aria-controls="round2" aria-selected="false">2 라운드</a>
+              </li>
+          {% endif %}
+
+          {% if matches3 %}
+              <li class="nav-item">
+                <a class="nav-link" id="loser_round3-tab" data-toggle="tab" href="#loser_round3" role="tab" aria-controls="round3" aria-selected="false">3 라운드</a>
+              </li>
+          {% endif %}
+
+
+          {% if matches4 %}
+            <li class="nav-item">
+                <a class="nav-link" id="loser_round4-tab" data-toggle="tab" href="#loser_round4" role="tab" aria-controls="round4" aria-selected="false">4 라운드</a>
+            </li>
+          {% endif %}
+
+          {% if matches5 %}
+            <li class="nav-item">
+                <a class="nav-link" id="loser_round5-tab" data-toggle="tab" href="#loser_round5" role="tab" aria-controls="round5" aria-selected="false">5 라운드</a>
+            </li>
+          {% endif %}
+
+          {% if matches6 %}
+            <li class="nav-item">
+                <a class="nav-link" id="loser_round6-tab" data-toggle="tab" href="#loser_round6" role="tab" aria-controls="round6" aria-selected="false">6 라운드</a>
+            </li>
+          {% endif %}
+
+          {% if matches7 %}
+            <li class="nav-item">
+                <a class="nav-link" id="loser_round7-tab" data-toggle="tab" href="loser_#round7" role="tab" aria-controls="round7" aria-selected="false">7 라운드</a>
+            </li>
+          {% endif %}
+
+        {% if matches8 %}
+            <li class="nav-item">
+                <a class="nav-link" id="loser_round8-tab" data-toggle="tab" href="loser_#round7" role="tab" aria-controls="round7" aria-selected="false">8 라운드</a>
+            </li>
+          {% endif %}
+        </ul>
+
+        <div class="tab-content" id="loserTabContent">
+          <div class="tab-pane fade show active" id="loser_round1" role="tabpanel" aria-labelledby="round1">
+            <table class="table table-dark">
+                <colgroup>
+                    <col width="10%">
+                    <col width="30%">
+                    <col width="30%">
+                    <col width="15%">
+                    <col width="15%">
+                </colgroup>
+                <thead class="thead-light">
+                    <tr>
+                      <th scope="col">번호</th>
+                      <th scope="col"> 팀 </th>
+                      <th scope="col">경기 일시</th>
+                      <th scope="col">경기 결과</th>
+                      <th scope="col"> 관리자
+                        <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
+                        </svg> </th>
+                    </tr>
+                </thead>
+
+                {% for match in loser_matches1 %}
+                <tr>
+                    <td>{{ match.number }}</td>
+                    {% if match.team1 %}
+                        <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
+                    {% else %}
+                        <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
+                    {% endif %}
+                    <td>{{ match.date }}</td>
+
+                    {% if match.result == 0 %}<td style="color:lightgray;">경기전</td>
+                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
+                    {% elif match.result == 3 %}<td style="color:yellow;"> 무승부 </td>
+                    {% elif match.result == -1 %}<td style="color:skyblue;"> 부전승 </td>
+
+                    {% endif %}
+
+                    {% if competition.master == user %}
+                        <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+
+          {% include "competitions/brackets_match.html" with round="loser_round2" matches=loser_matches2 %}
+          {% include "competitions/brackets_match.html" with round="loser_round3" matches=loser_matches3 %}
+          {% include "competitions/brackets_match.html" with round="loser_round4" matches=loser_matches4 %}
+          {% include "competitions/brackets_match.html" with round="loser_round5" matches=loser_matches5 %}
+          {% include "competitions/brackets_match.html" with round="loser_round6" matches=loser_matches6 %}
+          {% include "competitions/brackets_match.html" with round="loser_round7" matches=loser_matches7 %}
+          {% include "competitions/brackets_match.html" with round="loser_round8" matches=loser_matches8 %}
+          {% include "competitions/brackets_match.html" with round="loser_round9" matches=loser_matches9 %}
+
+        </div>
+    </div>
+
+    <div class = "border border-primary rounded bg-light mt-3 p-5 "  >
+
+        <h1 class = "practice_name">
+            최종전</h1>
+        <div class="card-footer bg-transparent border-dark"></div>
+
+        <ul class="nav nav-tabs" id="final_tab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="final_round1-tab" data-toggle="tab" href="#final" role="tab" aria-controls="round1" aria-selected="true">최종전</a>
+          </li>
+
+        </ul>
+
+        <div class="tab-content" id="finalTabContent">
+          <div class="tab-pane fade show active" id="final" role="tabpanel" aria-labelledby="round1">
+            <table class="table table-dark">
+                <colgroup>
+                    <col width="10%">
+                    <col width="30%">
+                    <col width="30%">
+                    <col width="15%">
+                    <col width="15%">
+                </colgroup>
+                <thead class="thead-light">
+                    <tr>
+                      <th scope="col">번호</th>
+                      <th scope="col"> 팀 </th>
+                      <th scope="col">경기 일시</th>
+                      <th scope="col">경기 결과</th>
+                      <th scope="col"> 관리자
+                        <svg class="bi bi-wrench" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019L13 11l-.471.242-.529.026-.287.445-.445.287-.026.529L11 13l.242.471.026.529.445.287.287.445.529.026L13 15l.471-.242.529-.026.287-.445.445-.287.026-.529L15 13l-.242-.471-.026-.529-.445-.287-.287-.445-.529-.026z"/>
+                        </svg> </th>
+                    </tr>
+                </thead>
+
+                {% for match in final %}
+                <tr>
+                    <td>{{ match.number }}</td>
+                    {% if match.team1 %}
+                        <td><a href="/competitions/match/{{match.pk}}">{{ match.team1}} vs {{match.team2 }}</a></td>
+                    {% else %}
+                        <td><a href="/competitions/match/{{match.pk}}"> 경기예정</a></td>
+                    {% endif %}
+                    <td>{{ match.date }}</td>
+
+                    {% if match.result == 0 %}<td style="color:lightgray;">경기전</td>
+                    {% elif match.result == 1 %}<td><a href="/team/detail/{{match.team1.pk}}">{{ match.team1}}</a> 승</td>
+                    {% elif match.result == 2 %}<td><a href="/team/detail/{{match.team2.pk}}">{{ match.team2}}</a> 승</td>
+                    {% elif match.result == 3 %}<td style="color:yellow;"> 무승부 </td>
+                    {% elif match.result == -1 %}<td style="color:skyblue;"> 부전승 </td>
+
+                    {% endif %}
+
+                    {% if competition.master == user %}
+                        <td><a href="/competitions/match/edit/{{match.pk}}">정보 입력</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+          </div>
+
+          {% include "competitions/brackets_match.html" with round="final" matches=final %}
+
+        </div>
+    </div>
+
+    {% endif %}
 </div>
 
 
@@ -233,103 +425,79 @@
               {% include "competitions/brackets_rounds.html" with matches=matches8 %}
         {% endif %}
 
+        {% if competition.tournament_type == -2 %}
         [{
-            player1: { name: "우승자", ID: 129 },
+            player1: { name: "승자조 우승자", ID: 129 },
         },],
+        {% else %}
+        [{
+            player1: { name: "우승", ID: 129 },
+        },],
+        {% endif %}
     ];
 
 
     var rounds2;
     rounds2 = [
+        {% if loser_matches1 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches1 %}
+        {% endif %}
+        {% if loser_matches2 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches2 %}
+        {% endif %}
+        {% if loser_matches3 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches3 %}
+        {% endif %}
+        {% if loser_matches4 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches4 %}
+        {% endif %}
+        {% if loser_matches5 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches5 %}
+        {% endif %}
+        {% if loser_matches6 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches6 %}
+        {% endif %}
+        {% if loser_matches7 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches7 %}
+        {% endif %}
+        {% if loser_matches8 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches8 %}
+        {% endif %}
+        {% if loser_matches9 %}
+              {% include "competitions/brackets_rounds.html" with matches=loser_matches9 %}
+        {% endif %}
+        [{
+            player1: { name: "패자조 우승자", ID: 129 },
+        },],
+    ];
 
-        //-- ronda 1
-        [
-
-            {
-                player1: { name: " 1", winner: true, ID: 100, url: 'http://www.google.com' },
-                player2: { name: "player 2", ID: 200 }
-            },
-
-            {
-                player1: { name: "Player 3", winner: true, ID: 300 },
-                player2: { name: "Player 4", ID: 400 }
-            },
-        ],
-
-        //-- ronda 2
-        [
-
-            {
-                player1: { name: "Player 1", winner: true, ID: 100},
-                player2: { name: "Player 3", ID: 300 }
-            },
-
-            {
-                player1: { name: "Player 5", winner: true, ID: 500 },
-                player2: { name: "Player 8", ID: 800 }
-            },
-
-
-        ],
-
-        //-- ronda 3
-        [
-
-            {
-                player1: { name: "Player 1", winner: true, ID: 100},
-                player2: { name: "Player 8", ID: 800 }
-
-            },
-
-            {
-                player1: { name: "Player 7777", winner: true, ID: 7777 }
-            },
-        ],
-
-        //-- ronda 4
-        [
-
-            {
-                player1: { name: "Player 113", winner: true, ID: 113 },
-                player2: { name: "Player 218", winner: true, ID: 218 },
-            },
-            {
-                player1: { name: "Player 111", winner: true, ID: 111 },
-                player2: { name: "Player 113", ID: 113 }
-            },
-
-            {
-                player1: { name: "Player 115", winner: true, ID: 115 },
-                player2: { name: "Player 218", ID: 218 }
-            },
-        ],
-        //-- Champion
-        [
-
-            {
-                player1: { name: "Player 113", winner: true, ID: 113 },
-            },
-
-        ],
-
+    var rounds3;
+    rounds3 = [
+        {% if final %}
+          {% include "competitions/brackets_rounds.html" with matches=final %}
+        {% endif %}
+        [{
+            player1: { name: "우승", ID: 3118 },
+        },],
     ];
     var titles = [];
 
-    ;(function($){
-
+    function makeWinner($){
         $(".brackets").brackets({
-            titles: titles,
-            rounds: rounds,
-            color_title: 'black',
-            border_color: '#00F',
-            color_player: 'black',
-            bg_player: 'white',
-            color_player_hover: 'white',
-            bg_player_hover: 'gray',
-            border_radius_player: '3px',
-            border_radius_lines: '5px',
+                titles: titles,
+                rounds: rounds,
+                color_title: 'black',
+                border_color: '#00F',
+                color_player: 'black',
+                bg_player: 'white',
+                color_player_hover: 'white',
+                bg_player_hover: 'gray',
+                border_radius_player: '3px',
+                border_radius_lines: '5px',
         });
+    };
 
+    function makeLoser($){
         $(".brackets_loser").brackets({
             titles: titles,
             rounds: rounds2,
@@ -342,11 +510,12 @@
             border_radius_player: '3px',
             border_radius_lines: '5px',
         });
+    };
 
-
+    function makeFinal($){
         $(".brackets_final").brackets({
             titles: titles,
-            rounds: rounds,
+            rounds: rounds3,
             color_title: 'black',
             border_color: '#00F',
             color_player: 'black',
@@ -356,8 +525,12 @@
             border_radius_player: '3px',
             border_radius_lines: '5px',
         });
-    })(jQuery);
 
+    };
 
+    makeFinal($);
+    makeWinner($);
+
+    makeLoser($);
 </script>
 {% endblock %}

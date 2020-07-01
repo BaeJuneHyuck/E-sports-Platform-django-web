@@ -197,6 +197,9 @@ class InviteView(generic.FormView):
                 competition=competition).exists():
             messages.error(self.request, '이미 초대한 팀입니다.')
             return redirect(self.request.path_info)
+        elif competition.current_teams == competition.total_teams:
+            messages.success(self.request, '모든 팀이 참가했습니다')
+            return redirect('competitions:detail', pk=competition.pk)
         else:
             f.save()
             messages.success(self.request, str(team) + '을 초대했습니다')
@@ -212,7 +215,8 @@ class InviteView(generic.FormView):
                     makeDoubleMatches(competition_pk)
                 else:
                     makeRoundRobin(competition_pk, competition.tournament_type )
-            return redirect('competitions:detail', pk=competition.pk)
+                return redirect('competitions:detail', pk=competition.pk)
+            return redirect(self.request.path_info)
 
 
 class OngoingView(generic.ListView):
@@ -549,14 +553,26 @@ class BracketsView(generic.DetailView):
         
         # 승리가 많은순, 패배가 적은순 정렬
         context['teams'] = CompetitionParticipate.objects.filter(competition=self.kwargs.get('pk')).order_by('lose').order_by('-win')
-        context['matches1'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=1)
-        context['matches2'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=2)
-        context['matches3'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=3)
-        context['matches4'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=4)
-        context['matches5'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=5)
-        context['matches6'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=6)
-        context['matches7'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=7)
-        context['matches8'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(round=8)
+        context['matches1'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=1)
+        context['matches2'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=2)
+        context['matches3'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=3)
+        context['matches4'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=4)
+        context['matches5'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=5)
+        context['matches6'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=6)
+        context['matches7'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=7)
+        context['matches8'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=1).filter(round=8)
+
+        context['loser_matches1'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=1)
+        context['loser_matches2'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=2)
+        context['loser_matches3'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=3)
+        context['loser_matches4'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=4)
+        context['loser_matches5'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=5)
+        context['loser_matches6'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=6)
+        context['loser_matches7'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=7)
+        context['loser_matches8'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=8)
+        context['loser_matches9'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=2).filter(round=9)
+
+        context['final'] = Match.objects.filter(competition=self.kwargs.get('pk')).filter(group=3).filter(round=1)
         return context
 
 
@@ -830,8 +846,13 @@ def makeDoubleMatches(competition_pk):
         teams_for_match.append(relation.team)
         current_number= current_number+1
 
-    match_number = 0
+
+
+    match_number = 0    # 승자전 경기 번호
+    match_number_loser = 0    # 패자전 경기 번호
+    loser_match_flag = True  # 패자 나올때마다 경기 하나생성 두번째 사람은 첫경기에 포함하니 체크하기위해 flag
     prev_round_match_number = 0
+    prev_loser_match_number = 0 # 부전승 제외하고 갯수센다
     current_round = 1
     prev_won_by_default_team = None # 이전라운드에 부전승이 있엇다 => 이번 라운드 마지막경기도 부전승으로 만들어야함
     # 1라운드 생성
@@ -866,19 +887,43 @@ def makeDoubleMatches(competition_pk):
                 team2 = team2,
                 result = 0,
                 date=timezone.now())
-
+            if loser_match_flag:
+                match_number_loser = match_number_loser + 1
+                prev_loser_match_number = prev_loser_match_number + 1
+                Match.objects.create(
+                    game = competition.competition_game,
+                    competition=competition,
+                    number = match_number_loser,
+                    round = 1,
+                    group = 2,  # 패자조 경기 생성
+                    result = 0,
+                    date=timezone.now())
+            loser_match_flag = not loser_match_flag
 
     # 이후 2라운드 이상 필요한경우( 이전 라운드에 실행한 match가 두개이상인 경우) => 반복
     while prev_round_match_number != 1 :    # 이전 라운드의 경기가 하나밖에없었다 => 결승전임, 루프 종료
         print("이전 라운드 경기수:" + str(prev_round_match_number))
-
         current_round = current_round + 1       # 라운드 증가
+
+        losematch = prev_loser_match_number
+        while losematch>0:
+            match_number_loser = match_number_loser + 1
+            Match.objects.create(
+                game = competition.competition_game,
+                competition=competition,
+                number = match_number_loser,
+                round = current_round,
+                group = 2,  # 패자조 경기 생성
+                result = 0,
+                date=timezone.now())
+            losematch = losematch -2
+
         current_round_match = math.floor(prev_round_match_number / 2)  # 이번 라운드에서 해야할 경기
         if prev_round_match_number % 2 == 1:      # 홀수번 경기를 했다면? -> 부전승경기 하나 더 해야함
             current_round_match = current_round_match + 1
         saved_prev_round_match_number = prev_round_match_number
         prev_round_match_number = 0         # 라운드의 경기수 초기화
-
+        prev_loser_match_number = 0
         print("지금 라운드:" + str(current_round) + "이번라운드 경기" + str(current_round_match))
 
         # 해당 라운드의 경기들을 생성
@@ -909,6 +954,7 @@ def makeDoubleMatches(competition_pk):
                         result = -1,
                         date=timezone.now())
             else:
+                prev_loser_match_number = prev_loser_match_number + 1
                 Match.objects.create(
                     game = competition.competition_game,
                     competition=competition,
@@ -916,8 +962,37 @@ def makeDoubleMatches(competition_pk):
                     round = current_round,
                     result = 0,
                     date=timezone.now())
+                if loser_match_flag:
+                    match_number_loser = match_number_loser + 1
+                    Match.objects.create(
+                        game = competition.competition_game,
+                        competition=competition,
+                        number = match_number_loser,
+                        round = current_round,
+                        group = 2,  # 패자조 경기 생성
+                        result = 0,
+                        date=timezone.now())
+                loser_match_flag = not loser_match_flag
 
+    Match.objects.create(
+        game = competition.competition_game,
+        competition=competition,
+        number = match_number_loser,
+        round = current_round + 1,
+        group = 2,  # 패자조 경기 생성
+        result = 0,
+        date=timezone.now())
 
+    #결승전 경기 생성
+    match_number = match_number + 1
+    Match.objects.create(
+        game = competition.competition_game,
+        competition=competition,
+        number = 1,
+        group= 3,
+        round = 1,
+        result = 0,
+        date=timezone.now())
     #대회에 몇 라운드까지 있는지 기록
     competition.rounds = current_round
     competition.save()

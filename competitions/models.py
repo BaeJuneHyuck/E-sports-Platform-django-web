@@ -60,10 +60,12 @@ class Competition(models.Model):
     total_teams = models.IntegerField(default=8, verbose_name='전체 모집 팀', validators=[MinValueValidator(2),
                                        MaxValueValidator(128)]) # 대회 참가팀수, 마감시 모집종료
     current_teams = models.IntegerField(default=0, verbose_name='현재 모집 팀') # 대회 참가팀수, 마감시 모집종료
-    rounds = models.IntegerField(default=7, verbose_name='전체 라운드수',null=True,
+    rounds = models.IntegerField(default=7, verbose_name='승자조 라운드수',null=True,
                                  validators=[MinValueValidator(1),MaxValueValidator(8)])
     # 전체 라운드수는  single elimination 에서 2인대회 일때 1로 최소 ,128인대회일때 7로 최대)
     # dobule이면 패자전이 각각 진행되므로 1라운드 추가
+    rounds_loser = models.IntegerField(default=7, verbose_name='패자조 라운드수',null=True,
+                                 validators=[MinValueValidator(1),MaxValueValidator(9)])
                                                 
     def __str__(self):
         return '{}'.format(self.competition_name)
@@ -117,7 +119,7 @@ class Match(models.Model):
     competition = models.ForeignKey(Competition, null=True, on_delete=models.CASCADE)  # 어느 대회의 경기인가
     number = models.IntegerField(default=1, verbose_name='경기 번호') # pk 아님, 각 대회에서 몇번째경기인가, 대진표그리는데 사용
     round = models.IntegerField(default=1, verbose_name='라운드')
-
+    group = models.IntegerField(default=1, verbose_name='그룹') #1 승자조 , #2 패자조 , #3 최종전
     team1 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team1')
     team2 = models.ForeignKey(Team, null=True, on_delete=models.CASCADE, related_name='team2')
     date = models.DateTimeField('경기일시', editable=True, null=True,)

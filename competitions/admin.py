@@ -56,6 +56,7 @@ class MatchAdmin(admin.ModelAdmin):
         (None, {'fields': ['game']}),
         (None, {'fields': ['competition']}),
         (None, {'fields': ['number']}),
+        (None, {'fields': ['group']}),
         (None, {'fields': ['round']}),
         (None, {'fields': ['team1']}),
         (None, {'fields': ['team2']}),
@@ -63,7 +64,7 @@ class MatchAdmin(admin.ModelAdmin):
         (None, {'fields': ['result_lol']}),
         (None, {'fields': ['result_ow']}),
     ]
-    list_display = ('game', 'competition', 'number', 'round', 'team1' ,'team2', 'result', 'result_lol', 'result_ow')
+    list_display = ('game', 'competition', 'number', 'group', 'round', 'team1' ,'team2', 'result', 'result_lol', 'result_ow')
     list_filter = ['competition']
     search_fields = ['competition']
 
