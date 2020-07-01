@@ -15,3 +15,4 @@ PNU 2020 Applied Design and Lab. team 6
 추가 db파일(db.sqlite3)은 제외하고 commit, push하기
 
 lol,overwatch DB aws 원격서버로 이동하였습니다.
+장고프로잭트 aws원격서버로 이동하였습니다.
