@@ -1,4 +1,4 @@
-# 2020_Applied_Design_Lab_team6
+# E-sports platform
 PNU 2020 Applied Design and Lab. team 6 
 
 ## Features
