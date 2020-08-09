@@ -148,8 +148,8 @@ SESSION_COOKIE_AGE = 1200
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'esportsplatform2020@gmail.com'
-EMAIL_HOST_PASSWORD = 'ep2020!!'
+EMAIL_HOST_USER = 'use your g-mail account'
+EMAIL_HOST_PASSWORD = 'and password'
 EMAIL_USE_TLS = True
 
 #Disqus
