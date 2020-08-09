@@ -2,12 +2,12 @@
 PNU 2020 Applied Design and Lab. team 6 
 
 ## Features
-sign up with email and authentication email
-make,find and join team
-make,find and join competition
-check competition scehdules and competition tables
-make,find and join practice match
-check my game play stats
+* sign up with email and authentication email
+* make,find and join team
+* make,find and join competition
+* check competition scehdules and competition tables
+* make,find and join practice match
+* check my game play stats
 
 ## Snap Shoot
 ### Main Page
@@ -52,6 +52,7 @@ check my game play stats
 
 
 ## How to Install
+0. clone this project and goto top directory
 1. python manage.py makemigrations 
 2. python manage.py migrate
 3. python manage.py createsuperuser
